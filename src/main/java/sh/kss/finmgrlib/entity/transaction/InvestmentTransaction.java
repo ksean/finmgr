@@ -2,7 +2,6 @@ package sh.kss.finmgrlib.entity.transaction;
 
 import lombok.Value;
 import sh.kss.finmgrlib.entity.*;
-import sh.kss.finmgrlib.exception.CurrencyInconsistentException;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
