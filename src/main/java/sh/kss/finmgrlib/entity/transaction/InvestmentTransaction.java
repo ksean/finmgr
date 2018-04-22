@@ -2,7 +2,9 @@ package sh.kss.finmgrlib.entity.transaction;
 
 import lombok.Value;
 import sh.kss.finmgrlib.entity.*;
+import sh.kss.finmgrlib.exception.CurrencyInconsistentException;
 
+import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
@@ -24,8 +26,17 @@ public class InvestmentTransaction {
 
     public boolean isValid() {
 
-        //TODO: Iterate all validations
+        return currencyIsConsistent();
+    }
 
-        return true;
+    public boolean currencyIsConsistent() {
+
+        CurrencyUnit currency = this.price.getCurrency();
+
+        return grossAmount.getCurrency().equals(currency) &&
+                commission.getCurrency().equals(currency) &&
+                netAmount.getCurrency().equals(currency) &&
+                returnOnCapital.getCurrency().equals(currency) &&
+                capitalGain.getCurrency().equals(currency);
     }
 }

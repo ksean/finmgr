@@ -1,6 +1,7 @@
 package sh.kss.finmgrlib;
 
 import org.javamoney.moneta.Money;
+import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import javax.money.CurrencyUnit;
@@ -9,6 +10,7 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Service
 public class Operations {
 
     public static MonetaryAmount getAcbPerShare(List<InvestmentTransaction> transactions) {
