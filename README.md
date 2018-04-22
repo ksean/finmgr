@@ -1,6 +1,8 @@
 finmgr-lib
 ===
 
+![Travis CI](https://travis-ci.org/ksean/finmgr-lib.svg?branch=master)
+
 A library for defining and operating on financial transactions.
 
 ## Requirements
