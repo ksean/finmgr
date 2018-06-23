@@ -6,4 +6,5 @@ import lombok.Value;
 public class Account {
     String id;
     String alias;
+    AccountType accountType;
 }
