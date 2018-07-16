@@ -5,7 +5,7 @@ finmgr
 
 A financial transaction framework
 
-![Project Overview](https://github.com/ksean/fingmgr/finmgr.png "finmgr project overview")
+![Project Overview](finmgr.png "finmgr project overview")
 
 
 ## Requirements
