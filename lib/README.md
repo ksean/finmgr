@@ -1,12 +1,9 @@
-finmgr
+finmgr-lib
 ===
 
 ![Travis CI](https://travis-ci.org/ksean/finmgr-lib.svg?branch=master)
 
-A financial transaction framework
-
-![Project Overview](https://github.com/ksean/fingmgr/finmgr.png "finmgr project overview")
-
+A library for defining financial transaction entities and operating on them.
 
 ## Requirements
 
