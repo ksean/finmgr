@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import logo from './logo.svg';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import './App.css';
+import MenuAppBar from "./MenuAppBar";
 
 class App extends Component {
     render() {
         return (
-            <div className="App">
-                <div className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <h2>Welcome to Spring Boot React Starter!</h2>
-                </div>
-
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
-
-                <Button variant="contained" color="primary">
-                    Hello World
-                </Button>
-            </div>
+            <React.Fragment>
+                <CssBaseline />
+                <MenuAppBar />
+            </React.Fragment>
     );
     }
 }
