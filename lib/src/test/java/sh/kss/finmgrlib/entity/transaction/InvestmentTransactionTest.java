@@ -24,9 +24,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import sh.kss.finmgrlib.Operations;
 import sh.kss.finmgrlib.entity.*;
-import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -35,7 +37,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -44,14 +48,7 @@ public class InvestmentTransactionTest {
     @Autowired
     Operations operations;
 
-    MonetaryAmount price;
-    MonetaryAmount grossAmount;
-    MonetaryAmount commission;
-    MonetaryAmount netAmount;
-    Account account;
-    MonetaryAmount returnOnCapital;
-    MonetaryAmount capitalGain;
-    Currency currency;
+    InvestmentTransactionValidator validator = new InvestmentTransactionValidator();
 
     private final String BASE_CURRENCY = "CAD";
 
@@ -109,7 +106,14 @@ public class InvestmentTransactionTest {
                 new Currency(BASE_CURRENCY)
         );
 
-        assertFalse(inconsistentTransaction.currencyIsConsistent());
+        Errors errors = new BeanPropertyBindingResult(inconsistentTransaction, "inconsistentTransaction");
+        validator.validate(inconsistentTransaction, errors);
+
+        assertTrue(errors.hasErrors());
+        assertEquals(3,
+                errors.getAllErrors().size());
+        assertNotNull(errors.getFieldError("netAmount"));
+
     }
 
     @Test
@@ -140,8 +144,8 @@ public class InvestmentTransactionTest {
                 new Currency(BASE_CURRENCY)
         );
 
-        assertTrue(buyVTI.settledAfterTransaction());
-        assertTrue(settledSameDay.settledAfterTransaction());
+        assertTrue(buyVTI.settledOnOrBeforeTransactionDate());
+        assertTrue(settledSameDay.settledOnOrBeforeTransactionDate());
     }
 
     @Test
@@ -166,7 +170,7 @@ public class InvestmentTransactionTest {
                 new Currency(BASE_CURRENCY)
         );
 
-        assertFalse(badSettlementDateTransaction.settledAfterTransaction());
+        assertFalse(badSettlementDateTransaction.settledOnOrBeforeTransactionDate());
     }
 
     @Test

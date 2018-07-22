@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class Operations {
 
-    public static MonetaryAmount getAcbPerShare(List<InvestmentTransaction> transactions) {
+    public static MonetaryAmount currentACB(List<InvestmentTransaction> transactions) {
 
         // TODO: Implement base currency + auto conversion
         CurrencyUnit currency = Monetary.getCurrency(transactions.get(0).getCurrency().getValue());

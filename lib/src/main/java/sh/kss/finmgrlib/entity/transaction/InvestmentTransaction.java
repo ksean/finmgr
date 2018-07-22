@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgrlib.entity.transaction;
 
+import com.sun.istack.internal.NotNull;
 import lombok.Value;
 import sh.kss.finmgrlib.entity.*;
 
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 
 @Value
 public class InvestmentTransaction {
+
     LocalDate transactionDate;
     LocalDate settlementDate;
     InvestmentAction action;
@@ -46,7 +48,8 @@ public class InvestmentTransaction {
         return currencyIsConsistent() &&
                 grossAmountEqualsProductOfQuantityPrice() &&
                 netAmountEqualsGrossMinusCommission() &&
-                settledAfterTransaction();
+                commissionNegativeOrZero() &&
+                settledOnOrBeforeTransactionDate();
     }
 
     public boolean currencyIsConsistent() {
@@ -60,6 +63,11 @@ public class InvestmentTransaction {
                 capitalGain.getCurrency().equals(currencyUnit);
     }
 
+    public boolean commissionNegativeOrZero() {
+
+        return commission.isNegativeOrZero();
+    }
+
     public boolean grossAmountEqualsProductOfQuantityPrice() {
 
         return grossAmount.isEqualTo(price.multiply(quantity.getValue()).negate());
@@ -70,7 +78,7 @@ public class InvestmentTransaction {
         return netAmount.isEqualTo((grossAmount.add(commission)));
     }
 
-    public boolean settledAfterTransaction() {
+    public boolean settledOnOrBeforeTransactionDate() {
 
         return transactionDate.isBefore(settlementDate) || transactionDate.equals(settlementDate);
     }
