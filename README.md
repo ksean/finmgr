@@ -12,6 +12,14 @@ A financial transaction framework
 
 Java >= 8
 
+## Installation
+
+`mvn install`
+
+## Running 
+
+Project lifecycle is managed through Maven. `finmgr-web` (frontend) and `finmgr-core` (backend) can be launched independently.
+
 ## Testing
 
 `mvn test`

@@ -6,7 +6,7 @@
     <groupId>sh.kss</groupId>
     <artifactId>finmgr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>finmgr</name>
     <inceptionYear>2018</inceptionYear>
