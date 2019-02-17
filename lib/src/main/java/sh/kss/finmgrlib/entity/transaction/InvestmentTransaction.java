@@ -17,7 +17,6 @@
  */
 package sh.kss.finmgrlib.entity.transaction;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Value;
 import sh.kss.finmgrlib.entity.*;
 
