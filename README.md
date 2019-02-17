@@ -1,7 +1,7 @@
 finmgr
 ===
 
-![Travis CI](https://travis-ci.org/ksean/finmgr-lib.svg?branch=master)
+![Travis CI](https://travis-ci.org/ksean/finmgr.svg?branch=master)
 
 A financial transaction framework
 
@@ -19,6 +19,18 @@ Java >= 8
 ## Running 
 
 Project lifecycle is managed through Maven. `finmgr-web` (frontend) and `finmgr-core` (backend) can be launched independently.
+
+#### finmgr-web
+
+`npm install`
+
+`npm start`
+
+#### finmgr-core
+
+`mvn package`
+
+Use packaged jar file to deploy server API
 
 ## Testing
 
