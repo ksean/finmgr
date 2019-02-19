@@ -25,21 +25,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import sh.kss.finmgrlib.Operations;
 import sh.kss.finmgrlib.entity.*;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import javax.money.MonetaryAmount;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -48,12 +46,12 @@ public class InvestmentTransactionTest {
     @Autowired
     Operations operations;
 
-    InvestmentTransactionValidator validator = new InvestmentTransactionValidator();
+    private final InvestmentTransactionValidator VALIDATOR = new InvestmentTransactionValidator();
 
     private final String BASE_CURRENCY = "CAD";
 
     // VALID buy and sell transactions
-    InvestmentTransaction buyVTI = new InvestmentTransaction(
+    private final InvestmentTransaction buyVTI = new InvestmentTransaction(
             LocalDate.now(),
             LocalDate.now().plusDays(3),
             InvestmentAction.Buy,
@@ -69,7 +67,7 @@ public class InvestmentTransactionTest {
             new Currency(BASE_CURRENCY)
     );
 
-    InvestmentTransaction sellVTI = new InvestmentTransaction(
+    private final InvestmentTransaction sellVTI = new InvestmentTransaction(
             LocalDate.now(),
             LocalDate.now().plusDays(3),
             InvestmentAction.Sell,
@@ -87,6 +85,7 @@ public class InvestmentTransactionTest {
 
     @Test
     public void inconsistentCurrencyTest() {
+        // Setup
         CurrencyUnit cad = Monetary.getCurrency("CAD");
         CurrencyUnit usd = Monetary.getCurrency("USD");
 
@@ -99,32 +98,79 @@ public class InvestmentTransactionTest {
                 Money.of(100, cad),
                 Money.of(10_000, cad),
                 Money.of(-5, cad),
-                Money.of(9_995, usd), // Inconsistent
+                Money.of(9_995, usd), // should be -CAD$10,005
                 new Account("123-abc", "foo", AccountType.NON_REGISTERED),
                 Money.of(0, cad),
                 Money.of(0, cad),
                 new Currency(BASE_CURRENCY)
         );
 
+        // Validation
         Errors errors = new BeanPropertyBindingResult(inconsistentTransaction, "inconsistentTransaction");
-        validator.validate(inconsistentTransaction, errors);
+        VALIDATOR.validate(inconsistentTransaction, errors);
 
-        assertTrue(errors.hasErrors());
-        assertEquals(3,
-                errors.getAllErrors().size());
-        assertNotNull(errors.getFieldError("netAmount"));
+        List<FieldError> netAmountErrors = errors.getFieldErrors("netAmount");
+        FieldError netAmountCurrencyError = netAmountErrors.get(0);
+        FieldError netAmountSumError = netAmountErrors.get(1);
+        FieldError grossAmountProductError = errors.getFieldError("grossAmount");
+
+        String[] netAmountCurrencyCodes = netAmountCurrencyError.getCodes();
+        String[] netAmountSumCodes = netAmountSumError.getCodes();
+        String[] grossAmountProductCodes = grossAmountProductError.getCodes();
+
+        // Assertions
+        assertEquals(
+            3,
+            errors.getAllErrors().size()
+        );
+
+        assertNotNull(netAmountErrors);
+        assertNotNull(netAmountCurrencyError);
+        assertNotNull(netAmountSumError);
+        assertNotNull(grossAmountProductError);
+
+        if (netAmountCurrencyCodes != null) {
+            assertTrue(netAmountCurrencyCodes.length > 1);
+            assertEquals(
+                "currencyInconsistent",
+                netAmountCurrencyCodes[netAmountCurrencyCodes.length - 1]
+            );
+        }
+        if (netAmountSumCodes != null) {
+            assertTrue(netAmountSumCodes.length > 1);
+            assertEquals(
+                "netAmountSum",
+                netAmountSumCodes[netAmountSumCodes.length - 1]
+            );
+        }
+        if (grossAmountProductCodes != null) {
+            assertTrue(grossAmountProductCodes.length > 1);
+            assertEquals(
+                "grossAmountProduct",
+                grossAmountProductCodes[grossAmountProductCodes.length - 1]
+            );
+        }
 
     }
 
     @Test
     public void consistentCurrencyTest() {
 
-        assertTrue(buyVTI.currencyIsConsistent());
+        // Validation
+        Errors errors = new BeanPropertyBindingResult(buyVTI, "inconsistentTransaction");
+        VALIDATOR.validate(buyVTI, errors);
+
+        // Assertions
+        assertEquals(
+            0,
+            errors.getAllErrors().size()
+        );
     }
 
     @Test
     public void settledOnOrAfterTransactionDateTest() {
 
+        // Setup
         LocalDate now = LocalDate.now();
         CurrencyUnit cad = Monetary.getCurrency("CAD");
 
@@ -135,17 +181,24 @@ public class InvestmentTransactionTest {
                 new Symbol("VTI"),
                 new Quantity(new BigDecimal(100)),
                 Money.of(100, cad),
-                Money.of(10_000, cad),
+                Money.of(-10_000, cad),
                 Money.of(-5, cad),
-                Money.of(9_995, cad),
+                Money.of(-10_005, cad),
                 new Account("123-abc", "foo", AccountType.NON_REGISTERED),
                 Money.of(0, cad),
                 Money.of(0, cad),
                 new Currency(BASE_CURRENCY)
         );
 
-        assertTrue(buyVTI.settledOnOrBeforeTransactionDate());
-        assertTrue(settledSameDay.settledOnOrBeforeTransactionDate());
+        // Validation
+        Errors errors = new BeanPropertyBindingResult(settledSameDay, "settledSameDay");
+        VALIDATOR.validate(settledSameDay, errors);
+
+        // Assertions
+        assertEquals(
+            0,
+            errors.getAllErrors().size()
+        );
     }
 
     @Test
@@ -161,23 +214,47 @@ public class InvestmentTransactionTest {
                 new Symbol("VTI"),
                 new Quantity(new BigDecimal(100)),
                 Money.of(100, cad),
-                Money.of(10_000, cad),
+                Money.of(-10_000, cad),
                 Money.of(-5, cad),
-                Money.of(9_995, cad),
+                Money.of(-10_005, cad),
                 new Account("123-abc", "foo", AccountType.NON_REGISTERED),
                 Money.of(0, cad),
                 Money.of(0, cad),
                 new Currency(BASE_CURRENCY)
         );
 
-        assertFalse(badSettlementDateTransaction.settledOnOrBeforeTransactionDate());
+        // Validation
+        Errors errors = new BeanPropertyBindingResult(badSettlementDateTransaction, "badSettlementDateTransaction");
+        VALIDATOR.validate(badSettlementDateTransaction, errors);
+        FieldError settlementDateError = errors.getFieldError("settlementDate");
+
+        // Assertions
+        assertEquals(
+            1,
+            errors.getAllErrors().size()
+        );
+        assertNotNull(settlementDateError);
+
+        if (settlementDateError.getCodes() != null) {
+            assertEquals(
+                "settledBeforeTransaction",
+                settlementDateError.getCodes()[settlementDateError.getCodes().length - 1]
+            );
+        }
     }
 
     @Test
     public void validGrossAmountTest() {
 
-        assertTrue(buyVTI.grossAmountEqualsProductOfQuantityPrice());
-        assertTrue(sellVTI.grossAmountEqualsProductOfQuantityPrice());
+        // Validation
+        Errors errors = new BeanPropertyBindingResult(sellVTI, "validGrossAmount");
+        VALIDATOR.validate(sellVTI, errors);
+
+        // Assertions
+        assertEquals(
+            0,
+            errors.getAllErrors().size()
+        );
     }
 
     @Test
@@ -188,12 +265,12 @@ public class InvestmentTransactionTest {
 
         InvestmentTransaction invalidGrossAmountTransaction = new InvestmentTransaction(
                 now,
-                now.minusDays(3), // Settled before transaction
+                now.plusDays(3),
                 InvestmentAction.Buy,
                 new Symbol("VTI"),
                 new Quantity(new BigDecimal(100)),
                 Money.of(100, cad),
-                Money.of(-10_001, cad),
+                Money.of(-10_001, cad), // Should be -$CAD10,000
                 Money.of(-5, cad),
                 Money.of(-10_006, cad),
                 new Account("123-abc", "foo", AccountType.NON_REGISTERED),
@@ -202,14 +279,29 @@ public class InvestmentTransactionTest {
                 new Currency(BASE_CURRENCY)
         );
 
-        assertFalse(invalidGrossAmountTransaction.grossAmountEqualsProductOfQuantityPrice());
+        // Validation
+        Errors errors = new BeanPropertyBindingResult(invalidGrossAmountTransaction, "invalidGrossAmountTransaction");
+        VALIDATOR.validate(invalidGrossAmountTransaction, errors);
+        FieldError grossAmountError = errors.getFieldError("grossAmount");
+
+        // Assertions
+        assertEquals(
+            1,
+            errors.getAllErrors().size()
+        );
+        assertNotNull(grossAmountError);
+
+        if (grossAmountError.getCodes() != null) {
+            assertEquals(
+                "grossAmountProduct",
+                grossAmountError.getCodes()[grossAmountError.getCodes().length - 1]
+            );
+        }
     }
 
     @Test
     public void validNetAmountTest() {
 
-        assertTrue(buyVTI.netAmountEqualsGrossMinusCommission());
-        assertTrue(sellVTI.netAmountEqualsGrossMinusCommission());
     }
 
     @Test
@@ -220,20 +312,37 @@ public class InvestmentTransactionTest {
 
         InvestmentTransaction invalidNetAmountTransaction = new InvestmentTransaction(
                 now,
-                now.minusDays(3), // Settled before transaction
+                now.plusDays(3),
                 InvestmentAction.Buy,
                 new Symbol("VTI"),
                 new Quantity(new BigDecimal(100)),
                 Money.of(100, cad),
                 Money.of(-10_000, cad),
                 Money.of(-5, cad),
-                Money.of(-10_004, cad),
+                Money.of(-10_004, cad), // Should be -$CAD10,005
                 new Account("123-abc", "foo", AccountType.NON_REGISTERED),
                 Money.of(0, cad),
                 Money.of(0, cad),
                 new Currency(BASE_CURRENCY)
         );
 
-        assertFalse(invalidNetAmountTransaction.netAmountEqualsGrossMinusCommission());
+        // Validation
+        Errors errors = new BeanPropertyBindingResult(invalidNetAmountTransaction, "invalidNetAmountTransaction");
+        VALIDATOR.validate(invalidNetAmountTransaction, errors);
+        FieldError netAmountError = errors.getFieldError("netAmount");
+
+        // Assertions
+        assertEquals(
+            1,
+            errors.getAllErrors().size()
+        );
+        assertNotNull(netAmountError);
+
+        if (netAmountError.getCodes() != null) {
+            assertEquals(
+                "netAmountSum",
+                netAmountError.getCodes()[netAmountError.getCodes().length - 1]
+            );
+        }
     }
 }

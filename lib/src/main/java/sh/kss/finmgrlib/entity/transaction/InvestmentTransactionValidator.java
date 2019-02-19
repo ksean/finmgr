@@ -22,9 +22,6 @@ import org.springframework.validation.Validator;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import javax.money.MonetaryAmount;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 
 public class InvestmentTransactionValidator implements Validator {
 
@@ -36,51 +33,69 @@ public class InvestmentTransactionValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        InvestmentTransaction iv = (InvestmentTransaction) o;
+        InvestmentTransaction transaction = (InvestmentTransaction) o;
 
-        // Consistent currency
-        CurrencyUnit currency = Monetary.getCurrency(iv.getCurrency().getValue());
-        if (!iv.getNetAmount().getCurrency().equals(currency)) {
-            errors.rejectValue("netAmount", "currencyInconsistent");
-        }
-        if (!iv.getGrossAmount().getCurrency().equals(currency)) {
-            errors.rejectValue("grossAmount", "currencyInconsistent");
-        }
-        if (!iv.getPrice().getCurrency().equals(currency)) {
-            errors.rejectValue("price", "currencyInconsistent");
-        }
-        if (!iv.getCommission().getCurrency().equals(currency)) {
-            errors.rejectValue("commission", "currencyInconsistent");
-        }
-        if (!iv.getCapitalGain().getCurrency().equals(currency)) {
-            errors.rejectValue("capitalGain", "currencyInconsistent");
-        }
-        if (!iv.getReturnOnCapital().getCurrency().equals(currency)) {
-            errors.rejectValue("returnOnCapital", "currencyInconsistent");
-        }
+        getCurrencyErrors(transaction, errors);
 
+        getSignErrors(transaction, errors);
 
-        // Commission always negative or zero
-        if (iv.getCommission().isPositive()) {
-            errors.rejectValue("commission", "commissionPositive");
+        getMathErrors(transaction, errors);
+
+        getChronologyErrors(transaction, errors);
+    }
+
+    private void getChronologyErrors(InvestmentTransaction transaction, Errors errors) {
+
+        // Settled on or after transaction
+        if (transaction.getSettlementDate().isBefore(transaction.getTransactionDate())) {
+            errors.rejectValue("settlementDate", "settledBeforeTransaction");
         }
+    }
+
+    private void getMathErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Gross is product of negated quantity and price
-        if (!iv.getGrossAmount().getCurrency().equals(iv.getPrice().getCurrency()) ||
-                !iv.getGrossAmount().isEqualTo(iv.getPrice().multiply(iv.getQuantity().getValue()).negate())) {
+        if (!transaction.getGrossAmount().isEqualTo(transaction.getPrice().multiply(transaction.getQuantity().getValue()).negate())) {
             errors.rejectValue("grossAmount", "grossAmountProduct");
         }
 
         // Net is sum of gross and commission
-        if (!iv.getNetAmount().getCurrency().equals(iv.getGrossAmount().getCurrency()) ||
-                !iv.getGrossAmount().getCurrency().equals(iv.getCommission().getCurrency()) ||
-                !iv.getNetAmount().isEqualTo(iv.getGrossAmount().add(iv.getCommission()))) {
+        if (errors.hasFieldErrors("netAmount") || errors.hasFieldErrors("commission") ||
+            !transaction.getNetAmount().isEqualTo(transaction.getGrossAmount().add(transaction.getCommission()))) {
+
             errors.rejectValue("netAmount", "netAmountSum");
         }
+    }
 
-        // Settled on or after transaction
-        if (iv.getSettlementDate().isBefore(iv.getTransactionDate())) {
-            errors.rejectValue("settlementDate", "settledBeforeTransaction");
+    private void getCurrencyErrors(InvestmentTransaction transaction, Errors errors) {
+
+        // Consistent currency
+        CurrencyUnit rootCurrency = Monetary.getCurrency(transaction.getCurrency().getValue());
+        if (!transaction.getNetAmount().getCurrency().equals(rootCurrency)) {
+            errors.rejectValue("netAmount", "currencyInconsistent");
+        }
+        if (!transaction.getGrossAmount().getCurrency().equals(rootCurrency)) {
+            errors.rejectValue("grossAmount", "currencyInconsistent");
+        }
+        if (!transaction.getPrice().getCurrency().equals(rootCurrency)) {
+            errors.rejectValue("price", "currencyInconsistent");
+        }
+        if (!transaction.getCommission().getCurrency().equals(rootCurrency)) {
+            errors.rejectValue("commission", "currencyInconsistent");
+        }
+        if (!transaction.getCapitalGain().getCurrency().equals(rootCurrency)) {
+            errors.rejectValue("capitalGain", "currencyInconsistent");
+        }
+        if (!transaction.getReturnOnCapital().getCurrency().equals(rootCurrency)) {
+            errors.rejectValue("returnOnCapital", "currencyInconsistent");
+        }
+    }
+
+    private void getSignErrors(InvestmentTransaction transaction, Errors errors) {
+
+        // Commission always negative or zero
+        if (transaction.getCommission().isPositiveOrZero()) {
+            errors.rejectValue("commission", "commissionPositiveOrZero");
         }
     }
 }
