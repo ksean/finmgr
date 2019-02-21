@@ -19,28 +19,19 @@ package sh.kss.finmgrlib.entity.transaction;
 
 
 import com.google.common.collect.ListMultimap;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
-import sh.kss.finmgrlib.Operations;
+import sh.kss.finmgrlib.FinmgrTest;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class TransactionTest {
-
-    @Autowired
-    Operations operations;
-
-    final String BASE_CURRENCY = "CAD";
+@Service
+public class TransactionTest extends FinmgrTest {
 
     void assertHasErrors(Validator validator, Object object, ListMultimap<String, String> expectedErrors) {
 

@@ -23,12 +23,10 @@ import com.google.common.collect.ListMultimap;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import sh.kss.finmgrlib.Operations;
 import sh.kss.finmgrlib.entity.*;
 
 import javax.money.CurrencyUnit;
@@ -42,43 +40,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 public class InvestmentTransactionTest extends TransactionTest {
 
-    @Autowired
-    Operations operations;
-
     private final InvestmentTransactionValidator VALIDATOR = new InvestmentTransactionValidator();
-
-    // VALID buy and sell transactions
-    private final InvestmentTransaction BUY_VTI = new InvestmentTransaction(
-        LocalDate.now(),
-        LocalDate.now().plusDays(3),
-        InvestmentAction.Buy,
-        new Symbol("VTI"),
-        new Quantity(new BigDecimal(100)),
-        Money.of(100, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(-10_000, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(-5, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(-10_005, Monetary.getCurrency(BASE_CURRENCY)),
-        new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-        Money.of(0, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(0, Monetary.getCurrency(BASE_CURRENCY)),
-        new Currency(BASE_CURRENCY)
-    );
-
-    private final InvestmentTransaction SELL_VTI = new InvestmentTransaction(
-        LocalDate.now(),
-        LocalDate.now().plusDays(3),
-        InvestmentAction.Sell,
-        new Symbol("VTI"),
-        new Quantity(new BigDecimal(-100)),
-        Money.of(100, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(10_000, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(-5, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(9_995, Monetary.getCurrency(BASE_CURRENCY)),
-        new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-        Money.of(0, Monetary.getCurrency(BASE_CURRENCY)),
-        Money.of(0, Monetary.getCurrency(BASE_CURRENCY)),
-        new Currency(BASE_CURRENCY)
-    );
 
     @Test
     public void validBuyTransaction() {
