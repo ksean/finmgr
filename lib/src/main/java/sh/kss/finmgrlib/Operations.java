@@ -84,6 +84,6 @@ public class Operations {
             return acb;
         }
 
-        return acb.divide(quantity);
+        return acb.divide(quantity).negate();
     }
 }

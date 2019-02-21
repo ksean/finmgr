@@ -19,6 +19,7 @@ package sh.kss.finmgrlib.entity.transaction;
 
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,32 +44,27 @@ public class InvestmentTransactionTest extends TransactionTest {
 
     private final InvestmentTransactionValidator VALIDATOR = new InvestmentTransactionValidator();
 
-    @Test
-    public void validBuyTransaction() {
-
-        // Validation
-        Errors errors = new BeanPropertyBindingResult(BUY_VTI, "validBuyTransaction");
-        VALIDATOR.validate(BUY_VTI, errors);
-
-        // Assertions
-        assertEquals(
-            0,
-            errors.getAllErrors().size()
-        );
-    }
+    private final List<InvestmentTransaction> TEST_TRANSACTIONS = ImmutableList.of(
+        BUY_VTI,
+        BUY_VTI_HIGHER_PRICE,
+        SELL_VTI,
+        SELL_VTI_LOWER_PRICE
+    );
 
     @Test
-    public void validSellTransaction() {
+    public void validTransactionFixtures() {
 
-        // Validation
-        Errors errors = new BeanPropertyBindingResult(SELL_VTI, "validSellTransaction");
-        VALIDATOR.validate(SELL_VTI, errors);
+        TEST_TRANSACTIONS.forEach(fixture -> {
+            // Validation
+            Errors errors = new BeanPropertyBindingResult(fixture, fixture.toString());
+            VALIDATOR.validate(fixture, errors);
 
-        // Assertions
-        assertEquals(
-            0,
-            errors.getAllErrors().size()
-        );
+            // Assertions
+            assertEquals(
+                0,
+                errors.getAllErrors().size()
+            );
+        });
     }
 
     @Test
