@@ -21,7 +21,10 @@ public class OperationsTest extends FinmgrTest {
     public void zeroQuantityACBTest() {
 
         // Buy then sell a stock in a single account
-        List<InvestmentTransaction> transactions = ImmutableList.of(BUY_VTI, SELL_VTI);
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            SELL_VTI
+        );
 
         // Calculate ACB
         MonetaryAmount acb = Operations.currentACB(transactions);
@@ -37,12 +40,15 @@ public class OperationsTest extends FinmgrTest {
     public void buyAtDifferentPriceACBTest() {
 
         // Buy at two different prices
-        List<InvestmentTransaction> transactions = ImmutableList.of(BUY_VTI, BUY_VTI_HIGHER_PRICE);
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE
+        );
 
         // Calculate ACB
         MonetaryAmount acb = Operations.currentACB(transactions);
 
-        // Assert $0 ACB
+        // Assert $CAD102.55 ACB
         assertEquals(
             Money.of(102.55, BASE_CURRENCY),
             acb
@@ -53,12 +59,36 @@ public class OperationsTest extends FinmgrTest {
     public void sellingDoesNotChangeACBTest() {
 
         // Buy at two different prices
-        List<InvestmentTransaction> transactions = ImmutableList.of(BUY_VTI, BUY_VTI_HIGHER_PRICE, SELL_VTI);
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE,
+            SELL_VTI
+        );
 
         // Calculate ACB
         MonetaryAmount acb = Operations.currentACB(transactions);
 
-        // Assert $0 ACB
+        // Assert $CAD102.55 ACB
+        assertEquals(
+            Money.of(102.55, BASE_CURRENCY),
+            acb
+        );
+    }
+
+    @Test
+    public void dividendDoesNotChangeACBTest() {
+
+        // Buy at two different prices
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE,
+            VTI_DIVIDEND
+        );
+
+        // Calculate ACB
+        MonetaryAmount acb = Operations.currentACB(transactions);
+
+        // Assert $CAD102.55 ACB
         assertEquals(
             Money.of(102.55, BASE_CURRENCY),
             acb

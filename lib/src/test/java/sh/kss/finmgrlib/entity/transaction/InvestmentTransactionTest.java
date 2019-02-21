@@ -28,12 +28,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import sh.kss.finmgrlib.entity.*;
+import sh.kss.finmgrlib.entity.InvestmentAction;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -70,23 +68,22 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void inconsistentCurrencyAndNetAmountTest() {
         // Setup
-        CurrencyUnit cad = Monetary.getCurrency("CAD");
         CurrencyUnit usd = Monetary.getCurrency("USD");
 
         InvestmentTransaction inconsistentTransaction = new InvestmentTransaction(
-            LocalDate.now(),
-            LocalDate.now().plusDays(3),
+            BASE_DATE,
+            BASE_DATE.plusDays(3),
             InvestmentAction.Buy,
-            new Symbol("VTI"),
-            new Quantity(new BigDecimal(100)),
-            Money.of(100, cad),
-            Money.of(10_000, cad),
-            Money.of(-5, cad),
-            Money.of(9_995, usd), // should be -CAD$10,005
-            new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-            Money.of(0, cad),
-            Money.of(0, cad),
-            new Currency(BASE_CURRENCY)
+            VTI_SYMBOL,
+            HUNDRED_QUANTITY,
+            Money.of(100, BASE_CURRENCY_UNIT),
+            Money.of(-10_001, BASE_CURRENCY_UNIT),            // should be -$CAD10,000
+            Money.of(-5, BASE_CURRENCY_UNIT),
+            Money.of(-9_995, usd),                            // should be -$CAD10,005
+            NON_REG_ACCOUNT,
+            Money.of(0, BASE_CURRENCY_UNIT),
+            Money.of(0, BASE_CURRENCY_UNIT),
+            CURRENCY
         );
 
         // Assert spring validator errors
@@ -103,24 +100,20 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void sameSettlementDateTransactionTest() {
 
-        // Setup
-        LocalDate now = LocalDate.now();
-        CurrencyUnit cad = Monetary.getCurrency("CAD");
-
         InvestmentTransaction settledSameDay = new InvestmentTransaction(
-            now, // Same transaction and settlement dates
-            now,
+            BASE_DATE,                                    // Same transaction and settlement dates
+            BASE_DATE,
             InvestmentAction.Buy,
-            new Symbol("VTI"),
-            new Quantity(new BigDecimal(100)),
-            Money.of(100, cad),
-            Money.of(-10_000, cad),
-            Money.of(-5, cad),
-            Money.of(-10_005, cad),
-            new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-            Money.of(0, cad),
-            Money.of(0, cad),
-            new Currency(BASE_CURRENCY)
+            VTI_SYMBOL,
+            HUNDRED_QUANTITY,
+            Money.of(100, BASE_CURRENCY_UNIT),
+            Money.of(-10_000, BASE_CURRENCY_UNIT),
+            Money.of(-5, BASE_CURRENCY_UNIT),
+            Money.of(-10_005, BASE_CURRENCY_UNIT),
+            NON_REG_ACCOUNT,
+            Money.of(0, BASE_CURRENCY_UNIT),
+            Money.of(0, BASE_CURRENCY_UNIT),
+            CURRENCY
         );
 
         // Validation
@@ -137,23 +130,20 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void settledBeforeTransactionDateTest() {
 
-        LocalDate now = LocalDate.now();
-        CurrencyUnit cad = Monetary.getCurrency("CAD");
-
         InvestmentTransaction badSettlementDateTransaction = new InvestmentTransaction(
-            now,
-            now.minusDays(3), // Settled before transaction
+            BASE_DATE,
+            BASE_DATE.minusDays(3),                     // Settled before transaction
             InvestmentAction.Buy,
-            new Symbol("VTI"),
-            new Quantity(new BigDecimal(100)),
-            Money.of(100, cad),
-            Money.of(-10_000, cad),
-            Money.of(-5, cad),
-            Money.of(-10_005, cad),
-            new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-            Money.of(0, cad),
-            Money.of(0, cad),
-            new Currency(BASE_CURRENCY)
+            VTI_SYMBOL,
+            HUNDRED_QUANTITY,
+            Money.of(100, BASE_CURRENCY_UNIT),
+            Money.of(-10_000, BASE_CURRENCY_UNIT),
+            Money.of(-5, BASE_CURRENCY_UNIT),
+            Money.of(-10_005, BASE_CURRENCY_UNIT),
+            NON_REG_ACCOUNT,
+            Money.of(0, BASE_CURRENCY_UNIT),
+            Money.of(0, BASE_CURRENCY_UNIT),
+            CURRENCY
         );
 
         // Assert spring validator errors
@@ -168,23 +158,20 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void invalidGrossAmountTest() {
 
-        LocalDate now = LocalDate.now();
-        CurrencyUnit cad = Monetary.getCurrency("CAD");
-
         InvestmentTransaction invalidGrossAmountTransaction = new InvestmentTransaction(
-            now,
-            now.plusDays(3),
+             BASE_DATE,
+            BASE_DATE.plusDays(3),
             InvestmentAction.Buy,
-            new Symbol("VTI"),
-            new Quantity(new BigDecimal(100)),
-            Money.of(100, cad),
-            Money.of(-10_001, cad), // Should be -$CAD10,000
-            Money.of(-5, cad),
-            Money.of(-10_006, cad),
-            new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-            Money.of(0, cad),
-            Money.of(0, cad),
-            new Currency(BASE_CURRENCY)
+            VTI_SYMBOL,
+            HUNDRED_QUANTITY,
+            Money.of(100, BASE_CURRENCY_UNIT),
+            Money.of(-10_001, BASE_CURRENCY_UNIT),     // Should be -$CAD10,000
+            Money.of(-5, BASE_CURRENCY_UNIT),
+            Money.of(-10_006, BASE_CURRENCY_UNIT),
+            NON_REG_ACCOUNT,
+            Money.of(0, BASE_CURRENCY_UNIT),
+            Money.of(0, BASE_CURRENCY_UNIT),
+            CURRENCY
         );
 
         // Assert spring validator errors
@@ -197,23 +184,46 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void invalidNetAmountTest() {
 
-        LocalDate now = LocalDate.now();
-        CurrencyUnit cad = Monetary.getCurrency("CAD");
+        InvestmentTransaction invalidNetAmountTransaction = new InvestmentTransaction(
+            BASE_DATE,
+            BASE_DATE.plusDays(3),
+            InvestmentAction.Buy,
+            VTI_SYMBOL,
+            HUNDRED_QUANTITY,
+            Money.of(100, BASE_CURRENCY_UNIT),
+            Money.of(-10_000, BASE_CURRENCY_UNIT),
+            Money.of(-5, BASE_CURRENCY_UNIT),
+            Money.of(-10_004, BASE_CURRENCY_UNIT),    // Should be -$CAD10,005
+            NON_REG_ACCOUNT,
+            Money.of(0, BASE_CURRENCY_UNIT),
+            Money.of(0, BASE_CURRENCY_UNIT),
+            CURRENCY
+        );
+
+        // Assert spring validator errors
+        ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
+        expectedErrors.put("netAmount", "netAmountSum");
+
+        assertHasErrors(VALIDATOR, invalidNetAmountTransaction, expectedErrors);
+    }
+
+    @Test
+    public void positiveCommissionTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = new InvestmentTransaction(
-            now,
-            now.plusDays(3),
+            BASE_DATE,
+            BASE_DATE.plusDays(3),
             InvestmentAction.Buy,
-            new Symbol("VTI"),
-            new Quantity(new BigDecimal(100)),
-            Money.of(100, cad),
-            Money.of(-10_000, cad),
-            Money.of(-5, cad),
-            Money.of(-10_004, cad), // Should be -$CAD10,005
-            new Account("123-abc", "foo", AccountType.NON_REGISTERED),
-            Money.of(0, cad),
-            Money.of(0, cad),
-            new Currency(BASE_CURRENCY)
+            VTI_SYMBOL,
+            HUNDRED_QUANTITY,
+            Money.of(100, BASE_CURRENCY_UNIT),
+            Money.of(-10_000, BASE_CURRENCY_UNIT),
+            Money.of(-5, BASE_CURRENCY_UNIT),
+            Money.of(-10_004, BASE_CURRENCY_UNIT),  // Should be -$CAD10,005
+            NON_REG_ACCOUNT,
+            Money.of(0, BASE_CURRENCY_UNIT),
+            Money.of(0, BASE_CURRENCY_UNIT),
+            CURRENCY
         );
 
         // Assert spring validator errors

@@ -36,7 +36,7 @@ public class InvestmentTransaction {
     MonetaryAmount commission;
     MonetaryAmount netAmount;
     Account account;
-    MonetaryAmount returnOnCapital;
+    MonetaryAmount returnOfCapital;
     MonetaryAmount capitalGain;
     Currency currency;
 }

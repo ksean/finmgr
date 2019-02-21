@@ -63,7 +63,7 @@ public class Operations {
                 // Return of Capital reduces ACB. Capital Gains distribution increases ACB
                 case Distribution:
                     MonetaryAmount addend = transaction.getCapitalGain().multiply(transaction.getQuantity().getValue());
-                    MonetaryAmount subtrahend = transaction.getReturnOnCapital().multiply(transaction.getQuantity().getValue());
+                    MonetaryAmount subtrahend = transaction.getReturnOfCapital().multiply(transaction.getQuantity().getValue());
 
                     acb = acb.add(addend).subtract(subtrahend);
 

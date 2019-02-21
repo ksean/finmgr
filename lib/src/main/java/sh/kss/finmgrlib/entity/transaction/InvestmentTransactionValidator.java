@@ -19,11 +19,14 @@ package sh.kss.finmgrlib.entity.transaction;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import sh.kss.finmgrlib.entity.InvestmentAction;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
+import java.math.BigDecimal;
 
 public class InvestmentTransactionValidator implements Validator {
+
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -39,9 +42,56 @@ public class InvestmentTransactionValidator implements Validator {
 
         getSignErrors(transaction, errors);
 
-        getMathErrors(transaction, errors);
+        if (transaction.getAction() != InvestmentAction.Distribution) {
+            getMathErrors(transaction, errors);
+        }
 
         getChronologyErrors(transaction, errors);
+
+        getZeroFieldValueErrors(transaction, errors);
+    }
+
+    private void getZeroFieldValueErrors(InvestmentTransaction transaction, Errors errors) {
+        switch (transaction.getAction()) {
+
+            case Buy:
+                if (transaction.getNetAmount().isZero()) {
+                    errors.rejectValue("netAmount", "netAmountZero");
+                }
+
+                if (transaction.getQuantity().getValue().equals(BigDecimal.ZERO)) {
+                    errors.rejectValue("quantity", "quantityZero");
+                }
+
+                if (transaction.getPrice().isNegativeOrZero()) {
+                    errors.rejectValue("price", "priceNegativeOrZero");
+                }
+
+                if (transaction.getGrossAmount().isZero()) {
+                    errors.rejectValue("quantity", "quantityZero");
+                }
+
+                break;
+
+            case Sell:
+                if (transaction.getQuantity().getValue().equals(BigDecimal.ZERO)) {
+                    errors.rejectValue("quantity", "quantityZero");
+                }
+
+                if (transaction.getPrice().isNegativeOrZero()) {
+                    errors.rejectValue("price", "priceNegativeOrZero");
+                }
+
+                if (transaction.getGrossAmount().isZero()) {
+                    errors.rejectValue("quantity", "quantityZero");
+                }
+
+                break;
+
+            case Distribution:
+            default:
+                break;
+        }
     }
 
     private void getChronologyErrors(InvestmentTransaction transaction, Errors errors) {
@@ -74,19 +124,24 @@ public class InvestmentTransactionValidator implements Validator {
         if (!transaction.getNetAmount().getCurrency().equals(rootCurrency)) {
             errors.rejectValue("netAmount", "currencyInconsistent");
         }
+
         if (!transaction.getGrossAmount().getCurrency().equals(rootCurrency)) {
             errors.rejectValue("grossAmount", "currencyInconsistent");
         }
+
         if (!transaction.getPrice().getCurrency().equals(rootCurrency)) {
             errors.rejectValue("price", "currencyInconsistent");
         }
+
         if (!transaction.getCommission().getCurrency().equals(rootCurrency)) {
             errors.rejectValue("commission", "currencyInconsistent");
         }
+
         if (!transaction.getCapitalGain().getCurrency().equals(rootCurrency)) {
             errors.rejectValue("capitalGain", "currencyInconsistent");
         }
-        if (!transaction.getReturnOnCapital().getCurrency().equals(rootCurrency)) {
+
+        if (!transaction.getReturnOfCapital().getCurrency().equals(rootCurrency)) {
             errors.rejectValue("returnOnCapital", "currencyInconsistent");
         }
     }
@@ -94,8 +149,46 @@ public class InvestmentTransactionValidator implements Validator {
     private void getSignErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Commission always negative or zero
-        if (transaction.getCommission().isPositiveOrZero()) {
-            errors.rejectValue("commission", "commissionPositiveOrZero");
+        if (transaction.getCommission().isPositive()) {
+            errors.rejectValue("commission", "commissionPositive");
+        }
+
+        // Return of capital always positive or zero
+        if (transaction.getReturnOfCapital().isNegative()) {
+            errors.rejectValue("returnOfCapital", "returnOfCapitalNegative");
+        }
+
+        // Capital gain always positive or zero
+        if (transaction.getCapitalGain().isNegative()) {
+            errors.rejectValue("capitalGain", "capitalGainNegative");
+        }
+
+        /* SELL
+           Quantity must be negative, gross must be positive
+         */
+        if (transaction.getAction().equals(InvestmentAction.Sell)) {
+
+            if (transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) > 0) {
+                errors.rejectValue("quantity", "sellQuantityPositive");
+            }
+
+            if (transaction.getGrossAmount().isNegativeOrZero()) {
+                errors.rejectValue("grossAmount", "sellGrossAmountNegativeOrZero");
+            }
+        }
+
+        /* BUY
+           Quantity must be positive, gross must be negative
+         */
+        if (transaction.getAction().equals(InvestmentAction.Buy)) {
+
+            if (transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) < 0) {
+                errors.rejectValue("quantity", "buyQuantityNegative");
+            }
+
+            if (transaction.getGrossAmount().isPositiveOrZero()) {
+                errors.rejectValue("grossAmount", "buyGrossAmountPositiveOrZero");
+            }
         }
     }
 }
