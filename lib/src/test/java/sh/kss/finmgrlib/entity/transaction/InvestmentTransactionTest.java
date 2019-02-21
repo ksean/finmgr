@@ -53,7 +53,8 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void validTransactionFixtures() {
 
         TEST_TRANSACTIONS.forEach(fixture -> {
-            // Validation
+
+            // Run Validation
             Errors errors = new BeanPropertyBindingResult(fixture, fixture.toString());
             VALIDATOR.validate(fixture, errors);
 
@@ -81,8 +82,8 @@ public class InvestmentTransactionTest extends TransactionTest {
             Money.of(-5, BASE_CURRENCY_UNIT),
             Money.of(-9_995, usd),                            // should be -$CAD10,005
             NON_REG_ACCOUNT,
-            Money.of(0, BASE_CURRENCY_UNIT),
-            Money.of(0, BASE_CURRENCY_UNIT),
+            ZERO_CAD,
+            ZERO_CAD,
             CURRENCY
         );
 
@@ -111,8 +112,8 @@ public class InvestmentTransactionTest extends TransactionTest {
             Money.of(-5, BASE_CURRENCY_UNIT),
             Money.of(-10_005, BASE_CURRENCY_UNIT),
             NON_REG_ACCOUNT,
-            Money.of(0, BASE_CURRENCY_UNIT),
-            Money.of(0, BASE_CURRENCY_UNIT),
+            ZERO_CAD,
+            ZERO_CAD,
             CURRENCY
         );
 
@@ -141,8 +142,8 @@ public class InvestmentTransactionTest extends TransactionTest {
             Money.of(-5, BASE_CURRENCY_UNIT),
             Money.of(-10_005, BASE_CURRENCY_UNIT),
             NON_REG_ACCOUNT,
-            Money.of(0, BASE_CURRENCY_UNIT),
-            Money.of(0, BASE_CURRENCY_UNIT),
+            ZERO_CAD,
+            ZERO_CAD,
             CURRENCY
         );
 
@@ -159,7 +160,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidGrossAmountTest() {
 
         InvestmentTransaction invalidGrossAmountTransaction = new InvestmentTransaction(
-             BASE_DATE,
+            BASE_DATE,
             BASE_DATE.plusDays(3),
             InvestmentAction.Buy,
             VTI_SYMBOL,
@@ -169,8 +170,8 @@ public class InvestmentTransactionTest extends TransactionTest {
             Money.of(-5, BASE_CURRENCY_UNIT),
             Money.of(-10_006, BASE_CURRENCY_UNIT),
             NON_REG_ACCOUNT,
-            Money.of(0, BASE_CURRENCY_UNIT),
-            Money.of(0, BASE_CURRENCY_UNIT),
+            ZERO_CAD,
+            ZERO_CAD,
             CURRENCY
         );
 
@@ -195,8 +196,8 @@ public class InvestmentTransactionTest extends TransactionTest {
             Money.of(-5, BASE_CURRENCY_UNIT),
             Money.of(-10_004, BASE_CURRENCY_UNIT),    // Should be -$CAD10,005
             NON_REG_ACCOUNT,
-            Money.of(0, BASE_CURRENCY_UNIT),
-            Money.of(0, BASE_CURRENCY_UNIT),
+            ZERO_CAD,
+            ZERO_CAD,
             CURRENCY
         );
 
@@ -221,8 +222,8 @@ public class InvestmentTransactionTest extends TransactionTest {
             Money.of(-5, BASE_CURRENCY_UNIT),
             Money.of(-10_004, BASE_CURRENCY_UNIT),  // Should be -$CAD10,005
             NON_REG_ACCOUNT,
-            Money.of(0, BASE_CURRENCY_UNIT),
-            Money.of(0, BASE_CURRENCY_UNIT),
+            ZERO_CAD,
+            ZERO_CAD,
             CURRENCY
         );
 

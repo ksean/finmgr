@@ -37,7 +37,6 @@ public class Operations {
 
         MonetaryAmount acb = Money.of(0, currency);
         BigDecimal quantity = new BigDecimal("0");
-        final BigDecimal ZERO = new BigDecimal("0");
 
         for (InvestmentTransaction transaction : transactions) {
 
@@ -62,8 +61,8 @@ public class Operations {
 
                 // Return of Capital reduces ACB. Capital Gains distribution increases ACB
                 case Distribution:
-                    MonetaryAmount addend = transaction.getCapitalGain().multiply(transaction.getQuantity().getValue());
-                    MonetaryAmount subtrahend = transaction.getReturnOfCapital().multiply(transaction.getQuantity().getValue());
+                    MonetaryAmount addend = transaction.getCapitalGain().multiply(quantity).negate();
+                    MonetaryAmount subtrahend = transaction.getReturnOfCapital().multiply(quantity).negate();
 
                     acb = acb.add(addend).subtract(subtrahend);
 
@@ -73,13 +72,13 @@ public class Operations {
                     break;
             }
 
-            if (quantity.equals(ZERO)) {
+            if (quantity.equals(BigDecimal.ZERO)) {
 
                 acb = Money.of(0, currency);
             }
         }
 
-        if (quantity.equals(ZERO)) {
+        if (quantity.equals(BigDecimal.ZERO)) {
 
             return acb;
         }

@@ -20,6 +20,7 @@ public class FinmgrTest {
     protected final Currency CURRENCY = new Currency(BASE_CURRENCY);
     protected final CurrencyUnit BASE_CURRENCY_UNIT = Monetary.getCurrency(BASE_CURRENCY);
     protected final LocalDate BASE_DATE = LocalDate.of(1980, 1, 1);
+    protected final Money ZERO_CAD = Money.of(0, BASE_CURRENCY_UNIT);
 
     // VALID buy and sell transactions
     protected final InvestmentTransaction BUY_VTI = new InvestmentTransaction(
@@ -33,8 +34,8 @@ public class FinmgrTest {
         Money.of(-5, BASE_CURRENCY_UNIT),
         Money.of(-10_005, BASE_CURRENCY_UNIT),
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
+        ZERO_CAD,
         CURRENCY
     );
 
@@ -49,8 +50,8 @@ public class FinmgrTest {
         Money.of(-5, BASE_CURRENCY_UNIT),
         Money.of(-10_505, BASE_CURRENCY_UNIT),
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
+        ZERO_CAD,
         CURRENCY
     );
 
@@ -65,8 +66,8 @@ public class FinmgrTest {
         Money.of(-5, BASE_CURRENCY_UNIT),
         Money.of(9_995, BASE_CURRENCY_UNIT),
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
+        ZERO_CAD,
         CURRENCY
     );
 
@@ -81,8 +82,8 @@ public class FinmgrTest {
         Money.of(-5, BASE_CURRENCY_UNIT),
         Money.of(970, BASE_CURRENCY_UNIT),
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
+        ZERO_CAD,
         CURRENCY
     );
 
@@ -91,46 +92,46 @@ public class FinmgrTest {
         BASE_DATE.plusDays(3),
         InvestmentAction.Distribution,
         VTI_SYMBOL,
-        new Quantity(new BigDecimal(0)),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        new Quantity(BigDecimal.ZERO),
+        ZERO_CAD,
+        ZERO_CAD,
+        ZERO_CAD,
         Money.of(250, BASE_CURRENCY_UNIT),
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
+        ZERO_CAD,
         CURRENCY
     );
 
-    protected final InvestmentTransaction VTI_ROC = new InvestmentTransaction(
+    protected final InvestmentTransaction VTI_RETURN_OF_CAPITAL = new InvestmentTransaction(
         BASE_DATE,
         BASE_DATE.plusDays(3),
         InvestmentAction.Distribution,
         VTI_SYMBOL,
-        new Quantity(new BigDecimal(0)),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(250, BASE_CURRENCY_UNIT),
+        new Quantity(BigDecimal.ZERO),
+        ZERO_CAD,
+        ZERO_CAD,
+        ZERO_CAD,
+        ZERO_CAD,
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        Money.of(1, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
         CURRENCY
     );
 
-    protected final InvestmentTransaction VTI_CAPITALGAIN = new InvestmentTransaction(
+    protected final InvestmentTransaction VTI_CAPITAL_GAIN = new InvestmentTransaction(
         BASE_DATE,
         BASE_DATE.plusDays(3),
         InvestmentAction.Distribution,
         VTI_SYMBOL,
-        new Quantity(new BigDecimal(0)),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(250, BASE_CURRENCY_UNIT),
+        new Quantity(BigDecimal.ZERO),
+        ZERO_CAD,
+        ZERO_CAD,
+        ZERO_CAD,
+        ZERO_CAD,
         NON_REG_ACCOUNT,
-        Money.of(0, BASE_CURRENCY_UNIT),
-        Money.of(0, BASE_CURRENCY_UNIT),
+        ZERO_CAD,
+        Money.of(0.75, BASE_CURRENCY_UNIT),
         CURRENCY
     );
 }

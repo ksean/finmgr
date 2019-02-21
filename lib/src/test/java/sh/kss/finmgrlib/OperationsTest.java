@@ -94,4 +94,44 @@ public class OperationsTest extends FinmgrTest {
             acb
         );
     }
+
+    @Test
+    public void returnOfCapitalReducesACBTest() {
+
+        // Buy at two different prices
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE,
+            VTI_RETURN_OF_CAPITAL
+        );
+
+        // Calculate ACB
+        MonetaryAmount acb = Operations.currentACB(transactions);
+
+        // Assert $CAD101.55 ACB -> RoC $1 per share
+        assertEquals(
+            Money.of(101.55, BASE_CURRENCY),
+            acb
+        );
+    }
+
+    @Test
+    public void capitalGainIncreasesACBTest() {
+
+        // Buy at two different prices
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE,
+            VTI_CAPITAL_GAIN
+        );
+
+        // Calculate ACB
+        MonetaryAmount acb = Operations.currentACB(transactions);
+
+        // Assert $CAD103.30 ACB -> Capital gain $0.75 per share
+        assertEquals(
+            Money.of(103.30, BASE_CURRENCY),
+            acb
+        );
+    }
 }
