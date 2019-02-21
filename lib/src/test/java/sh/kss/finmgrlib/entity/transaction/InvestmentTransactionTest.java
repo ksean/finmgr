@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2018 Kennedy Software Solutions Inc.
+    Copyright (C) 2019 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,10 @@ public class InvestmentTransactionTest extends TransactionTest {
         BUY_VTI,
         BUY_VTI_HIGHER_PRICE,
         SELL_VTI,
-        SELL_VTI_LOWER_PRICE
+        SELL_VTI_LOWER_PRICE,
+        VTI_DIVIDEND,
+        VTI_RETURN_OF_CAPITAL,
+        VTI_CAPITAL_GAIN
     );
 
     @Test

@@ -1,9 +1,9 @@
-finmgr-lib
+finmgr-web
 ===
 
 ![Travis CI](https://travis-ci.org/ksean/finmgr.svg?branch=master)
 
-A library for defining financial transactions, and providing built-in financial functions to operate on them.
+A simple web interface implementation of the finmgr-core API project.
 
 ## Requirements
 
