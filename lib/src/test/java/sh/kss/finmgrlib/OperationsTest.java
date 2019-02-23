@@ -151,4 +151,47 @@ public class OperationsTest extends FinmgrTest {
             acb
         );
     }
+
+    @Test
+    public void sellingAllQuantityResetsACBTest() {
+
+        // Buy at two different prices
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE,
+            SELL_VTI,
+            SELL_VTI
+        );
+
+        // Calculate ACB
+        MonetaryAmount acb = Operations.currentACB(transactions);
+
+        // Assert $CAD0 ACB -> sold all units
+        assertEquals(
+            Money.of(0, BASE_CURRENCY),
+            acb
+        );
+    }
+
+    @Test
+    public void sellAllRebuyACBTest() {
+
+        // Buy at two different prices
+        List<InvestmentTransaction> transactions = ImmutableList.of(
+            BUY_VTI,
+            BUY_VTI_HIGHER_PRICE,
+            SELL_VTI,
+            SELL_VTI,
+            BUY_VTI
+        );
+
+        // Calculate ACB
+        MonetaryAmount acb = Operations.currentACB(transactions);
+
+        // Assert $CAD100.05 ACB -> sold all units, then rebuy @ $100
+        assertEquals(
+            Money.of(100.05, BASE_CURRENCY),
+            acb
+        );
+    }
 }
