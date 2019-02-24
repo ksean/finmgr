@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package sh.kss.finmgrlib;
+package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableList;
 import org.javamoney.moneta.Money;
@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sh.kss.finmgrlib.FinmgrTest;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import javax.money.MonetaryAmount;
@@ -32,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class OperationsTest extends FinmgrTest {
+public class OperationTest extends FinmgrTest {
 
     @Test
     public void zeroQuantityACBTest() {
@@ -44,7 +45,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $0 ACB
         assertEquals(
@@ -63,7 +64,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD102.55 ACB
         assertEquals(
@@ -83,7 +84,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD102.55 ACB
         assertEquals(
@@ -103,7 +104,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD102.55 ACB
         assertEquals(
@@ -123,7 +124,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD101.55 ACB -> RoC $1 per share
         assertEquals(
@@ -143,7 +144,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD103.30 ACB -> Capital gain $0.75 per share
         assertEquals(
@@ -164,7 +165,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD0 ACB -> sold all units
         assertEquals(
@@ -186,7 +187,7 @@ public class OperationsTest extends FinmgrTest {
         );
 
         // Calculate ACB
-        MonetaryAmount acb = Operations.currentACB(transactions);
+        MonetaryAmount acb = Operation.currentACB(transactions);
 
         // Assert $CAD100.05 ACB -> sold all units, then rebuy @ $100
         assertEquals(

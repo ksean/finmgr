@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package sh.kss.finmgrlib;
+package sh.kss.finmgrlib.operation;
 
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class Operations {
+public abstract class Operation {
 
     public static MonetaryAmount currentACB(List<InvestmentTransaction> transactions) {
 

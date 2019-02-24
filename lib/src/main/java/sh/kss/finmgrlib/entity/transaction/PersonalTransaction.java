@@ -17,26 +17,28 @@
  */
 package sh.kss.finmgrlib.entity.transaction;
 
+import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.Wither;
 import sh.kss.finmgrlib.entity.Account;
+import sh.kss.finmgrlib.entity.Currency;
 import sh.kss.finmgrlib.entity.TransactionCategory;
 
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
 @Value
+@Wither
+@Builder(toBuilder = true)
 public class PersonalTransaction {
+
+    // TODO: Immutable inheritance with builder pattern for member fields:
     LocalDate transactionDate;
     LocalDate settlementDate;
-    MonetaryAmount amount;
     Account account;
+    MonetaryAmount netAmount;
+    Currency currency;
     String description;
+
     TransactionCategory transactionCategory;
-
-    public boolean isValid() {
-
-        //TODO: Iterate all validations
-
-        return true;
-    }
 }

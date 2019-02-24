@@ -17,26 +17,33 @@
  */
 package sh.kss.finmgrlib.entity.transaction;
 
+import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.Wither;
 import sh.kss.finmgrlib.entity.*;
 
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
 @Value
+@Wither
+@Builder(toBuilder = true)
 public class InvestmentTransaction {
 
+    // TODO: Immutable inheritance with builder pattern for member fields:
     LocalDate transactionDate;
     LocalDate settlementDate;
+    Account account;
+    MonetaryAmount netAmount;
+    Currency currency;
+    String description;
+
     InvestmentAction action;
     Symbol symbol;
     Quantity quantity;
     MonetaryAmount price;
     MonetaryAmount grossAmount;
     MonetaryAmount commission;
-    MonetaryAmount netAmount;
-    Account account;
     MonetaryAmount returnOfCapital;
     MonetaryAmount capitalGain;
-    Currency currency;
 }

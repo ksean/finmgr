@@ -28,7 +28,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import sh.kss.finmgrlib.entity.InvestmentAction;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -74,21 +73,9 @@ public class InvestmentTransactionTest extends TransactionTest {
         // Setup
         CurrencyUnit usd = Monetary.getCurrency("USD");
 
-        InvestmentTransaction inconsistentTransaction = new InvestmentTransaction(
-            BASE_DATE,
-            BASE_DATE.plusDays(3),
-            InvestmentAction.Buy,
-            VTI_SYMBOL,
-            HUNDRED_QUANTITY,
-            Money.of(100, BASE_CURRENCY_UNIT),
-            Money.of(-10_001, BASE_CURRENCY_UNIT),            // should be -$CAD10,000
-            Money.of(-5, BASE_CURRENCY_UNIT),
-            Money.of(-9_995, usd),                            // should be -$CAD10,005
-            NON_REG_ACCOUNT,
-            ZERO_CAD,
-            ZERO_CAD,
-            CURRENCY
-        );
+        InvestmentTransaction inconsistentTransaction = BUY_VTI
+        .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT))
+        .withNetAmount(Money.of(-9_995, usd));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -104,21 +91,8 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void sameSettlementDateTransactionTest() {
 
-        InvestmentTransaction settledSameDay = new InvestmentTransaction(
-            BASE_DATE,                                    // Same transaction and settlement dates
-            BASE_DATE,
-            InvestmentAction.Buy,
-            VTI_SYMBOL,
-            HUNDRED_QUANTITY,
-            Money.of(100, BASE_CURRENCY_UNIT),
-            Money.of(-10_000, BASE_CURRENCY_UNIT),
-            Money.of(-5, BASE_CURRENCY_UNIT),
-            Money.of(-10_005, BASE_CURRENCY_UNIT),
-            NON_REG_ACCOUNT,
-            ZERO_CAD,
-            ZERO_CAD,
-            CURRENCY
-        );
+        InvestmentTransaction settledSameDay = BUY_VTI
+        .withSettlementDate(BUY_VTI.getTransactionDate());
 
         // Validation
         Errors errors = new BeanPropertyBindingResult(settledSameDay, "settledSameDay");
@@ -134,21 +108,8 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void settledBeforeTransactionDateTest() {
 
-        InvestmentTransaction badSettlementDateTransaction = new InvestmentTransaction(
-            BASE_DATE,
-            BASE_DATE.minusDays(3),                     // Settled before transaction
-            InvestmentAction.Buy,
-            VTI_SYMBOL,
-            HUNDRED_QUANTITY,
-            Money.of(100, BASE_CURRENCY_UNIT),
-            Money.of(-10_000, BASE_CURRENCY_UNIT),
-            Money.of(-5, BASE_CURRENCY_UNIT),
-            Money.of(-10_005, BASE_CURRENCY_UNIT),
-            NON_REG_ACCOUNT,
-            ZERO_CAD,
-            ZERO_CAD,
-            CURRENCY
-        );
+        InvestmentTransaction badSettlementDateTransaction = BUY_VTI
+        .withSettlementDate(BUY_VTI.getTransactionDate().minusDays(1));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -162,25 +123,13 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void invalidGrossAmountTest() {
 
-        InvestmentTransaction invalidGrossAmountTransaction = new InvestmentTransaction(
-            BASE_DATE,
-            BASE_DATE.plusDays(3),
-            InvestmentAction.Buy,
-            VTI_SYMBOL,
-            HUNDRED_QUANTITY,
-            Money.of(100, BASE_CURRENCY_UNIT),
-            Money.of(-10_001, BASE_CURRENCY_UNIT),     // Should be -$CAD10,000
-            Money.of(-5, BASE_CURRENCY_UNIT),
-            Money.of(-10_006, BASE_CURRENCY_UNIT),
-            NON_REG_ACCOUNT,
-            ZERO_CAD,
-            ZERO_CAD,
-            CURRENCY
-        );
+        InvestmentTransaction invalidGrossAmountTransaction = BUY_VTI
+        .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
         expectedErrors.put("grossAmount", "grossAmountProduct");
+        expectedErrors.put("netAmount", "netAmountSum");
 
         assertHasErrors(VALIDATOR, invalidGrossAmountTransaction, expectedErrors);
     }
@@ -188,21 +137,8 @@ public class InvestmentTransactionTest extends TransactionTest {
     @Test
     public void invalidNetAmountTest() {
 
-        InvestmentTransaction invalidNetAmountTransaction = new InvestmentTransaction(
-            BASE_DATE,
-            BASE_DATE.plusDays(3),
-            InvestmentAction.Buy,
-            VTI_SYMBOL,
-            HUNDRED_QUANTITY,
-            Money.of(100, BASE_CURRENCY_UNIT),
-            Money.of(-10_000, BASE_CURRENCY_UNIT),
-            Money.of(-5, BASE_CURRENCY_UNIT),
-            Money.of(-10_004, BASE_CURRENCY_UNIT),    // Should be -$CAD10,005
-            NON_REG_ACCOUNT,
-            ZERO_CAD,
-            ZERO_CAD,
-            CURRENCY
-        );
+        InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
+        .withNetAmount(Money.of(-10_004, BASE_CURRENCY_UNIT));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -212,26 +148,14 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
     @Test
-    public void positiveCommissionTest() {
+    public void invalidCommissionTest() {
 
-        InvestmentTransaction invalidNetAmountTransaction = new InvestmentTransaction(
-            BASE_DATE,
-            BASE_DATE.plusDays(3),
-            InvestmentAction.Buy,
-            VTI_SYMBOL,
-            HUNDRED_QUANTITY,
-            Money.of(100, BASE_CURRENCY_UNIT),
-            Money.of(-10_000, BASE_CURRENCY_UNIT),
-            Money.of(-5, BASE_CURRENCY_UNIT),
-            Money.of(-10_004, BASE_CURRENCY_UNIT),  // Should be -$CAD10,005
-            NON_REG_ACCOUNT,
-            ZERO_CAD,
-            ZERO_CAD,
-            CURRENCY
-        );
+        InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
+        .withCommission(Money.of(5, BASE_CURRENCY_UNIT));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
+        expectedErrors.put("commission", "commissionPositive");
         expectedErrors.put("netAmount", "netAmountSum");
 
         assertHasErrors(VALIDATOR, invalidNetAmountTransaction, expectedErrors);
