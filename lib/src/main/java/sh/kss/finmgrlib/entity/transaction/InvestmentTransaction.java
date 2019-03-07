@@ -31,19 +31,34 @@ import java.time.LocalDate;
 public class InvestmentTransaction {
 
     // TODO: Immutable inheritance with builder pattern for member fields:
+    // TODO: Consider two subclasses -> distributions & buy/sell
+    // What, where, when this transaction happened
     LocalDate transactionDate;
     LocalDate settlementDate;
+    InvestmentAction action;
     Account account;
-    MonetaryAmount netAmount;
     Currency currency;
+    Symbol symbol;
     String description;
 
-    InvestmentAction action;
-    Symbol symbol;
-    Quantity quantity;
+    // Details of transactions that change the quantity of the security
     MonetaryAmount price;
+    Quantity quantity;
     MonetaryAmount grossAmount;
     MonetaryAmount commission;
+    MonetaryAmount netAmount;
+
+    // Most frequently referenced distribution
     MonetaryAmount returnOfCapital;
     MonetaryAmount capitalGain;
+    MonetaryAmount eligibleDividend;
+    MonetaryAmount nonEligibleDividend;
+
+    MonetaryAmount foreignBusinessIncome;
+    MonetaryAmount foreignNonBusinessIncome;
+    MonetaryAmount otherIncome;
+    MonetaryAmount nonReportableDistribution;
+    MonetaryAmount capitalGainsDeductionEligible;
+    MonetaryAmount foreignBusinessIncomeTaxPaid;
+    MonetaryAmount foreignNonBusinessIncomeTaxPaid;
 }

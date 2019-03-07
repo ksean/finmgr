@@ -59,12 +59,11 @@ public abstract class Operation {
 
                     break;
 
-                // Return of Capital reduces ACB. Capital Gains distribution increases ACB
+                // Return of Capital reduces ACB
                 case Distribution:
-                    MonetaryAmount addend = transaction.getCapitalGain().multiply(quantity).negate();
                     MonetaryAmount subtrahend = transaction.getReturnOfCapital().multiply(quantity).negate();
 
-                    acb = acb.add(addend).subtract(subtrahend);
+                    acb = acb.subtract(subtrahend);
 
                     break;
 

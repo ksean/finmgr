@@ -134,26 +134,6 @@ public class OperationTest extends FinmgrTest {
     }
 
     @Test
-    public void capitalGainIncreasesACBTest() {
-
-        // Buy at two different prices
-        List<InvestmentTransaction> transactions = ImmutableList.of(
-            BUY_VTI,
-            BUY_VTI_HIGHER_PRICE,
-            VTI_CAPITAL_GAIN
-        );
-
-        // Calculate ACB
-        MonetaryAmount acb = Operation.currentACB(transactions);
-
-        // Assert $CAD103.30 ACB -> Capital gain $0.75 per share
-        assertEquals(
-            Money.of(103.30, BASE_CURRENCY),
-            acb
-        );
-    }
-
-    @Test
     public void sellingAllQuantityResetsACBTest() {
 
         // Buy at two different prices
