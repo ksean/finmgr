@@ -17,15 +17,33 @@
  */
 package sh.kss.finmgrlib.entity;
 
+import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.Wither;
+import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+import sh.kss.finmgrlib.operation.Operation;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-@Wither
+// A run is a list of transactions and some set of operations to run against each transaction
 @Value
-public class Quantity {
-    BigDecimal value;
+@Wither
+@Builder(toBuilder = true)
+public class Run {
 
-    public static final Quantity ZERO_QUANTITY = new Quantity(BigDecimal.ZERO);
+    Portfolio portfolio;
+    List<Operation> operations;
+    List<InvestmentTransaction> transactions;
+
+    public static Portfolio process(Run run) {
+
+        for(InvestmentTransaction transaction : run.transactions) {
+            for(Operation operation : run.operations) {
+
+                run = run.withPortfolio(operation.process(run.portfolio, transaction));
+            }
+        }
+
+        return run.getPortfolio();
+    }
 }

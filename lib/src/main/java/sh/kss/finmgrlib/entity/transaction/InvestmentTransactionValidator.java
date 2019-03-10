@@ -46,7 +46,7 @@ public class InvestmentTransactionValidator implements Validator {
             getMathErrors(transaction, errors);
         }
 
-        getChronologyErrors(transaction, errors);
+        getChronologicalErrors(transaction, errors);
 
         getZeroFieldValueErrors(transaction, errors);
     }
@@ -94,7 +94,7 @@ public class InvestmentTransactionValidator implements Validator {
         }
     }
 
-    private void getChronologyErrors(InvestmentTransaction transaction, Errors errors) {
+    private void getChronologicalErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Settled on or after transaction
         if (transaction.getSettlementDate().isBefore(transaction.getTransactionDate())) {

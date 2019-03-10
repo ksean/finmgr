@@ -22,6 +22,8 @@ import lombok.Value;
 import lombok.experimental.Wither;
 import sh.kss.finmgrlib.entity.*;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
@@ -61,4 +63,19 @@ public class InvestmentTransaction {
     MonetaryAmount capitalGainsDeductionEligible;
     MonetaryAmount foreignBusinessIncomeTaxPaid;
     MonetaryAmount foreignNonBusinessIncomeTaxPaid;
+
+    public String identifier(String opcode) {
+        return new StringBuilder()
+            .append(account.getAccountType())
+            .append("-")
+            .append(symbol.getValue())
+            .append("-")
+            .append(opcode)
+            .toString();
+    }
+
+    public CurrencyUnit currencyUnit() {
+
+        return Monetary.getCurrency(currency.getValue());
+    }
 }

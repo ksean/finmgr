@@ -19,6 +19,7 @@ package sh.kss.finmgrlib.operation;
 
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
+import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import javax.money.CurrencyUnit;
@@ -29,6 +30,8 @@ import java.util.List;
 
 @Service
 public abstract class Operation {
+
+    abstract public Portfolio process(Portfolio portfolio, InvestmentTransaction investmentTransaction);
 
     public static MonetaryAmount currentACB(List<InvestmentTransaction> transactions) {
 
