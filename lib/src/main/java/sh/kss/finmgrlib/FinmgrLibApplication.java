@@ -19,11 +19,27 @@ package sh.kss.finmgrlib;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+import sh.kss.finmgrlib.parse.PdfParser;
+
+import java.util.Collections;
+import java.util.List;
 
 @SpringBootApplication
 public class FinmgrLibApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(FinmgrLibApplication.class, args);
+
+        // Temporarily test any pdf document in classpath
+        List<InvestmentTransaction> transactions = PdfParser.fromPath("/home/s/dev/java/finmgr/lib/src/main/resources/");
+
+        Collections.sort(transactions);
+
+        for (InvestmentTransaction transaction : transactions) {
+            System.out.println(transaction);
+        }
+
     }
 }

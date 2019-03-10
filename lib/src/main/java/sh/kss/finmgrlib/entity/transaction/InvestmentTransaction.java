@@ -30,7 +30,7 @@ import java.time.LocalDate;
 @Value
 @Wither
 @Builder(toBuilder = true)
-public class InvestmentTransaction {
+public class InvestmentTransaction implements Comparable<InvestmentTransaction> {
 
     // TODO: Immutable inheritance with builder pattern for member fields:
     // TODO: Consider two subclasses -> distributions & buy/sell
@@ -77,5 +77,11 @@ public class InvestmentTransaction {
     public CurrencyUnit currencyUnit() {
 
         return Monetary.getCurrency(currency.getValue());
+    }
+
+    @Override
+    public int compareTo(InvestmentTransaction transaction) {
+
+        return getTransactionDate().compareTo(transaction.getTransactionDate());
     }
 }

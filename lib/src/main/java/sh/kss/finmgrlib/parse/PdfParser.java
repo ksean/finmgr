@@ -38,11 +38,14 @@ public class PdfParser {
     public static List<InvestmentTransaction> fromPath(String path) {
 
         try {
+
             File[] files = new File(path).listFiles();
 
             return fromFiles(files);
-        } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage());
+        }
+        catch (Exception e) {
+
+            e.printStackTrace();
         }
 
         return Collections.emptyList();
@@ -53,6 +56,7 @@ public class PdfParser {
         List<InvestmentTransaction> transactions = new ArrayList<>();
 
         for (File file : files) {
+
             transactions.addAll(fromFile(file));
         }
 
@@ -73,17 +77,40 @@ public class PdfParser {
                 String pdfFileInText = tStripper.getText(document);
                 List<String> lines = Arrays.asList(pdfFileInText.split("\\r?\\n"));
 
+                // Print pdf contents if file name matches
+                if (file.getName().equals("08-Aug.pdf")) {
+
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    for (int i = 0; i < lines.size(); i++) {
+                        stringBuilder
+                        .append(i)
+                        .append(": ")
+                        .append(lines.get(i))
+                        .append("\n");
+                    }
+
+                    System.out.println(stringBuilder);
+
+                }
+
+
                 for (Parser parser : PARSERS) {
 
                     if (parser.isMatch(lines)) {
+
+                        System.out.println("MATCHED: " + file.getName());
+
                         return parser.parse(lines);
                     }
                 }
 
             }
 
-        } catch (IOException ioe) {
-            System.out.println(ioe.getLocalizedMessage());
+        }
+        catch (IOException ioe) {
+
+            ioe.printStackTrace();
         }
 
         return Collections.emptyList();

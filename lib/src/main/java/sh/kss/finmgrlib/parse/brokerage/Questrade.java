@@ -17,29 +17,66 @@
  */
 package sh.kss.finmgrlib.parse.brokerage;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import org.javamoney.moneta.Money;
+import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.Parser;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
+import javax.money.MonetaryAmount;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Questrade extends Parser {
 
-    @Override
-    public boolean isMatch(List<String> lines) {
+    private final Map<String, InvestmentAction> actionMap = ImmutableMap.<String, InvestmentAction>builder()
+        .put("buy", InvestmentAction.Buy)
+        .put("sell", InvestmentAction.Sell)
+        .build();
 
-        return lines.get(37).trim().endsWith("Questrade");
+    private InvestmentAction getAction(final String action) {
+
+        return actionMap.getOrDefault(action, InvestmentAction.Other);
+    }
+
+    private MonetaryAmount getMoney(final String amount, CurrencyUnit currencyUnit) {
+
+        return Money.of(new BigDecimal(amount.replaceAll("[^\\d.]", "")), currencyUnit);
+    }
+
+    private Quantity getQuantity(final String quantity) {
+
+        return new Quantity(new BigDecimal(quantity.replaceAll("[^\\d.]", "")));
     }
 
     @Override
-    public List<InvestmentTransaction> parse(List<String> lines) {
+    public boolean isMatch(final List<String> lines) {
+
+        return lines.get(37).trim().endsWith("Questrade")
+            || lines.get(16).trim().endsWith("Questrade, Inc.");
+    }
+
+    @Override
+    public List<InvestmentTransaction> parse(final List<String> lines) {
 
         try {
-            CurrencyUnit currency = Monetary.getCurrency("CAD");
+
+            Currency currency = new Currency("CAD");
+            CurrencyUnit currencyUnit = Monetary.getCurrency(currency.getValue());
+            Account account = new Account("id", "default", AccountType.NON_REGISTERED);
+            Symbol symbol = new Symbol("SYMBOL");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+
+            List<InvestmentTransaction> transactions = Lists.newArrayList();
 
             for (String line : lines) {
 
@@ -47,30 +84,42 @@ public class Questrade extends Parser {
                 + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
                 + "(?<type>\\w+) "
                 + "(?<description>.+) "
-                + "(?<quantity>[\\d|,]+) "
-                + "(?<price>\\$[\\d|,]+\\.\\d{3}) "
-                + "(?<gross>\\(?\\$[\\d|,]+\\.\\d{2}\\)?) "
-                + "(?<commission>\\(?\\$[\\d|,]+\\.\\d{2}\\)?) "
-                + "(?<net>\\(?\\$[\\d|,]+\\.\\d{2}\\)?)");
+                + "(?<quantity>[\\d|,]+)\\s(?:[\\-\\s]+)"
+                + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
+                + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
+                + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
+                + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)"
+                );
 
                 Matcher transaction = transactionPattern.matcher(line.trim());
 
                 if (transaction.find()) {
+                    System.out.println("adding: " + line.trim());
+                    transactions.add(
 
-                    System.out.println("transaction: " + transaction.group("transaction"));
-                    System.out.println("settlement: " + transaction.group("settlement"));
-                    System.out.println("type: " + transaction.group("type"));
-                    System.out.println("description: " + transaction.group("description"));
-                    System.out.println("quantity: " + transaction.group("quantity"));
-                    System.out.println("price: " + transaction.group("price"));
-                    System.out.println("gross: " + transaction.group("gross"));
-                    System.out.println("commission: " + transaction.group("commission"));
-                    System.out.println("net: " + transaction.group("net"));
+                        InvestmentTransaction.builder()
+                            .transactionDate(LocalDate.parse(transaction.group("transaction"), dateTimeFormatter))
+                            .settlementDate(LocalDate.parse(transaction.group("settlement"), dateTimeFormatter))
+                            .action(getAction(transaction.group("type")))
+                            .account(account)
+                            .currency(currency)
+                            .symbol(symbol)
+                            .description(transaction.group("description").trim())
+                            .price(getMoney(transaction.group("price"), currencyUnit))
+                            .quantity(getQuantity(transaction.group("quantity")))
+                            .grossAmount(getMoney(transaction.group("gross"), currencyUnit))
+                            .commission(getMoney(transaction.group("commission"), currencyUnit))
+                            .netAmount(getMoney(transaction.group("net"), currencyUnit))
+                            .build()
+                    );
                 }
             }
-        } catch (NullPointerException npe) {
 
-            System.out.println(npe.getLocalizedMessage());
+            return transactions;
+        }
+        catch (NullPointerException npe) {
+
+            npe.printStackTrace();
         }
 
         return Collections.emptyList();
