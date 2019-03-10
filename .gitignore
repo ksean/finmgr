@@ -19,6 +19,8 @@ node/
 *.iml
 *.ipr
 
+*.pdf
+
 ### NetBeans ###
 /nbproject/private/
 /build/
