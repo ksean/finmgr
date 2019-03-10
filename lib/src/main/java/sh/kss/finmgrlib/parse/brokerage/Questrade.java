@@ -50,7 +50,11 @@ public class Questrade extends Parser {
 
     private MonetaryAmount getMoney(final String amount, CurrencyUnit currencyUnit) {
 
-        return Money.of(new BigDecimal(amount.replaceAll("[^\\d.]", "")), currencyUnit);
+        return Money.of(
+            new BigDecimal(amount
+                .replaceAll("-", "0")
+                .replaceAll("[^\\d.]", "")
+            ), currencyUnit);
     }
 
     private Quantity getQuantity(final String quantity) {
@@ -84,10 +88,10 @@ public class Questrade extends Parser {
                 + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
                 + "(?<type>\\w+) "
                 + "(?<description>.+) "
-                + "(?<quantity>[\\d|,]+)\\s(?:[\\-\\s]+)"
+                + "(?<quantity>[\\d|,]+)\\s[\\- ]*"
                 + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
                 + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
-                + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
+                + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
                 + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)"
                 );
 

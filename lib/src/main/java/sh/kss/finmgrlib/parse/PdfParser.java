@@ -78,7 +78,7 @@ public class PdfParser {
                 List<String> lines = Arrays.asList(pdfFileInText.split("\\r?\\n"));
 
                 // Print pdf contents if file name matches
-                if (file.getName().equals("08-Aug.pdf")) {
+                if (file.getName().equals("06-Jun.pdf")) {
 
                     StringBuilder stringBuilder = new StringBuilder();
 
