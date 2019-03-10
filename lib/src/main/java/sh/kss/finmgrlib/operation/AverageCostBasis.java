@@ -33,6 +33,7 @@ public class AverageCostBasis extends Operation {
 
     private final String OPCODE = "ACB";
 
+    @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {
 
         final CurrencyUnit CURRENCY = transaction.currencyUnit();
