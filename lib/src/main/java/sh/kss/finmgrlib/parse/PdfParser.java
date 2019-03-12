@@ -20,7 +20,6 @@ package sh.kss.finmgrlib.parse;
 import com.google.common.collect.ImmutableList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.pdfbox.text.PDFTextStripperByArea;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.Questrade;
 
@@ -33,15 +32,38 @@ import java.util.List;
 
 public class PdfParser {
 
-    public static final List<Parser> PARSERS = ImmutableList.of(new Questrade());
+    private static final List<Parser> PARSERS = ImmutableList.of(new Questrade());
+    private static PDFTextStripper stripper;
 
-    public static List<InvestmentTransaction> fromPath(String path) {
+    private static void setUtils() {
+
+        try {
+            if (stripper == null) {
+
+                stripper = new PDFTextStripper();
+            }
+        } catch (IOException ioe) {
+
+            ioe.printStackTrace();
+        }
+    }
+
+
+    private static List<InvestmentTransaction> traverse(File file, boolean verbose) {
+
+        if (file.isDirectory()) {
+
+            return fromFiles(file.listFiles(), verbose);
+        }
+
+        return fromFile(file, verbose);
+    }
+
+    public static List<InvestmentTransaction> fromPath(String path, boolean verbose) {
 
         try {
 
-            File[] files = new File(path).listFiles();
-
-            return fromFiles(files);
+            return traverse(new File(path), verbose);
         }
         catch (Exception e) {
 
@@ -51,21 +73,15 @@ public class PdfParser {
         return Collections.emptyList();
     }
 
-    public static List<InvestmentTransaction> fromFiles(File[] files) {
+    public static List<InvestmentTransaction> fromFiles(File[] files, boolean verbose) {
 
         List<InvestmentTransaction> transactions = new ArrayList<>();
 
         try {
             for (File file : files) {
 
-                if (file.isDirectory()) {
+                transactions.addAll(traverse(file, verbose));
 
-                    transactions.addAll(fromFiles(file.listFiles()));
-
-                } else if (file.isFile()) {
-
-                    transactions.addAll(fromFile(file));
-                }
             }
         } catch (NullPointerException npe) {
             npe.printStackTrace();
@@ -74,19 +90,32 @@ public class PdfParser {
         return transactions;
     }
 
-    public static List<InvestmentTransaction> fromFile(File file) {
+    public static List<InvestmentTransaction> fromFile(File file, boolean verbose) {
+
+        setUtils();
 
         try (PDDocument document = PDDocument.load(file)) {
 
             if (!document.isEncrypted()) {
 
-                PDFTextStripperByArea stripper = new PDFTextStripperByArea();
-                stripper.setSortByPosition(true);
-
-                PDFTextStripper tStripper = new PDFTextStripper();
-
-                String pdfFileInText = tStripper.getText(document);
+                String pdfFileInText = stripper.getText(document);
                 List<String> lines = Arrays.asList(pdfFileInText.split("\\r?\\n"));
+
+                if (verbose) {
+
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    for (int i = 0; i < lines.size(); i++) {
+
+                        stringBuilder
+                            .append(i)
+                            .append(": ")
+                            .append(lines.get(i))
+                            .append("\n");
+                    }
+
+                    System.out.println(stringBuilder);
+                }
 
                 for (Parser parser : PARSERS) {
 
@@ -106,5 +135,4 @@ public class PdfParser {
 
         return Collections.emptyList();
     }
-
 }

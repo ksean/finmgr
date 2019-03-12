@@ -49,12 +49,18 @@ public class Questrade extends Parser {
         .put("sell", InvestmentAction.Sell)
         .put("deposit", InvestmentAction.Deposit)
         .put("brw", InvestmentAction.Journal)
+        .put("fee", InvestmentAction.Fee)
+        .put("foreign", InvestmentAction.Exchange)
         .build();
 
     @Override
     public boolean isMatch(final List<String> lines) {
 
         return lines.get(37).trim().endsWith("Questrade")
+            || lines.get(38).trim().endsWith("Questrade")
+            || lines.get(41).trim().endsWith("Questrade")
+            || lines.get(42).trim().endsWith("Questrade")
+            || lines.get(44).trim().endsWith("Questrade")
             || lines.get(16).trim().endsWith("Questrade, Inc.");
     }
 
@@ -101,7 +107,7 @@ public class Questrade extends Parser {
             + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
             + "(?<type>\\w+) "
             + "(?<description>.+) "
-            + "(?<quantity>[\\d|,]+)\\s[\\- ]*"
+            + "(?<quantity>\\(?[\\d|,]+)\\)?\\s[\\- ]*"
             + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
             + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
             + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
