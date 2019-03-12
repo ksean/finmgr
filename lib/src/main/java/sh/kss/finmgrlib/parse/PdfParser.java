@@ -55,9 +55,20 @@ public class PdfParser {
 
         List<InvestmentTransaction> transactions = new ArrayList<>();
 
-        for (File file : files) {
+        try {
+            for (File file : files) {
 
-            transactions.addAll(fromFile(file));
+                if (file.isDirectory()) {
+
+                    transactions.addAll(fromFiles(file.listFiles()));
+
+                } else if (file.isFile()) {
+
+                    transactions.addAll(fromFile(file));
+                }
+            }
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
         }
 
         return transactions;
@@ -77,29 +88,9 @@ public class PdfParser {
                 String pdfFileInText = tStripper.getText(document);
                 List<String> lines = Arrays.asList(pdfFileInText.split("\\r?\\n"));
 
-                // Print pdf contents if file name matches
-                if (file.getName().equals("06-Jun.pdf")) {
-
-                    StringBuilder stringBuilder = new StringBuilder();
-
-                    for (int i = 0; i < lines.size(); i++) {
-                        stringBuilder
-                        .append(i)
-                        .append(": ")
-                        .append(lines.get(i))
-                        .append("\n");
-                    }
-
-                    System.out.println(stringBuilder);
-
-                }
-
-
                 for (Parser parser : PARSERS) {
 
                     if (parser.isMatch(lines)) {
-
-                        System.out.println("MATCHED: " + file.getName());
 
                         return parser.parse(lines);
                     }

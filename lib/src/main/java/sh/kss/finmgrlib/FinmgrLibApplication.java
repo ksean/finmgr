@@ -32,8 +32,7 @@ public class FinmgrLibApplication {
 
         SpringApplication.run(FinmgrLibApplication.class, args);
 
-        // Temporarily test any pdf document in classpath
-        List<InvestmentTransaction> transactions = PdfParser.fromPath("/home/s/dev/java/finmgr/lib/src/main/resources/");
+        List<InvestmentTransaction> transactions = PdfParser.fromPath("foo");
 
         Collections.sort(transactions);
 
