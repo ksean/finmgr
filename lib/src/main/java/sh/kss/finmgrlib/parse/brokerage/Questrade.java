@@ -44,6 +44,29 @@ public class Questrade extends Parser {
     private final Currency CAD = new Currency("CAD");
     private final Currency USD = new Currency("USD");
 
+    private final Pattern PATTERN = Pattern.compile("(?<transaction>\\d{1,2}/\\d{1,2}/\\d{4}) "
+        + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
+        + "(?<type>\\w+) "
+        + "(?<description>.+) "
+        + "(?<quantity>\\(?[\\d|,]+)\\)?\\s[\\- ]*"
+        + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
+        + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
+        + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
+        + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)"
+    );
+
+    private final Pattern START_PATTERN = Pattern.compile("(?<transaction>^\\d{1,2}/\\d{1,2}/\\d{4}) "
+        + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
+        + "(?<type>\\w+)$"
+    );
+
+    private final Pattern END_PATTERN = Pattern.compile("(?<quantity>^\\(?[\\d|,]+)\\)?\\s[\\- ]*"
+        + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
+        + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
+        + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
+        + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)$"
+    );
+
     private final Map<String, InvestmentAction> actionMap = ImmutableMap.<String, InvestmentAction>builder()
         .put("buy", InvestmentAction.Buy)
         .put("sell", InvestmentAction.Sell)
@@ -76,7 +99,9 @@ public class Questrade extends Parser {
 
             List<InvestmentTransaction> transactions = Lists.newArrayList();
 
-            for (String line : lines) {
+            for (int i = 0; i < lines.size(); i++) {
+
+                final String line = lines.get(i);
 
                 cursorCurrency = getCurrency(line, cursorCurrency);
                 cursorCurrencyUnit = Monetary.getCurrency(CAD.getValue());
@@ -84,6 +109,24 @@ public class Questrade extends Parser {
                 cursorSymbol = getSymbol(line, cursorSymbol);
 
                 parseTransaction(cursorCurrency, cursorCurrencyUnit, cursorAccount, cursorSymbol, line).ifPresent(transactions::add);
+
+                if (startPartialTransaction(line)) {
+
+                    StringBuilder multiLine = new StringBuilder().append(line).append(" ");
+
+                    int lastLineIndex = i + 1;
+
+                    while (!END_PATTERN.matcher(lines.get(lastLineIndex).trim()).find() && lastLineIndex < lines.size()) {
+
+                        multiLine.append(lines.get(lastLineIndex)).append(" ");
+
+                        lastLineIndex++;
+                    }
+
+                    multiLine.append(lines.get(lastLineIndex));
+
+                    parseTransaction(cursorCurrency, cursorCurrencyUnit, cursorAccount, cursorSymbol, multiLine.toString()).ifPresent(transactions::add);
+                }
 
             }
 
@@ -103,18 +146,7 @@ public class Questrade extends Parser {
                                                              final Symbol symbol,
                                                              final String line) {
 
-        Pattern transactionPattern = Pattern.compile("(?<transaction>\\d{1,2}/\\d{1,2}/\\d{4}) "
-            + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
-            + "(?<type>\\w+) "
-            + "(?<description>.+) "
-            + "(?<quantity>\\(?[\\d|,]+)\\)?\\s[\\- ]*"
-            + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
-            + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
-            + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
-            + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)"
-        );
-
-        Matcher transaction = transactionPattern.matcher(line.trim());
+        Matcher transaction = PATTERN.matcher(line.trim());
 
         if (transaction.find()) {
 
@@ -139,17 +171,22 @@ public class Questrade extends Parser {
         return Optional.empty();
     }
 
-    private Currency getCurrency(String line, Currency currentCurrency) {
+    private boolean startPartialTransaction(final String line) {
+
+        return START_PATTERN.matcher(line.trim()).find();
+    }
+
+    private Currency getCurrency(final String line, final Currency currentCurrency) {
 
         return currentCurrency;
     }
 
-    private Account getAccount(String line, Account currentAccount) {
+    private Account getAccount(final String line, final Account currentAccount) {
 
         return currentAccount;
     }
 
-    private Symbol getSymbol(String line, Symbol currentSymbol) {
+    private Symbol getSymbol(final String line, final Symbol currentSymbol) {
 
         return currentSymbol;
     }
@@ -159,7 +196,7 @@ public class Questrade extends Parser {
         return actionMap.getOrDefault(action, InvestmentAction.Other);
     }
 
-    private MonetaryAmount getMoney(final String amount, CurrencyUnit currencyUnit) {
+    private MonetaryAmount getMoney(final String amount, final CurrencyUnit currencyUnit) {
 
         return Money.of(
             new BigDecimal(amount
