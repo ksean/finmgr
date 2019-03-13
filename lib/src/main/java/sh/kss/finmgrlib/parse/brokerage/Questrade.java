@@ -67,6 +67,8 @@ public class Questrade extends Parser {
         + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)$"
     );
 
+    private final Pattern END_DIV_PATTERN = Pattern.compile("^\\$[\\d|,]+\\.\\d{2}$");
+
     private final Map<String, InvestmentAction> actionMap = ImmutableMap.<String, InvestmentAction>builder()
         .put("buy", InvestmentAction.Buy)
         .put("sell", InvestmentAction.Sell)
@@ -74,6 +76,7 @@ public class Questrade extends Parser {
         .put("brw", InvestmentAction.Journal)
         .put("fee", InvestmentAction.Fee)
         .put("foreign", InvestmentAction.Exchange)
+        .put("div", InvestmentAction.Distribution)
         .build();
 
     @Override
@@ -116,7 +119,9 @@ public class Questrade extends Parser {
 
                     int lastLineIndex = i + 1;
 
-                    while (!END_PATTERN.matcher(lines.get(lastLineIndex).trim()).find() && lastLineIndex < lines.size()) {
+                    while (!END_PATTERN.matcher(lines.get(lastLineIndex).trim()).find()
+                        && !END_DIV_PATTERN.matcher(lines.get(lastLineIndex).trim()).find()
+                        && lastLineIndex < lines.size() - 1) {
 
                         multiLine.append(lines.get(lastLineIndex)).append(" ");
 
