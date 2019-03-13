@@ -26,7 +26,7 @@ public enum InvestmentAction {
     Exchange,
     Distribution,
     Reinvest,
-    Coporate,
+    Corporate,
     Journal,
     Other
 }

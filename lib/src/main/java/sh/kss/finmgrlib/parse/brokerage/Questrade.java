@@ -77,6 +77,8 @@ public class Questrade extends Parser {
         .put("fee", InvestmentAction.Fee)
         .put("foreign", InvestmentAction.Exchange)
         .put("div", InvestmentAction.Distribution)
+        .put("rei", InvestmentAction.Reinvest)
+        .put("nac", InvestmentAction.Corporate)
         .build();
 
     @Override
@@ -87,7 +89,18 @@ public class Questrade extends Parser {
             || lines.get(41).trim().endsWith("Questrade")
             || lines.get(42).trim().endsWith("Questrade")
             || lines.get(44).trim().endsWith("Questrade")
-            || lines.get(16).trim().endsWith("Questrade, Inc.");
+            || lines.get(16).trim().endsWith("Questrade, Inc.")
+            || lines.get(36).trim().endsWith("Questrade, Inc.")
+            || lines.get(37).trim().endsWith("Questrade, Inc.")
+            || lines.get(39).trim().endsWith("Questrade, Inc.")
+            || lines.get(41).trim().endsWith("Questrade, Inc.")
+            || lines.get(42).trim().endsWith("Questrade, Inc.")
+            || lines.get(44).trim().endsWith("Questrade, Inc.")
+            || lines.get(48).trim().endsWith("Questrade, Inc.")
+            || lines.get(49).trim().endsWith("Questrade, Inc.")
+            || lines.get(50).trim().endsWith("Questrade, Inc.")
+            || lines.get(54).trim().endsWith("Questrade, Inc.")
+        ;
     }
 
     @Override
