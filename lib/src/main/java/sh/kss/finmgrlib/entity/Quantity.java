@@ -22,10 +22,12 @@ import lombok.experimental.Wither;
 
 import java.math.BigDecimal;
 
+
 @Wither
 @Value
 public class Quantity {
-    BigDecimal value;
 
     public static final Quantity ZERO_QUANTITY = new Quantity(BigDecimal.ZERO);
+
+    BigDecimal value;
 }

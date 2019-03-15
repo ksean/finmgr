@@ -17,7 +17,9 @@
  */
 package sh.kss.finmgrlib.entity;
 
+
 public enum InvestmentAction {
+
     Buy,
     Sell,
     Deposit,

@@ -27,6 +27,7 @@ import sh.kss.finmgrlib.entity.TransactionCategory;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
+
 @Value
 @Wither
 @Builder(toBuilder = true)

@@ -27,6 +27,7 @@ import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+
 @Service
 public class FinmgrTest {
 
@@ -42,53 +43,53 @@ public class FinmgrTest {
 
     // VALID buy and sell transactions
     protected final InvestmentTransaction BUY_VTI = InvestmentTransaction
-    .builder()
-    .transactionDate(BASE_DATE)
-    .settlementDate(BASE_DATE.plusDays(3))
-    .action(InvestmentAction.Buy)
-    .symbol(VTI_SYMBOL)
-    .quantity(HUNDRED_QUANTITY)
-    .price(Money.of(100, BASE_CURRENCY_UNIT))
-    .grossAmount(Money.of(-10_000, BASE_CURRENCY_UNIT))
-    .commission(Money.of(-5, BASE_CURRENCY_UNIT))
-    .netAmount(Money.of(-10_005, BASE_CURRENCY_UNIT))
-    .account(NON_REG_ACCOUNT)
-    .returnOfCapital(ZERO_CAD)
-    .capitalGain(ZERO_CAD)
-    .currency(CURRENCY)
-    .build();
+        .builder()
+        .transactionDate(BASE_DATE)
+        .settlementDate(BASE_DATE.plusDays(3))
+        .action(InvestmentAction.Buy)
+        .symbol(VTI_SYMBOL)
+        .quantity(HUNDRED_QUANTITY)
+        .price(Money.of(100, BASE_CURRENCY_UNIT))
+        .grossAmount(Money.of(-10_000, BASE_CURRENCY_UNIT))
+        .commission(Money.of(-5, BASE_CURRENCY_UNIT))
+        .netAmount(Money.of(-10_005, BASE_CURRENCY_UNIT))
+        .account(NON_REG_ACCOUNT)
+        .returnOfCapital(ZERO_CAD)
+        .capitalGain(ZERO_CAD)
+        .currency(CURRENCY)
+        .build();
 
 
     protected final InvestmentTransaction BUY_VTI_HIGHER_PRICE = BUY_VTI
-    .withPrice(Money.of(105, BASE_CURRENCY_UNIT))
-    .withGrossAmount(Money.of(-10_500, BASE_CURRENCY_UNIT))
-    .withNetAmount(Money.of(-10_505, BASE_CURRENCY_UNIT));
+        .withPrice(Money.of(105, BASE_CURRENCY_UNIT))
+        .withGrossAmount(Money.of(-10_500, BASE_CURRENCY_UNIT))
+        .withNetAmount(Money.of(-10_505, BASE_CURRENCY_UNIT));
 
     protected final InvestmentTransaction SELL_VTI = BUY_VTI
-    .withAction(InvestmentAction.Sell)
-    .withQuantity(new Quantity(BUY_VTI.getQuantity().getValue().negate()))
-    .withGrossAmount(BUY_VTI.getGrossAmount().negate())
-    .withNetAmount(Money.of(9_995, BASE_CURRENCY_UNIT));
+        .withAction(InvestmentAction.Sell)
+        .withQuantity(new Quantity(BUY_VTI.getQuantity().getValue().negate()))
+        .withGrossAmount(BUY_VTI.getGrossAmount().negate())
+        .withNetAmount(Money.of(9_995, BASE_CURRENCY_UNIT));
 
     protected final InvestmentTransaction SELL_VTI_LOWER_PRICE = SELL_VTI
-    .withPrice(Money.of(97.50, BASE_CURRENCY_UNIT))
-    .withGrossAmount(Money.of(9_750, BASE_CURRENCY_UNIT))
-    .withNetAmount(Money.of(9_745, BASE_CURRENCY_UNIT));
+        .withPrice(Money.of(97.50, BASE_CURRENCY_UNIT))
+        .withGrossAmount(Money.of(9_750, BASE_CURRENCY_UNIT))
+        .withNetAmount(Money.of(9_745, BASE_CURRENCY_UNIT));
 
     protected final InvestmentTransaction VTI_DIVIDEND = BUY_VTI
-    .withAction(InvestmentAction.Distribution)
-    .withQuantity(ZERO_QUANTITY)
-    .withPrice(ZERO_CAD)
-    .withGrossAmount(ZERO_CAD)
-    .withCommission(ZERO_CAD)
-    .withNetAmount(Money.of(250, BASE_CURRENCY_UNIT));
+        .withAction(InvestmentAction.Distribution)
+        .withQuantity(ZERO_QUANTITY)
+        .withPrice(ZERO_CAD)
+        .withGrossAmount(ZERO_CAD)
+        .withCommission(ZERO_CAD)
+        .withNetAmount(Money.of(250, BASE_CURRENCY_UNIT));
 
     protected final InvestmentTransaction VTI_RETURN_OF_CAPITAL = VTI_DIVIDEND
-    .withNetAmount(ZERO_CAD)
-    .withReturnOfCapital(Money.of(1, BASE_CURRENCY_UNIT));
+        .withNetAmount(ZERO_CAD)
+        .withReturnOfCapital(Money.of(1, BASE_CURRENCY_UNIT));
 
     protected final InvestmentTransaction VTI_CAPITAL_GAIN = VTI_RETURN_OF_CAPITAL
-    .withReturnOfCapital(ZERO_CAD)
-    .withCapitalGain(Money.of(0.75, BASE_CURRENCY_UNIT));
+        .withReturnOfCapital(ZERO_CAD)
+        .withCapitalGain(Money.of(0.75, BASE_CURRENCY_UNIT));
 
 }

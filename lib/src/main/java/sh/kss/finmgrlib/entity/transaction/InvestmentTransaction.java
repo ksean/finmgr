@@ -27,13 +27,12 @@ import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
+
 @Value
 @Wither
 @Builder(toBuilder = true)
 public class InvestmentTransaction implements Comparable<InvestmentTransaction> {
 
-    // TODO: Immutable inheritance with builder pattern for member fields:
-    // TODO: Consider two subclasses -> distributions & buy/sell
     // What, where, when this transaction happened
     LocalDate transactionDate;
     LocalDate settlementDate;
@@ -64,20 +63,22 @@ public class InvestmentTransaction implements Comparable<InvestmentTransaction> 
     MonetaryAmount foreignBusinessIncomeTaxPaid;
     MonetaryAmount foreignNonBusinessIncomeTaxPaid;
 
+
     public String identifier(String opcode) {
-        return new StringBuilder()
-            .append(account.getAccountType())
-            .append("-")
-            .append(symbol.getValue())
-            .append("-")
-            .append(opcode)
-            .toString();
+
+        return account.getAccountType()
+            + "-"
+            + symbol.getValue()
+            + "-"
+            + opcode;
     }
+
 
     public CurrencyUnit currencyUnit() {
 
         return Monetary.getCurrency(currency.getValue());
     }
+
 
     @Override
     public int compareTo(InvestmentTransaction transaction) {

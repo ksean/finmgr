@@ -30,46 +30,49 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class Questrade extends Parser {
 
-    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
 
-    private final Currency CAD = new Currency("CAD");
-    private final Currency USD = new Currency("USD");
+    private Currency CAD = new Currency("CAD");
+    private Currency USD = new Currency("USD");
 
-    private final Pattern PATTERN = Pattern.compile("(?<transaction>\\d{1,2}/\\d{1,2}/\\d{4}) "
+    private Pattern PATTERN = Pattern.compile(
+        "(?<transaction>\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<type>\\w+) "
         + "(?<description>.+) "
         + "(?<quantity>\\(?[\\d|,]+)\\)?\\s[\\- ]*"
         + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
         + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
-        + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
+        + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|-) "
         + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)"
     );
 
-    private final Pattern START_PATTERN = Pattern.compile("(?<transaction>^\\d{1,2}/\\d{1,2}/\\d{4}) "
+    private Pattern START_PATTERN = Pattern.compile(
+        "(?<transaction>^\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<type>\\w+)$"
     );
 
-    private final Pattern END_PATTERN = Pattern.compile("(?<quantity>^\\(?[\\d|,]+)\\)?\\s[\\- ]*"
+    private Pattern END_PATTERN = Pattern.compile(
+        "(?<quantity>^\\(?[\\d|,]+)\\)?\\s[\\- ]*"
         + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
         + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
-        + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|\\-) "
+        + "(?<commission>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?|-) "
         + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)$"
     );
 
-    private final Pattern END_DIV_PATTERN = Pattern.compile("^\\$[\\d|,]+\\.\\d{2}$");
+    private Pattern END_DIV_PATTERN = Pattern.compile("^\\$[\\d|,]+\\.\\d{2}$");
 
-    private final Map<String, InvestmentAction> actionMap = ImmutableMap.<String, InvestmentAction>builder()
+    private Map<String, InvestmentAction> actionMap = ImmutableMap.<String, InvestmentAction>builder()
         .put("buy", InvestmentAction.Buy)
         .put("sell", InvestmentAction.Sell)
         .put("deposit", InvestmentAction.Deposit)
@@ -81,8 +84,9 @@ public class Questrade extends Parser {
         .put("nac", InvestmentAction.Corporate)
         .build();
 
+
     @Override
-    public boolean isMatch(final List<String> lines) {
+    public boolean isMatch(List<String> lines) {
 
         return lines.get(37).trim().endsWith("Questrade")
             || lines.get(38).trim().endsWith("Questrade")
@@ -103,127 +107,150 @@ public class Questrade extends Parser {
         ;
     }
 
+
     @Override
-    public List<InvestmentTransaction> parse(final List<String> lines) {
+    public List<InvestmentTransaction> parse(List<String> lines) {
 
-        try {
+        Currency cursorCurrency = CAD;
+        CurrencyUnit cursorCurrencyUnit;
+        Account cursorAccount = new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED);
+        Symbol cursorSymbol = new Symbol("UNKNOWN");
 
-            Currency cursorCurrency = CAD;
-            CurrencyUnit cursorCurrencyUnit;
-            Account cursorAccount = new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED);
-            Symbol cursorSymbol = new Symbol("UNKNOWN");
+        List<InvestmentTransaction> transactions = Lists.newArrayList();
 
-            List<InvestmentTransaction> transactions = Lists.newArrayList();
+        for (int i = 0; i < lines.size(); i++) {
 
-            for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
 
-                final String line = lines.get(i);
+            cursorCurrency = getCurrency(line, cursorCurrency);
+            cursorCurrencyUnit = Monetary.getCurrency(CAD.getValue());
+            cursorAccount = getAccount(line, cursorAccount);
+            cursorSymbol = getSymbol(line, cursorSymbol);
 
-                cursorCurrency = getCurrency(line, cursorCurrency);
-                cursorCurrencyUnit = Monetary.getCurrency(CAD.getValue());
-                cursorAccount = getAccount(line, cursorAccount);
-                cursorSymbol = getSymbol(line, cursorSymbol);
+            parseTransaction(
+                cursorCurrency,
+                cursorCurrencyUnit,
+                cursorAccount,
+                cursorSymbol,
+                line
+            ).ifPresent(
+                transactions::add
+            );
 
-                parseTransaction(cursorCurrency, cursorCurrencyUnit, cursorAccount, cursorSymbol, line).ifPresent(transactions::add);
-
-                if (startPartialTransaction(line)) {
-
-                    StringBuilder multiLine = new StringBuilder().append(line).append(" ");
-
-                    int lastLineIndex = i + 1;
-
-                    while (!END_PATTERN.matcher(lines.get(lastLineIndex).trim()).find()
-                        && !END_DIV_PATTERN.matcher(lines.get(lastLineIndex).trim()).find()
-                        && lastLineIndex < lines.size() - 1) {
-
-                        multiLine.append(lines.get(lastLineIndex)).append(" ");
-
-                        lastLineIndex++;
-                    }
-
-                    multiLine.append(lines.get(lastLineIndex));
-
-                    parseTransaction(cursorCurrency, cursorCurrencyUnit, cursorAccount, cursorSymbol, multiLine.toString()).ifPresent(transactions::add);
-                }
-
+            if (! startPartialTransaction(line)) {
+                continue;
             }
 
-            return transactions;
-        }
-        catch (NullPointerException npe) {
+            StringBuilder multiLine = new StringBuilder();
 
-            npe.printStackTrace();
+            multiLine.append(line).append(" ");
+
+            int lastLineIndex = i + 1;
+
+            while (!END_PATTERN.matcher(lines.get(lastLineIndex).trim()).find()
+                && !END_DIV_PATTERN.matcher(lines.get(lastLineIndex).trim()).find()
+                && lastLineIndex < lines.size() - 1
+            ) {
+
+                multiLine.append(lines.get(lastLineIndex)).append(" ");
+
+                lastLineIndex++;
+            }
+
+            multiLine.append(lines.get(lastLineIndex));
+
+            parseTransaction(
+                cursorCurrency,
+                cursorCurrencyUnit,
+                cursorAccount,
+                cursorSymbol,
+                multiLine.toString()
+            ).ifPresent(
+                transactions::add
+            );
         }
 
-        return Collections.emptyList();
+        return transactions;
     }
 
-    private Optional<InvestmentTransaction> parseTransaction(final Currency currency,
-                                                             final CurrencyUnit currencyUnit,
-                                                             final Account account,
-                                                             final Symbol symbol,
-                                                             final String line) {
 
+    private Optional<InvestmentTransaction> parseTransaction(
+            Currency currency,
+            CurrencyUnit currencyUnit,
+            Account account,
+            Symbol symbol,
+            String line
+    ) {
         Matcher transaction = PATTERN.matcher(line.trim());
 
-        if (transaction.find()) {
+        if (! transaction.find()) {
 
-                return Optional.of(
-                    InvestmentTransaction.builder()
-                        .transactionDate(LocalDate.parse(transaction.group("transaction"), DATE_FORMATTER))
-                        .settlementDate(LocalDate.parse(transaction.group("settlement"), DATE_FORMATTER))
-                        .action(getAction(transaction.group("type").trim().toLowerCase()))
-                        .account(account)
-                        .currency(currency)
-                        .symbol(symbol)
-                        .description(transaction.group("description").trim())
-                        .price(getMoney(transaction.group("price"), currencyUnit))
-                        .quantity(getQuantity(transaction.group("quantity")))
-                        .grossAmount(getMoney(transaction.group("gross"), currencyUnit))
-                        .commission(getMoney(transaction.group("commission"), currencyUnit))
-                        .netAmount(getMoney(transaction.group("net"), currencyUnit))
-                        .build()
-                );
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        InvestmentTransaction investmentTransaction = InvestmentTransaction
+            .builder()
+            .transactionDate(LocalDate.parse(transaction.group("transaction"), DATE_FORMATTER))
+            .settlementDate(LocalDate.parse(transaction.group("settlement"), DATE_FORMATTER))
+            .action(getAction(transaction.group("type").trim().toLowerCase()))
+            .account(account)
+            .currency(currency)
+            .symbol(symbol)
+            .description(transaction.group("description").trim())
+            .price(getMoney(transaction.group("price"), currencyUnit))
+            .quantity(getQuantity(transaction.group("quantity")))
+            .grossAmount(getMoney(transaction.group("gross"), currencyUnit))
+            .commission(getMoney(transaction.group("commission"), currencyUnit))
+            .netAmount(getMoney(transaction.group("net"), currencyUnit))
+            .build();
+
+        return Optional.of(investmentTransaction);
     }
 
-    private boolean startPartialTransaction(final String line) {
+
+    private boolean startPartialTransaction(String line) {
 
         return START_PATTERN.matcher(line.trim()).find();
     }
 
-    private Currency getCurrency(final String line, final Currency currentCurrency) {
+
+    private Currency getCurrency(String line, Currency currentCurrency) {
 
         return currentCurrency;
     }
 
-    private Account getAccount(final String line, final Account currentAccount) {
+
+    private Account getAccount(String line, Account currentAccount) {
 
         return currentAccount;
     }
 
-    private Symbol getSymbol(final String line, final Symbol currentSymbol) {
+
+    private Symbol getSymbol(String line, Symbol currentSymbol) {
 
         return currentSymbol;
     }
 
-    private InvestmentAction getAction(final String action) {
+
+    private InvestmentAction getAction(String action) {
 
         return actionMap.getOrDefault(action, InvestmentAction.Other);
     }
 
-    private MonetaryAmount getMoney(final String amount, final CurrencyUnit currencyUnit) {
 
-        return Money.of(
-            new BigDecimal(amount
-                .replaceAll("-", "0")
-                .replaceAll("[^\\d.]", "")
-            ), currencyUnit);
+    private MonetaryAmount getMoney(String amount, CurrencyUnit currencyUnit) {
+
+        String adjustedAmount = amount
+            .replaceAll("-", "0")
+            .replaceAll("[^\\d.]", "");
+
+        BigDecimal parsedAmount = new BigDecimal(adjustedAmount);
+
+        return Money.of(parsedAmount, currencyUnit);
     }
 
-    private Quantity getQuantity(final String quantity) {
+
+    private Quantity getQuantity(String quantity) {
 
         return new Quantity(new BigDecimal(quantity.replaceAll("[^\\d.]", "")));
     }

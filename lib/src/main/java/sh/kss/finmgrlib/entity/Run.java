@@ -25,6 +25,7 @@ import sh.kss.finmgrlib.operation.Operation;
 
 import java.util.List;
 
+
 // A run is a list of transactions and some set of operations to run against each transaction
 @Value
 @Wither
@@ -38,6 +39,7 @@ public class Run {
     public static Portfolio process(Run run) {
 
         for(InvestmentTransaction transaction : run.transactions) {
+
             for(Operation operation : run.operations) {
 
                 run = run.withPortfolio(operation.process(run.portfolio, transaction));

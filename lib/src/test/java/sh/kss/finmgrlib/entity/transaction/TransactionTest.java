@@ -30,8 +30,10 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+
 @Service
 public class TransactionTest extends FinmgrTest {
+
 
     void assertHasErrors(Validator validator, Object object, ListMultimap<String, String> expectedErrors) {
 
@@ -40,6 +42,7 @@ public class TransactionTest extends FinmgrTest {
 
         assertHasFieldErrors(errors, expectedErrors);
     }
+
 
     private void assertHasFieldErrors(Errors errors, ListMultimap<String, String> expectedErrors) {
 
@@ -66,6 +69,7 @@ public class TransactionTest extends FinmgrTest {
         );
     }
 
+
     private void assertFieldHasOneErrorCode(Errors errors, String fieldName, List<String> code) {
 
         FieldError fieldError =  errors.getFieldError(fieldName);
@@ -87,6 +91,7 @@ public class TransactionTest extends FinmgrTest {
             errorCodes[errorCodes.length - 1]
         );
     }
+
 
     private void assertFieldHasMultiErrorCodes(Errors errors, String fieldName, List<String> codes) {
 

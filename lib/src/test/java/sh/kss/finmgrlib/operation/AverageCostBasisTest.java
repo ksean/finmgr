@@ -35,6 +35,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class AverageCostBasisTest extends FinmgrTest {
@@ -56,6 +57,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             .build();
     }
 
+
     @Test
     public void zeroQuantityACBTest() {
 
@@ -73,6 +75,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
     }
 
+
     @Test
     public void buyAtDifferentPriceACBTest() {
 
@@ -89,6 +92,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
+
 
     @Test
     public void sellingDoesNotChangeACBTest() {
@@ -108,6 +112,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
     }
 
+
     @Test
     public void dividendDoesNotChangeACBTest() {
 
@@ -125,6 +130,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
+
 
     @Test
     public void returnOfCapitalReducesACBTest() {
@@ -144,6 +150,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
     }
 
+
     @Test
     public void sellingAllQuantityResetsACBTest() {
 
@@ -162,6 +169,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
+
 
     @Test
     public void sellAllRebuyACBTest() {

@@ -86,14 +86,12 @@ public class AverageCostBasis extends Operation {
             monies.put(TXCODE, Money.of(0, CURRENCY));
         }
 
-        return portfolio
-            .withMonies(monies)
-            .withQuantities(quantities);
+        return portfolio;
     }
 
     public static MonetaryAmount getACB(Portfolio portfolio, String txcode) {
 
-        if (portfolio.getQuantities().get(txcode).getValue() == BigDecimal.ZERO) {
+        if (portfolio.getQuantities().get(txcode).getValue().equals(BigDecimal.ZERO)) {
             return portfolio.getMonies().get(txcode);
         }
 

@@ -25,6 +25,7 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.math.BigDecimal;
 
+
 public class InvestmentTransactionValidator implements Validator {
 
 
@@ -33,6 +34,7 @@ public class InvestmentTransactionValidator implements Validator {
 
         return InvestmentTransaction.class.equals(aClass);
     }
+
 
     @Override
     public void validate(Object o, Errors errors) {
@@ -50,6 +52,7 @@ public class InvestmentTransactionValidator implements Validator {
 
         getZeroFieldValueErrors(transaction, errors);
     }
+
 
     private void getZeroFieldValueErrors(InvestmentTransaction transaction, Errors errors) {
         switch (transaction.getAction()) {
@@ -94,6 +97,7 @@ public class InvestmentTransactionValidator implements Validator {
         }
     }
 
+
     private void getChronologicalErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Settled on or after transaction
@@ -101,6 +105,7 @@ public class InvestmentTransactionValidator implements Validator {
             errors.rejectValue("settlementDate", "settledBeforeTransaction");
         }
     }
+
 
     private void getMathErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -116,6 +121,7 @@ public class InvestmentTransactionValidator implements Validator {
             errors.rejectValue("netAmount", "netAmountSum");
         }
     }
+
 
     private void getCurrencyErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -145,6 +151,7 @@ public class InvestmentTransactionValidator implements Validator {
             errors.rejectValue("returnOnCapital", "currencyInconsistent");
         }
     }
+
 
     private void getSignErrors(InvestmentTransaction transaction, Errors errors) {
 

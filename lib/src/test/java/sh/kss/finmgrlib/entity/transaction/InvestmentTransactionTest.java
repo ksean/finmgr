@@ -35,6 +35,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class InvestmentTransactionTest extends TransactionTest {
@@ -50,6 +51,7 @@ public class InvestmentTransactionTest extends TransactionTest {
         VTI_RETURN_OF_CAPITAL,
         VTI_CAPITAL_GAIN
     );
+
 
     @Test
     public void validTransactionFixtures() {
@@ -68,14 +70,15 @@ public class InvestmentTransactionTest extends TransactionTest {
         });
     }
 
+
     @Test
     public void inconsistentCurrencyAndNetAmountTest() {
         // Setup
         CurrencyUnit usd = Monetary.getCurrency("USD");
 
         InvestmentTransaction inconsistentTransaction = BUY_VTI
-        .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT))
-        .withNetAmount(Money.of(-9_995, usd));
+            .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT))
+            .withNetAmount(Money.of(-9_995, usd));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -87,12 +90,11 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
-
     @Test
     public void sameSettlementDateTransactionTest() {
 
         InvestmentTransaction settledSameDay = BUY_VTI
-        .withSettlementDate(BUY_VTI.getTransactionDate());
+            .withSettlementDate(BUY_VTI.getTransactionDate());
 
         // Validation
         Errors errors = new BeanPropertyBindingResult(settledSameDay, "settledSameDay");
@@ -105,11 +107,12 @@ public class InvestmentTransactionTest extends TransactionTest {
         );
     }
 
+
     @Test
     public void settledBeforeTransactionDateTest() {
 
         InvestmentTransaction badSettlementDateTransaction = BUY_VTI
-        .withSettlementDate(BUY_VTI.getTransactionDate().minusDays(1));
+            .withSettlementDate(BUY_VTI.getTransactionDate().minusDays(1));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -119,12 +122,11 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
-
     @Test
     public void invalidGrossAmountTest() {
 
         InvestmentTransaction invalidGrossAmountTransaction = BUY_VTI
-        .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT));
+            .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -134,11 +136,12 @@ public class InvestmentTransactionTest extends TransactionTest {
         assertHasErrors(VALIDATOR, invalidGrossAmountTransaction, expectedErrors);
     }
 
+
     @Test
     public void invalidNetAmountTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-        .withNetAmount(Money.of(-10_004, BASE_CURRENCY_UNIT));
+            .withNetAmount(Money.of(-10_004, BASE_CURRENCY_UNIT));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -147,11 +150,12 @@ public class InvestmentTransactionTest extends TransactionTest {
         assertHasErrors(VALIDATOR, invalidNetAmountTransaction, expectedErrors);
     }
 
+
     @Test
     public void invalidCommissionTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-        .withCommission(Money.of(5, BASE_CURRENCY_UNIT));
+            .withCommission(Money.of(5, BASE_CURRENCY_UNIT));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
