@@ -32,13 +32,5 @@ public class FinmgrLibApplication {
 
         SpringApplication.run(FinmgrLibApplication.class, args);
 
-        List<InvestmentTransaction> transactions = PdfParser.fromPath("foo", true);
-
-        Collections.sort(transactions);
-
-        for (InvestmentTransaction transaction : transactions) {
-            System.out.println(transaction);
-        }
-
     }
 }

@@ -23,6 +23,7 @@ import ListIcon from '@material-ui/icons/List';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 
 import Main from './Main';
+import UploadArea from './UploadArea';
 
 const drawerWidth = 240;
 
@@ -183,6 +184,7 @@ class MenuAppBar extends React.Component {
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Main/>
+                    <UploadArea/>
                 </main>
             </div>
         );
