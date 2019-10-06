@@ -33,8 +33,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>8</java.version>
     <money.version>1.3</money.version>
-    <guava.version>27.0.1-jre</guava.version>
-    <pdfbox.version>2.0.14</pdfbox.version>
+    <guava.version>28.1-jre</guava.version>
+    <pdfbox.version>2.0.17</pdfbox.version>
   </properties>
 
   <dependencies>
