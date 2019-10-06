@@ -43,6 +43,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     private final List<Operation> OPERATIONS = Lists.newArrayList(new AverageCostBasis());
     private final String TXCODE = "NON_REGISTERED-VTI-ACB";
 
+
     private Run operationsTest(List<InvestmentTransaction> transactions) {
 
         return Run.builder()

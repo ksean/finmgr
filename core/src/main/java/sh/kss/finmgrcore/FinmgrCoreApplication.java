@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sh.kss.finmgrlib.operation.Operation;
 
+
 @SpringBootApplication(scanBasePackages = "sh.kss")
 @RestController
 public class FinmgrCoreApplication {

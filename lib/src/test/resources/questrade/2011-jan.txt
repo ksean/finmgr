@@ -1,0 +1,316 @@
+WHAT’S NEW ESTATEMENT DESCRIPTION
+FIRST LAST
+123 MYHOME ST                                   
+CITY PROV POSTAL CODE
+The following sections are broken down by currency. Canadian cash and position
+details appear first, followed by changes in U.S. equities.
+Portfolio summary:  Your overall account summary, including cash, the market
+value of your holdings, and your total account equity. For comparison, the
+previous month's totals are also displayed.
+Details of activity:  View all position changes and cash movements in your
+account including securities bought or sold, cash deposited or withdrawn,
+transfers, data fees, etc.
+Account holdings:  All cash and settled positions in your account.
+Statement of income and expenses:  A summary of all interest or dividends
+that were charged or received during the month.
+Trades to settle after month end:  All trades that were not settled by the end of
+the month. [Stock trades settle after 3 business days; option trades settle after 1
+business day].
+Welcome to your December eStatement
+A new year, a new way to trade 
+We're pleased to invite all our clients to pre-register for the beta version of
+Questrade IQ  and  Questrade IQ Edge , our new web and desktop platforms. For
+more information about what a beta version is and to pre-register your accounts,
+go to the new IQ section in myQuestrade.
+Join the Exchange 
+The Exchange , our new trading community, is a place for you to share ideas and
+get answers fast about IQ, Questrade and all things trading.
+Searching for a no-fee RSP? The search is over 
+From now until February 29, 2012, open and fund a new RSP account with a
+minimum of $25,000 and get 150 free stock trades. If you're looking at a smaller
+RSP, open and fund your RSP with a minimum of CAD $1,000 and get 10 free stock
+trades.  Learn more .
+PORTFOLIO SUMMARY This month's FX rate (CAD to USD) = 1.0193Last month's FX rate (CAD to USD) = 1.0193
+TOTAL AS OF DECEMBER 30, 2011 TOTAL AS OF NOVEMBER 30, 2011
+ACCOUNT # ACCOUNT TYPE CURRENCY CASH MARKET VALUE TOTAL EQUITY CASH MARKET VALUE TOTAL EQUITY
+12345678-00 Margin Long CAD $1,500.00 $0.00 $1,500.00 $0.00 $0.00 $0.00
+12345678-00 Margin Short CAD $0.00 $0.00 $0.00 $0.00 $0.00 $0.00
+12345678-00 Margin Long USD $0.00 $0.00 $0.00 $0.00 $0.00 $0.00
+12345678-00 Margin Short USD $0.00 $0.00 $0.00 $0.00 $0.00 $0.00
+Combined (CAD) $1,500.00 $0.00 $1,500.00 $0.00 $0.00 $0.00
+Combined (USD) $1,471.60 $0.00 $1,471.60 $0.00 $0.00 $0.00
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 1 of 9
+Note:  commissions include trade commission and additional market fees, if applicable. For exchange, ATS and ECN fees, please refer to  http://www.questrade.com/pricing/exchange_ecn_fees.aspx .
+DETAILS OF ACTIVITY
+Account #:  12345678-00   Currency:  CAD
+TRADE DATE SETTLEMENT DATE ACTION DESCRIPTION QTY PRICE GROSS COMM NET AMT
+Opening balance $0.00
+12/21/2011 12/21/2011 Deposit 1234567827 CIBC DIR DEP          0 $0.000 $0.00 $0.00 $1,500.00
+Closing balance $1,500.00
+Note:  % of portfolio is rounded to two decimals.
+Account #:  12345678-00   Currency:  CAD
+ACCOUNT HOLDINGS
+SYMBOL SECURITY DESCRIPTION QTY MARKET PRICE MARKET VALUE % OF PORTFOLIO ASSET LOCATION
+Cash
+Credit balance $1,500.00 100.00 %
+Month end portfolio value $1,500.00 100.00 %
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 2 of 9
+Account #:  12345678-00   Currency:  CAD
+STATEMENT OF INCOME AND EXPENSES
+INVESTMENT INCOME CURRENT MONTH Y–T–D
+Interest earned $0.00 $0.00
+Dividends earned $0.00 $0.00
+Total $0.00
+EXPENSES & FEES CURRENT MONTH Y–T–D
+Interest charged $0.00 $0.00
+Dividends charged $0.00 $0.00
+Total $0.00
+Note:  commissions include trade commission and additional market fees, if applicable. For exchange, ATS and ECN fees, please refer to  http://www.questrade.com/pricing/exchange_ecn_fees.aspx .
+DETAILS OF ACTIVITY
+Account #:  12345678-00   Currency:  USD
+TRADE DATE SETTLEMENT DATE ACTION DESCRIPTION QTY PRICE GROSS COMM NET AMT
+Opening balance $0.00
+Closing balance $0.00
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 3 of 9
+Note:  % of portfolio is rounded to two decimals.
+Account #:  12345678-00   Currency:  USD
+ACCOUNT HOLDINGS
+SYMBOL SECURITY DESCRIPTION QTY MARKET PRICE MARKET VALUE % OF PORTFOLIO ASSET LOCATION
+Credit balance $0.00
+Month end portfolio value $0.00
+Account #:  12345678-00   Currency:  USD
+STATEMENT OF INCOME AND EXPENSES
+INVESTMENT INCOME CURRENT MONTH Y–T–D
+Interest earned $0.00 $0.00
+Dividends earned $0.00 $0.00
+Total $0.00
+EXPENSES & FEES CURRENT MONTH Y–T–D
+Interest charged $0.00 $0.00
+Dividends charged $0.00 $0.00
+Total $0.00
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 4 of 9
+Note:  commissions include trade commission and additional market fees, if applicable. For exchange, ATS and ECN fees, please refer to  http://www.questrade.com/pricing/exchange_ecn_fees.aspx .
+DETAILS OF ACTIVITY
+Account #:  12345678-00   Currency:  CAD
+TRADE DATE SETTLEMENT DATE ACTION DESCRIPTION QTY PRICE GROSS COMM NET AMT
+Opening balance $0.00
+Closing balance $0.00
+Note:  % of portfolio is rounded to two decimals.
+Account #:  12345678-00   Currency:  CAD
+ACCOUNT HOLDINGS
+SYMBOL SECURITY DESCRIPTION QTY MARKET PRICE MARKET VALUE % OF PORTFOLIO ASSET LOCATION
+Credit balance $0.00
+Month end portfolio value $0.00
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 5 of 9
+Account #:  12345678-00   Currency:  CAD
+STATEMENT OF INCOME AND EXPENSES
+INVESTMENT INCOME CURRENT MONTH Y–T–D
+Interest earned $0.00 $0.00
+Dividends earned $0.00 $0.00
+Total $0.00
+EXPENSES & FEES CURRENT MONTH Y–T–D
+Interest charged $0.00 $0.00
+Dividends charged $0.00 $0.00
+Total $0.00
+Note:  commissions include trade commission and additional market fees, if applicable. For exchange, ATS and ECN fees, please refer to  http://www.questrade.com/pricing/exchange_ecn_fees.aspx .
+DETAILS OF ACTIVITY
+Account #:  12345678-00   Currency:  USD
+TRADE DATE SETTLEMENT DATE ACTION DESCRIPTION QTY PRICE GROSS COMM NET AMT
+Opening balance $0.00
+Closing balance $0.00
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 6 of 9
+Note:  % of portfolio is rounded to two decimals.
+Account #:  12345678-00   Currency:  USD
+ACCOUNT HOLDINGS
+SYMBOL SECURITY DESCRIPTION QTY MARKET PRICE MARKET VALUE % OF PORTFOLIO ASSET LOCATION
+Credit balance $0.00
+Month end portfolio value $0.00
+Account #:  12345678-00   Currency:  USD
+STATEMENT OF INCOME AND EXPENSES
+INVESTMENT INCOME CURRENT MONTH Y–T–D
+Interest earned $0.00 $0.00
+Dividends earned $0.00 $0.00
+Total $0.00
+EXPENSES & FEES CURRENT MONTH Y–T–D
+Interest charged $0.00 $0.00
+Dividends charged $0.00 $0.00
+Total $0.00
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 7 of 9
+FOR YOUR INFORMATION
+Transactions this month 
+Transactions are displayed in chronological order. Opening and month–end balances are also shown. Transactions that settle after the date of this statement are excluded from your positions.
+Transactions that have been settled at a price that is less than one-tenth of one cent ($0.001) will be shown as having a price of $0.000 on your statement. The gross and net amounts will still show
+the full value of the transaction.
+Security positions 
+Quantities listed as "owing by you" indicate securities which are currently due from you or which you have sold short. The "estimated market value" of an exchange listed security is obtained from
+sources we believe to be reliable, but we do not guarantee the accuracy. For securities not listed on an exchange or that are traded infrequently, the value given is an estimate which does not
+necessarily reflect the true market value; ("–") prints when the price is suspect. Some securities may not be priced because no data was available. "Segregated securities" are securities held in your
+account either registered in your name (SFK) or in bearer form (SEG).
+Any free credit balances represent funds payable on demand which although properly recorded in our books, are not segregated and may be used in the conduct of our business.
+Code Information 
+ACT DIV
+ADJ
+AS / RS
+CK
+CORR
+CR
+CXL
+CXLACT
+Stock dividend
+Adjustment
+Restricted shares
+Cheque issued
+Correction
+Deposit
+Cancelled item
+Cancellation of stock dividend
+DEL
+DSC
+DIV
+ECH
+ENC / MAT
+FRACT DIST
+FRAIS
+INT
+Delivery of securities
+Deferred sales charge
+Dividend
+Maturity
+Redemption
+Fraction / distribution
+Fee*
+Interest
+JE CJ MS
+L / SVS
+NCI
+N / NVS
+PMT
+RS / RVS
+RESIL
+RTS
+Journal entries
+Subordinate voting shares
+Non–certificate issue
+(GIC / mutual funds)
+Non–voting shares
+Electronic payment
+Restricted voting shares
+Cancellation of RRSP
+contribution
+Rights
+SOUS
+SPLIT
+SUBSTN
+SVS
+TRSF
+VEG / SFK
+WTS
+Subscription
+Split
+Substitution
+Subordinate voting shares
+Transfer
+Safekeeping
+Warrants
+*The applicable taxes will be added to these fees which may vary on two months notice.
+All plan accounts are registered with the Canada Revenue Agency for Questrade, Inc, agent for Computershare Trust Company of Canada.
+Shareholders communications  (CSA National instrument 54–101) – Your instructions may be modified at any time by providing us with written notice.
+The client agrees that notices made available online in myQuestrade or sent to his/her designed email address shall be deemed received.
+Carrying broker disclosure 
+Questrade, Inc. has appointed Penson Financial Services Canada Inc. (the "Carrying Broker") as our agent in connection with the clearing and settlement of transactions in your cash, margin or
+registered accounts (excluding any Forex account). The Carrying Broker is responsible for trade settlement, the custody of securities and the preparation of trade confirmations and account statements
+with respect to any transactions you may enter into in accounts for which the Carrying Broker acts as our agent. Questrade Inc. is responsible for opening and initial approval of accounts, the custody
+of cash and trade execution services.
+Price disclosure 
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 8 of 9
+Regarding activities that involved more than one transaction on the same security on the same side or transactions that took place on more than one marketplace, the information may be displayed on
+your statement in the aggregate. Details concerning the transaction will be provided upon request and without additional charge.
+Member CIPF 
+Customers' accounts are protected by the Canadian Investor Protection Fund within specified limits. A brochure describing the nature and limits of coverage is available upon request. Our Statement of
+Financial Condition as of our most recent financial year and a list of our directors and senior officers is available upon request. Our clients in British Columbia are entitled to certain additional
+information about us, including information about commissions and fees that we charge, and about any administrative proceedings that may relate to the firm or our staff.
+Please check this statement for any errors, irregularities or omissions. If any, they should be reported within thirty (30) days of mailing or delivery otherwise the statement will be 
+considered correct as printed. We reserve the right to adjust this statement for errors or omissions.  
+Please retain for income tax purposes. 
+ESTATEMENT
+5650 Yonge Street, Suite 1700, Toronto, ON M2M 4G3
+Phone: 416.227.9876 Web: questrade.com
+Dealer:  Questrade
+Period:  December 1 - 31, 2011
+Order execution only account
+Account:  12345678
+Type:  Non-Registered
+Currency:  CAD / USD
+ESTATEMENT 9 of 9
