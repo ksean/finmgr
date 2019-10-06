@@ -22,9 +22,9 @@ Project lifecycle is managed through Maven. `finmgr-web` (frontend) and `finmgr-
 
 #### finmgr-web
 
-`npm install`
+`yarn`
 
-`npm start`
+`yarn run start`
 
 #### finmgr-core
 
