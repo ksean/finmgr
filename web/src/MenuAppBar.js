@@ -1,199 +1,189 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import {withStyles} from '@material-ui/core/styles';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 import HomeIcon from '@material-ui/icons/Home';
-import InsertChartIcon from '@material-ui/icons/InsertChart';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ListIcon from '@material-ui/icons/List';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-
-import Main from './Main';
-import UploadArea from './UploadArea';
+import WallpaperIcon from '@material-ui/icons/Wallpaper';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import UploadArea from "./UploadArea";
 
 const drawerWidth = 240;
 
-const styles = theme => ({
-    root: {
-        flexGrow: 1,
-        height: 430,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9) + 1,
     },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    menuButton: {
-        marginLeft: 12,
-        marginRight: 36,
-    },
-    hide: {
-        display: 'none',
-    },
-    drawerPaper: {
-        position: 'relative',
-        whiteSpace: 'nowrap',
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing.unit * 7,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing.unit * 9,
-        },
-    },
-    toolbar: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        padding: '0 8px',
-        ...theme.mixins.toolbar,
-    },
-    content: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
-    },
-});
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));
 
-class MenuAppBar extends React.Component {
-    state = {
-        open: false,
-    };
+export default function MiniDrawer() {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
-    };
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
-    render() {
-        const { classes, theme } = this.props;
-
-        return (
-            <div className={classes.root}>
-                <AppBar
-                    position="absolute"
-                    className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-                >
-                    <Toolbar disableGutters={!this.state.open}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                            className={classNames(classes.menuButton, this.state.open && classes.hide)}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="title" color="inherit" noWrap>
-                            finmgr
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-                    }}
-                    open={this.state.open}
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={this.handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>
-                        <ListItem button>
-                        <ListItemIcon>
-                            <HomeIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Index" />
-                        </ListItem>
-                        <Divider/>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <ListIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Transactions" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DashboardIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Dashboards" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <VisibilityIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Visualizations" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <InsertChartIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Visual Types" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <FilterListIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Data Filters" />
-                        </ListItem>
-                    </List>
-                </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <Main/>
-                    <UploadArea/>
-                </main>
-            </div>
-        );
-    }
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            finmgr
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+        open={open}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <ListItem button key={'Home'}>
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary={'Home'} />
+          </ListItem>
+        </List>
+        <List>
+          <ListItem button key={'Transactions'}>
+            <ListItemIcon><AccountBalanceIcon /></ListItemIcon>
+            <ListItemText primary={'Transactions'} />
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem button key={'Dashboards'}>
+            <ListItemIcon><DashboardIcon /></ListItemIcon>
+            <ListItemText primary={'Dashboards'} />
+          </ListItem>
+          <ListItem button key={'Visualizations'}>
+            <ListItemIcon><AssessmentIcon /></ListItemIcon>
+            <ListItemText primary={'Visualizations'} />
+          </ListItem>
+          <ListItem button key={'Visual Types'}>
+            <ListItemIcon><WallpaperIcon /></ListItemIcon>
+            <ListItemText primary={'Visual Types'} />
+          </ListItem>
+          <ListItem button key={'Data Views'}>
+            <ListItemIcon><VisibilityIcon /></ListItemIcon>
+            <ListItemText primary={'Data Views'} />
+          </ListItem>
+        </List>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        <Typography paragraph>
+          Welcome to finmgr
+        </Typography>
+        <UploadArea />
+      </main>
+    </div>
+  );
 }
-
-MenuAppBar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(MenuAppBar);
