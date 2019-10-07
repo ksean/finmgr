@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {DropzoneArea} from 'material-ui-dropzone'
 
-const API_URL = 'http://localhost:8080/upload';
-
 class UploadArea extends Component {
   constructor(props) {
     super(props);
@@ -19,23 +17,27 @@ class UploadArea extends Component {
   }
 
   render() {
-    const { message, isLoading, error } = this.state;
+    const { isLoading, error } = this.state;
 
     if (isLoading) {
       return <p>Loading ...</p>;
     }
 
     if (error) {
-      return <p>Error uploading file</p>;
+      return <p>Error connecting to server</p>;
     }
 
     return (
       <DropzoneArea
+        acceptedFiles={['application/pdf', 'application/x-pdf', 'text/csv']}
+        filesLimit={100000}
+        maxFileSize={25000000}
+        dropzoneText={'PDF or CSV'}
+        showFileNames={true}
         onChange={this.handleChange.bind(this)}
       />
     );
   }
-
 }
 
 export default UploadArea;
