@@ -41,7 +41,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>CI=false yarn build</id>
+            <id>yarn build</id>
             <goals>
               <goal>yarn</goal>
             </goals>
