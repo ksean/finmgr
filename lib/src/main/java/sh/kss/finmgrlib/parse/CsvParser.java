@@ -17,13 +17,7 @@
  */
 package sh.kss.finmgrlib.parse;
 
-import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+public class CsvParser  {
 
-import java.util.List;
-
-abstract public class Parser {
-
-    abstract public boolean isMatch(List<String> lines);
-
-    abstract public List<InvestmentTransaction> parse(List<String> lines);
+    // TODO: Implement CSV parsing
 }

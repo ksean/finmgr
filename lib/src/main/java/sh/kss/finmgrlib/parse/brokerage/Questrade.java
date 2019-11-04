@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 import org.javamoney.moneta.Money;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.Parser;
+import sh.kss.finmgrlib.parse.PdfParser;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -37,7 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Questrade extends Parser {
+public class Questrade extends PdfParser {
 
     private DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
 
