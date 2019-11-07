@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Can consume a one or many CSV or PDF files and convert them into a list of transactions
+ * Can consume one or many CSV or PDF files and convert them into a list of transactions
  */
 public class Runner {
 
@@ -63,7 +63,7 @@ public class Runner {
             }
         } catch (IOException ioe) {
 
-            LOG.error("Failed to created PDF text stripper");
+            LOG.error("Failed to create PDF text stripper");
             ioe.printStackTrace();
 
             return false;
@@ -115,6 +115,7 @@ public class Runner {
 
             // Traverse the file and return the results
             return traverseFile(new File(path));
+
         }
         catch (NullPointerException npe) {
 
@@ -171,13 +172,19 @@ public class Runner {
             return Collections.emptyList();
         }
 
+        // Try to load the file in PDDocument
         try (PDDocument document = PDDocument.load(file)) {
 
+            // Skip any encrypted documents
             if (!document.isEncrypted()) {
 
+                // Get the text from the document
                 String pdfFileInText = textStripper.getText(document);
+
+                // Split it into a list of strings
                 List<String> lines = Arrays.asList(pdfFileInText.split("\\r?\\n"));
 
+                // In debug mode output every line in the document
                 StringBuilder stringBuilder = new StringBuilder();
 
                 for (int i = 0; i < lines.size(); i++) {
@@ -191,18 +198,23 @@ public class Runner {
 
                 LOG.debug(stringBuilder);
 
+                // Try all the parsers on the document
                 for (PdfParser parser : PARSERS) {
 
+                    // If it matches then short-circuit and return the parse results
                     if (parser.isMatch(lines)) {
 
                         LOG.debug(String.format("Matched parser %s", parser.toString()));
 
                         return parser.parse(lines);
+
                     } else {
+
                         LOG.debug(String.format("Did not match parser %s", parser.toString()));
                     }
                 }
             } else {
+
                 LOG.debug(String.format("Skipped file %s because it is encrypted", file.getAbsoluteFile()));
             }
         }
@@ -212,7 +224,7 @@ public class Runner {
             ioe.printStackTrace();
         }
 
-        // If we got here then an IOException happened during parsing and we will return an empty list
+        // IOException, encrypted files, or a file that doesn't match will all return an empty list
         return Collections.emptyList();
     }
 }

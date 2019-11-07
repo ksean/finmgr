@@ -22,7 +22,7 @@ import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import java.util.List;
 
 /**
- * General interface for any class that parses the text from a PDF file into transactions
+ * A class that can parse the text from a specific format of PDF file into finmgr transactions
  */
 abstract public class PdfParser {
 
@@ -37,6 +37,8 @@ abstract public class PdfParser {
 
     /**
      * Parse the input text and return all of the transactions found
+     * Should produce an empty list if either: there are no transactions in the file
+     * or it is parsing an incompatible document (i.e. isMatch produces false)
      *
      * @param lines List<String> - the lines of text from a PDF file
      * @return the list of transactions from the text
