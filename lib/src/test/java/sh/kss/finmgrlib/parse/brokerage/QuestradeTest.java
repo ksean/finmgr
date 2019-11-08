@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgrlib.parse.brokerage;
 
+import org.javamoney.moneta.Money;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,27 +25,41 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
+import sh.kss.finmgrlib.entity.*;
+import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.ParseTest;
 
+import javax.money.MonetaryAmount;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
+/**
+ * Test the questrade PDF parser
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class QuestradeTest extends ParseTest {
 
+    /**
+     * The text version of an example Questrade PDF document
+     */
     @Value("classpath:questrade/2011-jan.txt")
     Resource resourceFile;
 
     private final Questrade QUESTRADE = new Questrade();
 
-    private List<String> lines;
+    private static List<String> lines;
 
 
+    /**
+     * Sets up the tests by converting a resource test file into a list of strings
+     */
     @Before
     public void setup() {
 
@@ -60,6 +75,9 @@ public class QuestradeTest extends ParseTest {
     }
 
 
+    /**
+     * Questrade parser should match the test list of strings
+     */
     @Test
     public void questradeTextMatchesTest() {
 
@@ -67,12 +85,43 @@ public class QuestradeTest extends ParseTest {
     }
 
 
+    /**
+     * The parser should return one transaction with a net amount of $CAD 1500
+     */
     @Test
-    public void noTransactionsTest() {
+    public void oneTransactionTest() {
+
+        // Parse the transactions
+        List<InvestmentTransaction> transactions = QUESTRADE.parse(lines);
+
+        // Fixtures
+        final MonetaryAmount ZERO_CAD = Money.of(0, "CAD");
+
+        // Expected transaction
+        InvestmentTransaction expectedTransaction = InvestmentTransaction.builder()
+            .transactionDate(LocalDate.of(2011,12,21))
+            .settlementDate(LocalDate.of(2011,12,21))
+            .action(InvestmentAction.Deposit)
+            .account(new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED))
+            .symbol(new Symbol("UNKNOWN"))
+            .currency(CURRENCY)
+            .description("1234567827 CIBC DIR DEP")
+            .price(ZERO_CAD)
+            .grossAmount(ZERO_CAD)
+            .commission(ZERO_CAD)
+            .netAmount(Money.of(1500, "CAD"))
+            .quantity(new Quantity(new BigDecimal(0)))
+            .build();
+
 
         assertEquals(
             1,
-            QUESTRADE.parse(lines).size()
+            transactions.size()
+        );
+
+        assertEquals(
+            expectedTransaction,
+            transactions.get(0)
         );
     }
 }
