@@ -19,7 +19,7 @@ package sh.kss.finmgrlib.entity;
 
 import lombok.Builder;
 import lombok.Value;
-import lombok.experimental.Wither;
+import lombok.With;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.operation.Operation;
 
@@ -28,7 +28,7 @@ import java.util.List;
 
 // A run is a list of transactions and some set of operations to run against each transaction
 @Value
-@Wither
+@With
 @Builder(toBuilder = true)
 public class Run {
 

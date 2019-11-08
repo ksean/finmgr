@@ -18,12 +18,12 @@
 package sh.kss.finmgrlib.entity;
 
 import lombok.Value;
-import lombok.experimental.Wither;
+import lombok.With;
 
 import java.math.BigDecimal;
 
 
-@Wither
+@With
 @Value
 public class Quantity {
 

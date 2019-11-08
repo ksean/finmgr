@@ -19,7 +19,7 @@ package sh.kss.finmgrlib.entity.transaction;
 
 import lombok.Builder;
 import lombok.Value;
-import lombok.experimental.Wither;
+import lombok.With;
 import sh.kss.finmgrlib.entity.Account;
 import sh.kss.finmgrlib.entity.Currency;
 import sh.kss.finmgrlib.entity.TransactionCategory;
@@ -29,7 +29,7 @@ import java.time.LocalDate;
 
 
 @Value
-@Wither
+@With
 @Builder(toBuilder = true)
 public class PersonalTransaction {
 
