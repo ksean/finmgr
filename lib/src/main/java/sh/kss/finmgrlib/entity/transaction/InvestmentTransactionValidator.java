@@ -26,6 +26,10 @@ import javax.money.Monetary;
 import java.math.BigDecimal;
 
 
+/**
+ * Validate the state of an investment transaction. Investment transactions must be valid for use in supported
+ * transaction operations.
+ */
 public class InvestmentTransactionValidator implements Validator {
 
 
@@ -38,18 +42,25 @@ public class InvestmentTransactionValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
+        // Cast the object into a transaction
         InvestmentTransaction transaction = (InvestmentTransaction) o;
 
+        // Validate currency is consistent
         getCurrencyErrors(transaction, errors);
 
+        // Validate correct signs are used for credits vs debits
         getSignErrors(transaction, errors);
 
+        // All non-distribution transactions must have the correct quantities and amounts specified
         if (transaction.getAction() != InvestmentAction.Distribution) {
+
             getMathErrors(transaction, errors);
         }
 
+        // The dates on the transaction must follow chronologically
         getChronologicalErrors(transaction, errors);
 
+        // Can't buy or sell zero quantities
         getZeroFieldValueErrors(transaction, errors);
     }
 
@@ -59,18 +70,22 @@ public class InvestmentTransactionValidator implements Validator {
 
             case Buy:
                 if (transaction.getNetAmount().isZero()) {
+
                     errors.rejectValue("netAmount", "netAmountZero");
                 }
 
                 if (transaction.getQuantity().getValue().equals(BigDecimal.ZERO)) {
+
                     errors.rejectValue("quantity", "quantityZero");
                 }
 
                 if (transaction.getPrice().isNegativeOrZero()) {
+
                     errors.rejectValue("price", "priceNegativeOrZero");
                 }
 
                 if (transaction.getGrossAmount().isZero()) {
+
                     errors.rejectValue("quantity", "quantityZero");
                 }
 
@@ -78,14 +93,17 @@ public class InvestmentTransactionValidator implements Validator {
 
             case Sell:
                 if (transaction.getQuantity().getValue().equals(BigDecimal.ZERO)) {
+
                     errors.rejectValue("quantity", "quantityZero");
                 }
 
                 if (transaction.getPrice().isNegativeOrZero()) {
+
                     errors.rejectValue("price", "priceNegativeOrZero");
                 }
 
                 if (transaction.getGrossAmount().isZero()) {
+
                     errors.rejectValue("quantity", "quantityZero");
                 }
 
@@ -102,6 +120,7 @@ public class InvestmentTransactionValidator implements Validator {
 
         // Settled on or after transaction
         if (transaction.getSettlementDate().isBefore(transaction.getTransactionDate())) {
+
             errors.rejectValue("settlementDate", "settledBeforeTransaction");
         }
     }
@@ -111,6 +130,7 @@ public class InvestmentTransactionValidator implements Validator {
 
         // Gross is product of negated quantity and price
         if (!transaction.getGrossAmount().isEqualTo(transaction.getPrice().multiply(transaction.getQuantity().getValue()).negate())) {
+
             errors.rejectValue("grossAmount", "grossAmountProduct");
         }
 
@@ -127,27 +147,34 @@ public class InvestmentTransactionValidator implements Validator {
 
         // Consistent currency
         CurrencyUnit rootCurrency = Monetary.getCurrency(transaction.getCurrency().getValue());
+
         if (!transaction.getNetAmount().getCurrency().equals(rootCurrency)) {
+
             errors.rejectValue("netAmount", "currencyInconsistent");
         }
 
         if (!transaction.getGrossAmount().getCurrency().equals(rootCurrency)) {
+
             errors.rejectValue("grossAmount", "currencyInconsistent");
         }
 
         if (!transaction.getPrice().getCurrency().equals(rootCurrency)) {
+
             errors.rejectValue("price", "currencyInconsistent");
         }
 
         if (!transaction.getCommission().getCurrency().equals(rootCurrency)) {
+
             errors.rejectValue("commission", "currencyInconsistent");
         }
 
         if (!transaction.getCapitalGain().getCurrency().equals(rootCurrency)) {
+
             errors.rejectValue("capitalGain", "currencyInconsistent");
         }
 
         if (!transaction.getReturnOfCapital().getCurrency().equals(rootCurrency)) {
+
             errors.rejectValue("returnOnCapital", "currencyInconsistent");
         }
     }
@@ -157,16 +184,19 @@ public class InvestmentTransactionValidator implements Validator {
 
         // Commission always negative or zero
         if (transaction.getCommission().isPositive()) {
+
             errors.rejectValue("commission", "commissionPositive");
         }
 
         // Return of capital always positive or zero
         if (transaction.getReturnOfCapital().isNegative()) {
+
             errors.rejectValue("returnOfCapital", "returnOfCapitalNegative");
         }
 
         // Capital gain always positive or zero
         if (transaction.getCapitalGain().isNegative()) {
+
             errors.rejectValue("capitalGain", "capitalGainNegative");
         }
 
@@ -176,10 +206,12 @@ public class InvestmentTransactionValidator implements Validator {
         if (transaction.getAction().equals(InvestmentAction.Sell)) {
 
             if (transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) > 0) {
+
                 errors.rejectValue("quantity", "sellQuantityPositive");
             }
 
             if (transaction.getGrossAmount().isNegativeOrZero()) {
+
                 errors.rejectValue("grossAmount", "sellGrossAmountNegativeOrZero");
             }
         }
@@ -190,10 +222,12 @@ public class InvestmentTransactionValidator implements Validator {
         if (transaction.getAction().equals(InvestmentAction.Buy)) {
 
             if (transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) < 0) {
+
                 errors.rejectValue("quantity", "buyQuantityNegative");
             }
 
             if (transaction.getGrossAmount().isPositiveOrZero()) {
+
                 errors.rejectValue("grossAmount", "buyGrossAmountPositiveOrZero");
             }
         }
