@@ -23,7 +23,9 @@ import sh.kss.finmgrlib.entity.InvestmentAction;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
+import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.util.Map;
 
 
 /**
@@ -36,7 +38,7 @@ public class InvestmentTransactionValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
 
-        return InvestmentTransaction.class.equals(aClass);
+        return InvestmentTransaction.class.isAssignableFrom(aClass);
     }
 
 
@@ -44,6 +46,9 @@ public class InvestmentTransactionValidator implements Validator {
     public void validate(Object o, Errors errors) {
         // Cast the object into a transaction
         InvestmentTransaction transaction = (InvestmentTransaction) o;
+
+        // Expected string values must not be null or empty
+        getNullOrEmptyErrors(transaction, errors);
 
         // Validate currency is consistent
         getCurrencyErrors(transaction, errors);
@@ -65,7 +70,34 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
+    /*
+        Check if all of the required string values in the transaction are null or empty
+     */
+    private void getNullOrEmptyErrors(InvestmentTransaction transaction, Errors errors) {
+
+        Map<String, String> transactionStrings = Map.of(
+            "accountAlias", transaction.getAccount().getAlias(),
+            "accountId", transaction.getAccount().getId(),
+            "currencyValue", transaction.getCurrency().getValue(),
+            "symbolValue", transaction.getSymbol().getValue(),
+            "description", transaction.getDescription()
+        );
+
+        for(Map.Entry<String, String> entry : transactionStrings.entrySet()) {
+
+            if (entry.getValue() == null || entry.getValue().trim().isEmpty()) {
+
+                errors.rejectValue(entry.getKey(), "empty");
+            }
+        }
+    }
+
+
+    /*
+        All required numerical fields during Buy or Sell transactions should be non-zero
+     */
     private void getZeroFieldValueErrors(InvestmentTransaction transaction, Errors errors) {
+
         switch (transaction.getAction()) {
 
             case Buy:
@@ -116,6 +148,9 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
+    /*
+        Settlement date should happen on or after transaction date
+     */
     private void getChronologicalErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Settled on or after transaction
@@ -126,6 +161,10 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
+    /*
+        Gross amount should be the product of quantity and price
+        Net amount should be the sum of gross and commission
+     */
     private void getMathErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Gross is product of negated quantity and price
@@ -143,43 +182,36 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
+    /*
+        The same currency should be used for all monetary amounts
+     */
     private void getCurrencyErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Consistent currency
         CurrencyUnit rootCurrency = Monetary.getCurrency(transaction.getCurrency().getValue());
 
-        if (!transaction.getNetAmount().getCurrency().equals(rootCurrency)) {
+        Map<String, MonetaryAmount> monetaryAmounts = Map.of(
+            "netAmount", transaction.getNetAmount(),
+            "grossAmount", transaction.getGrossAmount(),
+            "price", transaction.getPrice(),
+            "commission", transaction.getCommission(),
+            "capitalGain", transaction.getCapitalGain(),
+            "returnOfCapital", transaction.getReturnOfCapital()
+        );
 
-            errors.rejectValue("netAmount", "currencyInconsistent");
-        }
+        for (Map.Entry<String, MonetaryAmount> entry : monetaryAmounts.entrySet()) {
 
-        if (!transaction.getGrossAmount().getCurrency().equals(rootCurrency)) {
+            if (!entry.getValue().getCurrency().equals(rootCurrency)) {
 
-            errors.rejectValue("grossAmount", "currencyInconsistent");
-        }
-
-        if (!transaction.getPrice().getCurrency().equals(rootCurrency)) {
-
-            errors.rejectValue("price", "currencyInconsistent");
-        }
-
-        if (!transaction.getCommission().getCurrency().equals(rootCurrency)) {
-
-            errors.rejectValue("commission", "currencyInconsistent");
-        }
-
-        if (!transaction.getCapitalGain().getCurrency().equals(rootCurrency)) {
-
-            errors.rejectValue("capitalGain", "currencyInconsistent");
-        }
-
-        if (!transaction.getReturnOfCapital().getCurrency().equals(rootCurrency)) {
-
-            errors.rejectValue("returnOnCapital", "currencyInconsistent");
+                errors.rejectValue(entry.getKey(), "currencyInconsistent");
+            }
         }
     }
 
 
+    /*
+
+     */
     private void getSignErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Commission always negative or zero

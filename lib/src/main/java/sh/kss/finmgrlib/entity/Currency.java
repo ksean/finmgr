@@ -19,8 +19,18 @@ package sh.kss.finmgrlib.entity;
 
 import lombok.Value;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+
 
 @Value
 public class Currency {
+
+    public static final CurrencyUnit UNIT_CAD = Monetary.getCurrency("CAD");
+    public static final CurrencyUnit UNIT_USD = Monetary.getCurrency("USD");
+    public static final Currency CAD = new Currency("CAD");
+    public static final Currency USD = new Currency("USD");
+
+
     String value;
 }

@@ -104,7 +104,7 @@ public class QuestradeTest extends ParseTest {
             .action(InvestmentAction.Deposit)
             .account(new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED))
             .symbol(new Symbol("UNKNOWN"))
-            .currency(CURRENCY)
+            .currency(Currency.CAD)
             .description("1234567827 CIBC DIR DEP")
             .price(ZERO_CAD)
             .grossAmount(ZERO_CAD)

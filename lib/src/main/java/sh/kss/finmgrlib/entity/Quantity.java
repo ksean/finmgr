@@ -27,7 +27,10 @@ import java.math.BigDecimal;
 @Value
 public class Quantity {
 
-    public static final Quantity ZERO_QUANTITY = new Quantity(BigDecimal.ZERO);
+    public static final Quantity ZERO = new Quantity(BigDecimal.ZERO);
+    public static final Quantity ONE = new Quantity(BigDecimal.ZERO);
+    public static final Quantity TEN = new Quantity(BigDecimal.ZERO);
+    public static final Quantity HUNDRED = new Quantity(new BigDecimal(100));
 
     BigDecimal value;
 }

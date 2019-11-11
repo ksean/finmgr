@@ -27,7 +27,7 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static sh.kss.finmgrlib.entity.Quantity.ZERO_QUANTITY;
+import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 
 public class AverageCostBasis extends Operation {
 
@@ -39,9 +39,9 @@ public class AverageCostBasis extends Operation {
         final CurrencyUnit CURRENCY = transaction.currencyUnit();
         final String TXCODE = transaction.identifier(OPCODE);
         MonetaryAmount acb = Money.of(0, CURRENCY);
-        Quantity quantity = ZERO_QUANTITY;
-        
-        
+        Quantity quantity = ZERO;
+
+
         Map<String, Quantity> quantities = portfolio.getQuantities();
         Map<String, MonetaryAmount> monies = portfolio.getMonies();
 

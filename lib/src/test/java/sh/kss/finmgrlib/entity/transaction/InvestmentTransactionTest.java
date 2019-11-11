@@ -28,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
+import sh.kss.finmgrlib.entity.Currency;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -77,7 +78,7 @@ public class InvestmentTransactionTest extends TransactionTest {
         CurrencyUnit usd = Monetary.getCurrency("USD");
 
         InvestmentTransaction inconsistentTransaction = BUY_VTI
-            .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT))
+            .withGrossAmount(Money.of(-10_001, Currency.UNIT_CAD))
             .withNetAmount(Money.of(-9_995, usd));
 
         // Assert spring validator errors
@@ -126,7 +127,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidGrossAmountTest() {
 
         InvestmentTransaction invalidGrossAmountTransaction = BUY_VTI
-            .withGrossAmount(Money.of(-10_001, BASE_CURRENCY_UNIT));
+            .withGrossAmount(Money.of(-10_001, Currency.UNIT_CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -141,7 +142,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidNetAmountTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-            .withNetAmount(Money.of(-10_004, BASE_CURRENCY_UNIT));
+            .withNetAmount(Money.of(-10_004, Currency.UNIT_CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -155,7 +156,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidCommissionTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-            .withCommission(Money.of(5, BASE_CURRENCY_UNIT));
+            .withCommission(Money.of(5, Currency.UNIT_CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();

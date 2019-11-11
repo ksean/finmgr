@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sh.kss.finmgrlib.FinmgrTest;
+import sh.kss.finmgrlib.entity.Currency;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
@@ -88,7 +89,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         assertEquals(
-            Money.of(102.55, BASE_CURRENCY),
+            Money.of(102.55, Currency.UNIT_CAD),
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
@@ -107,7 +108,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         assertEquals(
-            Money.of(102.55, BASE_CURRENCY),
+            Money.of(102.55, Currency.UNIT_CAD),
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
@@ -126,7 +127,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         assertEquals(
-            Money.of(102.55, BASE_CURRENCY),
+            Money.of(102.55, Currency.UNIT_CAD),
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
@@ -145,7 +146,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         assertEquals(
-            Money.of(101.55, BASE_CURRENCY),
+            Money.of(101.55, Currency.UNIT_CAD),
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
@@ -165,7 +166,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         assertEquals(
-            Money.of(0, BASE_CURRENCY),
+            Money.of(0, Currency.UNIT_CAD),
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
@@ -186,7 +187,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         assertEquals(
-            Money.of(100.05, BASE_CURRENCY),
+            Money.of(100.05, Currency.UNIT_CAD),
             AverageCostBasis.getACB(Run.process(test), TXCODE)
         );
     }
