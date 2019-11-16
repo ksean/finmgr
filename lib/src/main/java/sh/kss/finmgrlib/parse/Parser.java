@@ -22,15 +22,15 @@ import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import java.util.List;
 
 /**
- * A class that can parse the text from a specific format of PDF file into finmgr transactions
+ * A class that can parse the text from a specific format of input file into finmgr transactions
  */
-abstract public class PdfParser {
+abstract public class Parser {
 
     /**
-     * Checks if the input text from a PDF file is a match for the parser
+     * Checks if the input text from an input file is a match for the parser
      * Ideally this should be implemented in O(1) time
      *
-     * @param lines List<String> - the lines of text from a PDF file
+     * @param lines List<String> - the lines of text from an input file
      * @return the boolean if the input text is a match for the parser
      */
     abstract public boolean isMatch(List<String> lines);
@@ -40,7 +40,7 @@ abstract public class PdfParser {
      * Should produce an empty list if either: there are no transactions in the file
      * or it is parsing an incompatible document (i.e. isMatch produces false)
      *
-     * @param lines List<String> - the lines of text from a PDF file
+     * @param lines List<String> - the lines of text from an input file
      * @return the list of transactions from the text
      */
     abstract public List<InvestmentTransaction> parse(List<String> lines);

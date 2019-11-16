@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.brokerage.Questrade;
+import sh.kss.finmgrlib.parse.brokerage.QuestradePdf;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import java.util.List;
 public class Runner {
 
     // A list of the available PDF parsers
-    private static final List<PdfParser> PARSERS = ImmutableList.of(new Questrade());
+    private static final List<Parser> PARSERS = ImmutableList.of(new QuestradePdf());
     // pdfbox PDF to Text object
     private static PDFTextStripper textStripper;
     // Log manager
@@ -199,7 +199,7 @@ public class Runner {
                 LOG.debug(stringBuilder);
 
                 // Try all the parsers on the document
-                for (PdfParser parser : PARSERS) {
+                for (Parser parser : PARSERS) {
 
                     // If it matches then short-circuit and return the parse results
                     if (parser.isMatch(lines)) {

@@ -23,6 +23,8 @@ import lombok.Value;
 @Value
 public class Account {
 
+    public static final Account UNKNOWN = new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED);
+
     String id;
     String alias;
     AccountType accountType;

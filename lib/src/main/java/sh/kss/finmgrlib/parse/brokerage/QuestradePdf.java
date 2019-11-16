@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 import org.javamoney.moneta.Money;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.PdfParser;
+import sh.kss.finmgrlib.parse.Parser;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -37,14 +37,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Questrade extends PdfParser {
+public class QuestradePdf extends Parser {
 
-    private DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
+    // How Questrade formats their dates
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
 
-    private Currency CAD = new Currency("CAD");
-    private Currency USD = new Currency("USD");
-
-    private Pattern PATTERN = Pattern.compile(
+    // The typical pattern regex for a Questrade transaction
+    private final Pattern TRANSACTION_PATTERN = Pattern.compile(
         "(?<transaction>\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<type>\\w+) "
@@ -56,13 +55,15 @@ public class Questrade extends PdfParser {
         + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)"
     );
 
-    private Pattern START_PATTERN = Pattern.compile(
+    // For multi-line transactions, detect the start
+    private final Pattern START_PATTERN = Pattern.compile(
         "(?<transaction>^\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<settlement>\\d{1,2}/\\d{1,2}/\\d{4}) "
         + "(?<type>\\w+)$"
     );
 
-    private Pattern END_PATTERN = Pattern.compile(
+    // For multi-line transactions, detect the end
+    private final Pattern END_PATTERN = Pattern.compile(
         "(?<quantity>^\\(?[\\d|,]+)\\)?\\s[\\- ]*"
         + "(?<price>\\$?[\\d|,]+\\.\\d{3}) "
         + "(?<gross>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?) "
@@ -70,9 +71,11 @@ public class Questrade extends PdfParser {
         + "(?<net>\\(?\\$?[\\d|,]+\\.\\d{2}\\)?)$"
     );
 
-    private Pattern END_DIV_PATTERN = Pattern.compile("^\\$[\\d|,]+\\.\\d{2}$");
+    // Another necessary pattern to detect the end of a multi-line transaction
+    private final Pattern END_DIV_PATTERN = Pattern.compile("^\\$[\\d|,]+\\.\\d{2}$");
 
-    private Map<String, InvestmentAction> actionMap = ImmutableMap.<String, InvestmentAction>builder()
+    // Map Questrade action to an internal InvestmentAction
+    private final Map<String, InvestmentAction> ACTION_MAP = ImmutableMap.<String, InvestmentAction>builder()
         .put("buy", InvestmentAction.Buy)
         .put("sell", InvestmentAction.Sell)
         .put("deposit", InvestmentAction.Deposit)
@@ -88,22 +91,27 @@ public class Questrade extends PdfParser {
     @Override
     public boolean isMatch(List<String> lines) {
 
-        return lines.get(37).trim().endsWith("Questrade")
-            || lines.get(38).trim().endsWith("Questrade")
-            || lines.get(41).trim().endsWith("Questrade")
-            || lines.get(42).trim().endsWith("Questrade")
-            || lines.get(44).trim().endsWith("Questrade")
-            || lines.get(16).trim().endsWith("Questrade, Inc.")
-            || lines.get(36).trim().endsWith("Questrade, Inc.")
-            || lines.get(37).trim().endsWith("Questrade, Inc.")
-            || lines.get(39).trim().endsWith("Questrade, Inc.")
-            || lines.get(41).trim().endsWith("Questrade, Inc.")
-            || lines.get(42).trim().endsWith("Questrade, Inc.")
-            || lines.get(44).trim().endsWith("Questrade, Inc.")
-            || lines.get(48).trim().endsWith("Questrade, Inc.")
-            || lines.get(49).trim().endsWith("Questrade, Inc.")
-            || lines.get(50).trim().endsWith("Questrade, Inc.")
-            || lines.get(54).trim().endsWith("Questrade, Inc.")
+        // Length of the list must be greater than 53 to avoid an out of bounds exception
+
+        return lines.size() > 54 &&
+            (
+                lines.get(37).trim().endsWith("Questrade")
+                || lines.get(38).trim().endsWith("Questrade")
+                || lines.get(41).trim().endsWith("Questrade")
+                || lines.get(42).trim().endsWith("Questrade")
+                || lines.get(44).trim().endsWith("Questrade")
+                || lines.get(16).trim().endsWith("Questrade, Inc.")
+                || lines.get(36).trim().endsWith("Questrade, Inc.")
+                || lines.get(37).trim().endsWith("Questrade, Inc.")
+                || lines.get(39).trim().endsWith("Questrade, Inc.")
+                || lines.get(41).trim().endsWith("Questrade, Inc.")
+                || lines.get(42).trim().endsWith("Questrade, Inc.")
+                || lines.get(44).trim().endsWith("Questrade, Inc.")
+                || lines.get(48).trim().endsWith("Questrade, Inc.")
+                || lines.get(49).trim().endsWith("Questrade, Inc.")
+                || lines.get(50).trim().endsWith("Questrade, Inc.")
+                || lines.get(54).trim().endsWith("Questrade, Inc.")
+            )
         ;
     }
 
@@ -111,9 +119,7 @@ public class Questrade extends PdfParser {
     @Override
     public List<InvestmentTransaction> parse(List<String> lines) {
 
-        Currency cursorCurrency = CAD;
         CurrencyUnit cursorCurrencyUnit;
-        Account cursorAccount = new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED);
         Symbol cursorSymbol = new Symbol("UNKNOWN");
 
         List<InvestmentTransaction> transactions = Lists.newArrayList();
@@ -122,15 +128,13 @@ public class Questrade extends PdfParser {
 
             String line = lines.get(i);
 
-            cursorCurrency = getCurrency(line, cursorCurrency);
-            cursorCurrencyUnit = Monetary.getCurrency(CAD.getValue());
-            cursorAccount = getAccount(line, cursorAccount);
+            cursorCurrencyUnit = Monetary.getCurrency(Currency.CAD.getValue());
             cursorSymbol = getSymbol(line, cursorSymbol);
 
             parseTransaction(
-                cursorCurrency,
+                Currency.CAD,
                 cursorCurrencyUnit,
-                cursorAccount,
+                Account.UNKNOWN,
                 cursorSymbol,
                 line
             ).ifPresent(
@@ -160,9 +164,9 @@ public class Questrade extends PdfParser {
             multiLine.append(lines.get(lastLineIndex));
 
             parseTransaction(
-                cursorCurrency,
+                Currency.CAD,
                 cursorCurrencyUnit,
-                cursorAccount,
+                Account.UNKNOWN,
                 cursorSymbol,
                 multiLine.toString()
             ).ifPresent(
@@ -181,7 +185,8 @@ public class Questrade extends PdfParser {
             Symbol symbol,
             String line
     ) {
-        Matcher transaction = PATTERN.matcher(line.trim());
+
+        Matcher transaction = TRANSACTION_PATTERN.matcher(line.trim());
 
         if (! transaction.find()) {
 
@@ -234,7 +239,7 @@ public class Questrade extends PdfParser {
 
     private InvestmentAction getAction(String action) {
 
-        return actionMap.getOrDefault(action, InvestmentAction.Other);
+        return ACTION_MAP.getOrDefault(action, InvestmentAction.Other);
     }
 
 

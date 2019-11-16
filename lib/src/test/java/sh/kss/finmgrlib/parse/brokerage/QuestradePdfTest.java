@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue;
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class QuestradeTest extends ParseTest {
+public class QuestradePdfTest extends ParseTest {
 
     /**
      * The text version of an example Questrade PDF document
@@ -52,7 +52,7 @@ public class QuestradeTest extends ParseTest {
     @Value("classpath:questrade/2011-jan.txt")
     Resource resourceFile;
 
-    private final Questrade QUESTRADE = new Questrade();
+    private final QuestradePdf QUESTRADE_PDF = new QuestradePdf();
 
     private static List<String> lines;
 
@@ -81,7 +81,7 @@ public class QuestradeTest extends ParseTest {
     @Test
     public void questradeTextMatchesTest() {
 
-        assertTrue(QUESTRADE.isMatch(lines));
+        assertTrue(QUESTRADE_PDF.isMatch(lines));
     }
 
 
@@ -92,7 +92,7 @@ public class QuestradeTest extends ParseTest {
     public void oneTransactionTest() {
 
         // Parse the transactions
-        List<InvestmentTransaction> transactions = QUESTRADE.parse(lines);
+        List<InvestmentTransaction> transactions = QUESTRADE_PDF.parse(lines);
 
         // Fixtures
         final MonetaryAmount ZERO_CAD = Money.of(0, "CAD");

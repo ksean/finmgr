@@ -33,7 +33,6 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 public class PersonalTransaction {
 
-    // TODO: Immutable inheritance with builder pattern for member fields:
     LocalDate transactionDate;
     LocalDate settlementDate;
     Account account;
