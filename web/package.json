@@ -7,7 +7,7 @@
     "@material-ui/icons": "4.4.3",
     "axios": "0.19.0",
     "classnames": "2.2.6",
-    "material-ui-dropzone": "^2.4.1",
+    "material-ui-dropzone": "^2.4.9",
     "prop-types": "^15.7.2",
     "react": "16.10.2",
     "react-dom": "16.10.2",
@@ -15,7 +15,7 @@
     "typescript": "3.6.3"
   },
   "devDependencies": {
-    "react-scripts": "3.2.0"
+    "react-scripts": "^3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
