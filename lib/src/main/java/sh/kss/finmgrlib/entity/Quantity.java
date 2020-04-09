@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2019 Kennedy Software Solutions Inc.
+    Copyright (C) 2020 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ import java.math.BigDecimal;
 public class Quantity {
 
     public static final Quantity ZERO = new Quantity(BigDecimal.ZERO);
-    public static final Quantity ONE = new Quantity(BigDecimal.ZERO);
-    public static final Quantity TEN = new Quantity(BigDecimal.ZERO);
+    public static final Quantity ONE = new Quantity(BigDecimal.ONE);
+    public static final Quantity TEN = new Quantity(BigDecimal.TEN);
     public static final Quantity HUNDRED = new Quantity(new BigDecimal(100));
 
     BigDecimal value;

@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2019 Kennedy Software Solutions Inc.
+    Copyright (C) 2020 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,19 +48,18 @@ public class Run {
      *
      * @return the final state of the portfolio after performing all operations
      */
-    public static Portfolio process(Run run) {
+    public Portfolio process() {
 
         // Iterate through all transactions
-        for(InvestmentTransaction transaction : run.transactions) {
+        for(InvestmentTransaction transaction : this.transactions) {
 
             // Iterate through all operations
-            for(Operation operation : run.operations) {
+            for(Operation operation : this.operations) {
 
-                // Update the portfolio with the results of performing the operation
-                run = run.withPortfolio(operation.process(run.portfolio, transaction));
+                this.withPortfolio(operation.process(this.portfolio, transaction));
             }
         }
 
-        return run.getPortfolio();
+        return this.portfolio;
     }
 }

@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2019 Kennedy Software Solutions Inc.
+    Copyright (C) 2020 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@ package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import org.assertj.core.util.Lists;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sh.kss.finmgrlib.FinmgrTest;
@@ -30,6 +30,7 @@ import sh.kss.finmgrlib.entity.Currency;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+import sh.kss.finmgrlib.service.TransactionService;
 
 import java.util.List;
 
@@ -40,7 +41,12 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 public class AverageCostBasisTest extends FinmgrTest {
 
-    private final List<Operation> OPERATIONS = Lists.newArrayList(new AverageCostBasis());
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private AverageCostBasis averageCostBasis;
+
     private final String TXCODE = "NON_REGISTERED-VTI-ACB";
 
 
@@ -53,7 +59,7 @@ public class AverageCostBasisTest extends FinmgrTest {
                     .quantities(Maps.newHashMap())
                     .build()
             )
-            .operations(OPERATIONS)
+            .operations(ImmutableList.of(averageCostBasis))
             .transactions(transactions)
             .build();
     }
@@ -72,7 +78,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             ZERO_CAD,
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 
@@ -90,7 +96,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             Money.of(102.55, Currency.UNIT_CAD),
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 
@@ -109,7 +115,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             Money.of(102.55, Currency.UNIT_CAD),
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 
@@ -128,7 +134,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             Money.of(102.55, Currency.UNIT_CAD),
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 
@@ -147,7 +153,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             Money.of(101.55, Currency.UNIT_CAD),
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 
@@ -167,7 +173,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             Money.of(0, Currency.UNIT_CAD),
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 
@@ -188,7 +194,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         assertEquals(
             Money.of(100.05, Currency.UNIT_CAD),
-            AverageCostBasis.getACB(Run.process(test), TXCODE)
+            transactionService.getACB(test.process(), TXCODE)
         );
     }
 }

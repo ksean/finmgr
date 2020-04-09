@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2019 Kennedy Software Solutions Inc.
+    Copyright (C) 2020 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,11 @@
  */
 package sh.kss.finmgrlib.operation;
 
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
+@Component
 public abstract class Operation {
 
     abstract public Portfolio process(Portfolio portfolio, InvestmentTransaction investmentTransaction);

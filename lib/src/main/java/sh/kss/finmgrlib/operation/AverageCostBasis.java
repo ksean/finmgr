@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2019 Kennedy Software Solutions Inc.
+    Copyright (C) 2020 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,9 +18,12 @@
 package sh.kss.finmgrlib.operation;
 
 import org.javamoney.moneta.Money;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Quantity;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+import sh.kss.finmgrlib.service.TransactionService;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
@@ -29,9 +32,16 @@ import java.util.Map;
 
 import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 
+@Component
 public class AverageCostBasis extends Operation {
 
     private final String OPCODE = "ACB";
+    private final TransactionService transactionService;
+
+    @Autowired
+    public AverageCostBasis(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {
@@ -65,7 +75,7 @@ public class AverageCostBasis extends Operation {
 
             // ACB per share remains constant during sales.
             case Sell:
-                MonetaryAmount acbPerShare = AverageCostBasis.getACB(portfolio, TXCODE);
+                MonetaryAmount acbPerShare = transactionService.getACB(portfolio, TXCODE);
                 quantities.put(TXCODE, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
                 monies.put(TXCODE, acbPerShare.multiply(quantities.get(TXCODE).getValue().negate()));
 
@@ -86,15 +96,8 @@ public class AverageCostBasis extends Operation {
             monies.put(TXCODE, Money.of(0, CURRENCY));
         }
 
-        return portfolio;
-    }
-
-    public static MonetaryAmount getACB(Portfolio portfolio, String txcode) {
-
-        if (portfolio.getQuantities().get(txcode).getValue().equals(BigDecimal.ZERO)) {
-            return portfolio.getMonies().get(txcode);
-        }
-
-        return portfolio.getMonies().get(txcode).divide(portfolio.getQuantities().get(txcode).getValue()).negate();
+        return portfolio
+            .withMonies(monies)
+            .withQuantities(quantities);
     }
 }
