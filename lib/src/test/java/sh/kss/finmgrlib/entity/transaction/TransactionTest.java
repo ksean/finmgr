@@ -31,10 +31,20 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 
+/**
+ *
+ *
+ */
 @Service
 public class TransactionTest extends FinmgrTest {
 
-
+    /**
+     *
+     *
+     * @param validator
+     * @param object
+     * @param expectedErrors
+     */
     void assertHasErrors(Validator validator, Object object, ListMultimap<String, String> expectedErrors) {
 
         Errors errors = new BeanPropertyBindingResult(object, object.getClass().toString());
@@ -44,6 +54,12 @@ public class TransactionTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     * @param errors
+     * @param expectedErrors
+     */
     private void assertHasFieldErrors(Errors errors, ListMultimap<String, String> expectedErrors) {
 
         int expectedErrorSum = 0;
@@ -70,6 +86,13 @@ public class TransactionTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     * @param errors
+     * @param fieldName
+     * @param code
+     */
     private void assertFieldHasOneErrorCode(Errors errors, String fieldName, List<String> code) {
 
         FieldError fieldError =  errors.getFieldError(fieldName);
@@ -93,6 +116,13 @@ public class TransactionTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     * @param errors
+     * @param fieldName
+     * @param codes
+     */
     private void assertFieldHasMultiErrorCodes(Errors errors, String fieldName, List<String> codes) {
 
         List<FieldError> fieldErrors = errors.getFieldErrors(fieldName);

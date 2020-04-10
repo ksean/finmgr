@@ -35,13 +35,22 @@ import java.util.Map;
 public class InvestmentTransactionValidator implements Validator {
 
 
+    /**
+     *
+     * @param aClass
+     * @return
+     */
     @Override
     public boolean supports(Class<?> aClass) {
 
         return InvestmentTransaction.class.isAssignableFrom(aClass);
     }
 
-
+    /**
+     *
+     * @param o
+     * @param errors
+     */
     @Override
     public void validate(Object o, Errors errors) {
         // Cast the object into a transaction
@@ -70,8 +79,11 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
-    /*
-        Check if all of the required string values in the transaction are null or empty
+    /**
+     * Check if all of the required string values in the transaction are null or empty
+     *
+     * @param transaction
+     * @param errors
      */
     private void getNullOrEmptyErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -93,8 +105,11 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
-    /*
-        All required numerical fields during Buy or Sell transactions should be non-zero
+    /**
+     * All required numerical fields during Buy or Sell transactions should be non-zero
+     *
+     * @param transaction
+     * @param errors
      */
     private void getZeroFieldValueErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -148,8 +163,11 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
-    /*
-        Settlement date should happen on or after transaction date
+    /**
+     * Settlement date should happen on or after transaction date
+     *
+     * @param transaction
+     * @param errors
      */
     private void getChronologicalErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -161,9 +179,12 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
-    /*
-        Gross amount should be the product of quantity and price
-        Net amount should be the sum of gross and commission
+    /**
+     * Gross amount should be the product of quantity and price
+     * Net amount should be the sum of gross and commission
+     *
+     * @param transaction
+     * @param errors
      */
     private void getMathErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -182,8 +203,11 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
-    /*
-        The same currency should be used for all monetary amounts
+    /**
+     * The same currency should be used for all monetary amounts
+     *
+     * @param transaction
+     * @param errors
      */
     private void getCurrencyErrors(InvestmentTransaction transaction, Errors errors) {
 
@@ -209,8 +233,11 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
 
-    /*
-
+    /**
+     *
+     *
+     * @param transaction
+     * @param errors
      */
     private void getSignErrors(InvestmentTransaction transaction, Errors errors) {
 

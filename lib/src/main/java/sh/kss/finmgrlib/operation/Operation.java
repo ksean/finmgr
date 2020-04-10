@@ -21,6 +21,10 @@ import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
+/**
+ *
+ *
+ */
 @Component
 public abstract class Operation {
 

@@ -111,6 +111,10 @@ public class QuestradePdfTest extends ParseTest {
             .commission(ZERO_CAD)
             .netAmount(Money.of(1500, "CAD"))
             .quantity(new Quantity(new BigDecimal(0)))
+            .eligibleDividend(ZERO_CAD)
+            .nonEligibleDividend(ZERO_CAD)
+            .returnOfCapital(ZERO_CAD)
+            .capitalGain(ZERO_CAD)
             .build();
 
 

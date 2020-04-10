@@ -25,6 +25,10 @@ import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import java.time.LocalDate;
 
 
+/**
+ *
+ *
+ */
 @Service
 public class FinmgrTest {
 
@@ -50,6 +54,8 @@ public class FinmgrTest {
         .returnOfCapital(ZERO_CAD)
         .capitalGain(ZERO_CAD)
         .currency(Currency.CAD)
+        .eligibleDividend(ZERO_CAD)
+        .nonEligibleDividend(ZERO_CAD)
         .build();
 
 

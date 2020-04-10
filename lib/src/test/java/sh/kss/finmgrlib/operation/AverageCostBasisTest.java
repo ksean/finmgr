@@ -37,6 +37,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 
+/**
+ *
+ *
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class AverageCostBasisTest extends FinmgrTest {
@@ -50,6 +54,12 @@ public class AverageCostBasisTest extends FinmgrTest {
     private final String TXCODE = "NON_REGISTERED-VTI-ACB";
 
 
+    /**
+     *
+     *
+     * @param transactions
+     * @return
+     */
     private Run operationsTest(List<InvestmentTransaction> transactions) {
 
         return Run.builder()
@@ -65,6 +75,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void zeroQuantityACBTest() {
 
@@ -83,6 +97,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void buyAtDifferentPriceACBTest() {
 
@@ -101,6 +119,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void sellingDoesNotChangeACBTest() {
 
@@ -120,6 +142,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void dividendDoesNotChangeACBTest() {
 
@@ -139,6 +165,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void returnOfCapitalReducesACBTest() {
 
@@ -158,6 +188,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void sellingAllQuantityResetsACBTest() {
 
@@ -178,6 +212,10 @@ public class AverageCostBasisTest extends FinmgrTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void sellAllRebuyACBTest() {
 

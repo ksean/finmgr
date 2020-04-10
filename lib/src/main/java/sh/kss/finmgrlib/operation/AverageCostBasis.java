@@ -32,6 +32,10 @@ import java.util.Map;
 
 import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 
+/**
+ *
+ *
+ */
 @Component
 public class AverageCostBasis extends Operation {
 

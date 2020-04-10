@@ -22,7 +22,10 @@ import lombok.With;
 
 import java.math.BigDecimal;
 
-
+/**
+ *
+ *
+ */
 @With
 @Value
 public class Quantity {

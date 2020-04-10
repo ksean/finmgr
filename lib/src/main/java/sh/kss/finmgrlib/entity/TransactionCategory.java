@@ -21,6 +21,10 @@ import lombok.Value;
 
 import java.util.Set;
 
+/**
+ *
+ *
+ */
 @Value
 public class TransactionCategory {
     String name;

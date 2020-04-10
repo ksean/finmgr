@@ -36,7 +36,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ *
+ *
+ */
 public class QuestradePdf extends Parser {
 
     // How Questrade formats their dates
@@ -88,6 +91,12 @@ public class QuestradePdf extends Parser {
         .build();
 
 
+    /**
+     *
+     *
+     * @param lines List<String> - the lines of text from an input file
+     * @return
+     */
     @Override
     public boolean isMatch(List<String> lines) {
 
@@ -115,7 +124,12 @@ public class QuestradePdf extends Parser {
         ;
     }
 
-
+    /**
+     *
+     *
+     * @param lines List<String> - the lines of text from an input file
+     * @return
+     */
     @Override
     public List<InvestmentTransaction> parse(List<String> lines) {
 
@@ -178,6 +192,16 @@ public class QuestradePdf extends Parser {
     }
 
 
+    /**
+     *
+     *
+     * @param currency
+     * @param currencyUnit
+     * @param account
+     * @param symbol
+     * @param line
+     * @return
+     */
     private Optional<InvestmentTransaction> parseTransaction(
             Currency currency,
             CurrencyUnit currencyUnit,
@@ -207,42 +231,80 @@ public class QuestradePdf extends Parser {
             .grossAmount(getMoney(transaction.group("gross"), currencyUnit))
             .commission(getMoney(transaction.group("commission"), currencyUnit))
             .netAmount(getMoney(transaction.group("net"), currencyUnit))
+            .eligibleDividend(getMoney("0", currencyUnit))
+            .returnOfCapital(getMoney("0", currencyUnit))
+            .nonEligibleDividend(getMoney("0", currencyUnit))
+            .capitalGain(getMoney("0", currencyUnit))
             .build();
 
         return Optional.of(investmentTransaction);
     }
 
-
+    /**
+     *
+     *
+     * @param line
+     * @return
+     */
     private boolean startPartialTransaction(String line) {
 
         return START_PATTERN.matcher(line.trim()).find();
     }
 
-
+    /**
+     *
+     *
+     * @param line
+     * @param currentCurrency
+     * @return
+     */
     private Currency getCurrency(String line, Currency currentCurrency) {
 
         return currentCurrency;
     }
 
-
+    /**
+     *
+     *
+     * @param line
+     * @param currentAccount
+     * @return
+     */
     private Account getAccount(String line, Account currentAccount) {
 
         return currentAccount;
     }
 
-
+    /**
+     *
+     *
+     * @param line
+     * @param currentSymbol
+     * @return
+     */
     private Symbol getSymbol(String line, Symbol currentSymbol) {
 
         return currentSymbol;
     }
 
-
+    /**
+     *
+     *
+     * @param action
+     * @return
+     */
     private InvestmentAction getAction(String action) {
 
         return ACTION_MAP.getOrDefault(action, InvestmentAction.Other);
     }
 
-
+    /**
+     *
+     *
+     * @param amount
+     * @param currencyUnit
+     * @return
+     */
     private MonetaryAmount getMoney(String amount, CurrencyUnit currencyUnit) {
 
         String adjustedAmount = amount
@@ -254,7 +316,12 @@ public class QuestradePdf extends Parser {
         return Money.of(parsedAmount, currencyUnit);
     }
 
-
+    /**
+     *
+     *
+     * @param quantity
+     * @return
+     */
     private Quantity getQuantity(String quantity) {
 
         return new Quantity(new BigDecimal(quantity.replaceAll("[^\\d.]", "")));

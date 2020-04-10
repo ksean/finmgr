@@ -17,6 +17,10 @@
  */
 package sh.kss.finmgrlib.entity;
 
+/**
+ *
+ *
+ */
 public enum AccountType {
 
     TFSA,

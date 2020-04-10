@@ -36,7 +36,10 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-
+/**
+ *
+ *
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class InvestmentTransactionTest extends TransactionTest {
@@ -54,6 +57,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     );
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void validTransactionFixtures() {
 
@@ -72,6 +79,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void inconsistentCurrencyAndNetAmountTest() {
         // Setup
@@ -91,6 +102,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void sameSettlementDateTransactionTest() {
 
@@ -109,6 +124,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void settledBeforeTransactionDateTest() {
 
@@ -123,6 +142,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void invalidGrossAmountTest() {
 
@@ -138,6 +161,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void invalidNetAmountTest() {
 
@@ -152,6 +179,10 @@ public class InvestmentTransactionTest extends TransactionTest {
     }
 
 
+    /**
+     *
+     *
+     */
     @Test
     public void invalidCommissionTest() {
 

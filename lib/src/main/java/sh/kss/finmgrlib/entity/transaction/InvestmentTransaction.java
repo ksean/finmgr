@@ -18,6 +18,7 @@
 package sh.kss.finmgrlib.entity.transaction;
 
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
 import sh.kss.finmgrlib.entity.*;
@@ -27,33 +28,36 @@ import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
-
+/**
+ *
+ *
+ */
 @Value
 @With
 @Builder(toBuilder = true)
 public class InvestmentTransaction implements Comparable<InvestmentTransaction> {
 
     // What, where, when this transaction happened
-    LocalDate transactionDate;
-    LocalDate settlementDate;
-    InvestmentAction action;
-    Account account;
-    Currency currency;
+    @NonNull LocalDate transactionDate;
+    @NonNull LocalDate settlementDate;
+    @NonNull InvestmentAction action;
+    @NonNull Account account;
+    @NonNull Currency currency;
     Symbol symbol;
-    String description;
+    @NonNull String description;
 
     // Details of transactions that change the quantity of the security
-    MonetaryAmount price;
-    Quantity quantity;
-    MonetaryAmount grossAmount;
-    MonetaryAmount commission;
-    MonetaryAmount netAmount;
+    @NonNull MonetaryAmount price;
+    @NonNull Quantity quantity;
+    @NonNull MonetaryAmount grossAmount;
+    @NonNull MonetaryAmount commission;
+    @NonNull MonetaryAmount netAmount;
 
     // Most frequently referenced distribution
-    MonetaryAmount returnOfCapital;
-    MonetaryAmount capitalGain;
-    MonetaryAmount eligibleDividend;
-    MonetaryAmount nonEligibleDividend;
+    @NonNull MonetaryAmount returnOfCapital;
+    @NonNull MonetaryAmount capitalGain;
+    @NonNull MonetaryAmount eligibleDividend;
+    @NonNull MonetaryAmount nonEligibleDividend;
 
     MonetaryAmount foreignBusinessIncome;
     MonetaryAmount foreignNonBusinessIncome;

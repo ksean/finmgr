@@ -6,9 +6,20 @@ import sh.kss.finmgrlib.entity.Portfolio;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 
+/**
+ *
+ *
+ */
 @Service
 public class TransactionService {
 
+    /**
+     *
+     *
+     * @param portfolio
+     * @param txcode
+     * @return
+     */
     public MonetaryAmount getACB(Portfolio portfolio, String txcode) {
 
         if (portfolio.getQuantities().get(txcode).getValue().equals(BigDecimal.ZERO)) {
