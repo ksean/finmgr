@@ -17,6 +17,8 @@
  */
 package sh.kss.finmgrlib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,17 +26,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 /**
- *
+ * Tests for the correctness of the finmgr library interface and entities
  *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class FinmgrLibApplicationTests {
 
+    private static final Logger LOG = LogManager.getLogger(FinmgrLibApplicationTests.class);
+
     /**
+     * Test that the Spring context can load
      *
-     * 
      */
     @Test
-    public void contextLoads() {}
+    public void contextLoads() {
+        LOG.info("Spring context loaded");
+    }
 }

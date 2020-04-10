@@ -17,6 +17,8 @@
  */
 package sh.kss.finmgrlib.parse.brokerage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +58,8 @@ public class QuestradePdfTest extends ParseTest {
 
     private static List<String> lines;
 
+    private static final Logger LOG = LogManager.getLogger(QuestradePdfTest.class);
+
 
     /**
      * Sets up the tests by converting a resource test file into a list of strings
@@ -63,13 +67,17 @@ public class QuestradePdfTest extends ParseTest {
     @Before
     public void setup() {
 
+        LOG.info("Setting up tests");
+
         try {
 
+            LOG.debug("Retrieving file fixture contents");
             lines = getLinesFromFile(resourceFile.getFile());
 
         }
         catch (IOException ioe) {
 
+            LOG.debug(String.format("IOException trying to read %s", resourceFile.getFilename()));
             ioe.printStackTrace();
         }
     }
@@ -118,11 +126,13 @@ public class QuestradePdfTest extends ParseTest {
             .build();
 
 
+        // Exactly 1 transaction is parsed from the input
         assertEquals(
             1,
             transactions.size()
         );
 
+        // The transaction parsed matches the expected transaction defined explicitly above
         assertEquals(
             expectedTransaction,
             transactions.get(0)

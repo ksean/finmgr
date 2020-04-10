@@ -18,7 +18,6 @@
 package sh.kss.finmgrlib;
 
 import org.javamoney.moneta.Money;
-import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
@@ -26,10 +25,9 @@ import java.time.LocalDate;
 
 
 /**
- *
+ * Common finmgr test definitions for use in all tests
  *
  */
-@Service
 public class FinmgrTest {
 
     protected final Symbol VTI_SYMBOL = new Symbol("VTI");
@@ -38,6 +36,7 @@ public class FinmgrTest {
     protected final Money ZERO_CAD = Money.of(0, Currency.UNIT_CAD);
 
     // VALID buy and sell transactions
+    // Buying 100 shares of ETF as the root transaction
     protected final InvestmentTransaction BUY_VTI = InvestmentTransaction
         .builder()
         .transactionDate(BASE_DATE)

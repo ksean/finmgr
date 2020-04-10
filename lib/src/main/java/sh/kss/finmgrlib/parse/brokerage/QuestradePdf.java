@@ -92,10 +92,10 @@ public class QuestradePdf extends Parser {
 
 
     /**
-     *
+     * Check if a list of input lines matches known Questrade format
      *
      * @param lines List<String> - the lines of text from an input file
-     * @return
+     * @return a boolean if the list is a match
      */
     @Override
     public boolean isMatch(List<String> lines) {

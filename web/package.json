@@ -3,19 +3,19 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "4.5.0",
-    "@material-ui/icons": "4.4.3",
-    "axios": "0.19.0",
+    "@material-ui/core": "4.9.9",
+    "@material-ui/icons": "4.9.1",
+    "axios": "0.19.2",
     "classnames": "2.2.6",
-    "material-ui-dropzone": "^2.4.9",
-    "prop-types": "^15.7.2",
-    "react": "16.10.2",
-    "react-dom": "16.10.2",
+    "material-ui-dropzone": "2.4.9",
+    "prop-types": "15.7.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "typeface-roboto": "0.0.75",
-    "typescript": "3.6.3"
+    "typescript": "3.8.3"
   },
   "devDependencies": {
-    "react-scripts": "^3.4.1"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
