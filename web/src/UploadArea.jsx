@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {DropzoneArea} from 'material-ui-dropzone'
+import {DropzoneArea} from 'material-ui-dropzone';
+import './UploadArea.css';
 
 class UploadArea extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class UploadArea extends Component {
 
   onClickHandler = () => {
     const data = new FormData()
-    data.append('file', this.state.selectedFile)
+    data.append('file', this.state.files[0])
     axios.post("http://localhost:8080/upload", data, {})
       .then(response => {
         console.log(response.statusText)
@@ -47,7 +48,10 @@ class UploadArea extends Component {
           showFileNames={true}
           onChange={this.handleChange.bind(this)}
         />
-        <button type="button" className="btn btn-success btn-block" onClick={this.onClickHandler}>Upload</button>
+        <div>
+          <button type="button" className="btn btn-success btn-block btn-gap" onClick={this.onClickHandler}>Upload</button>
+        </div>
+
 
       </div>
     );

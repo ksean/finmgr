@@ -17,11 +17,29 @@
  */
 package sh.kss.finmgrcore;
 
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sh.kss.finmgrcore.storage.StorageService;
 
+@RestController
+public class FileUploadController {
 
-@Value
-public class HomeResponse {
+    private final StorageService storageService;
 
-    String message;
+    @Autowired
+    public FileUploadController(StorageService storageService) {
+        this.storageService = storageService;
+    }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public String handleFileUpload(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) {
+
+        storageService.store(file);
+
+        return "uploaded";
+    }
 }
