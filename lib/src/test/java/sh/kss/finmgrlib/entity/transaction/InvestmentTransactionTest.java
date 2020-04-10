@@ -21,6 +21,8 @@ package sh.kss.finmgrlib.entity.transaction;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +39,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
+ * Test the validity of investment transaction objects
  *
  */
 @SpringBootTest
@@ -56,13 +58,17 @@ public class InvestmentTransactionTest extends TransactionTest {
         VTI_CAPITAL_GAIN
     );
 
+    private static final Logger LOG = LogManager.getLogger(InvestmentTransactionTest.class);
+
 
     /**
-     *
+     * Asset that all transactions fixtures are valid
      *
      */
     @Test
     public void validTransactionFixtures() {
+
+        LOG.debug("Validate all test fixture transactions");
 
         TEST_TRANSACTIONS.forEach(fixture -> {
 
@@ -80,7 +86,7 @@ public class InvestmentTransactionTest extends TransactionTest {
 
 
     /**
-     *
+     * Bad math for gross amounts and inconsistent currencies are detected
      *
      */
     @Test
@@ -103,7 +109,7 @@ public class InvestmentTransactionTest extends TransactionTest {
 
 
     /**
-     *
+     * Transactions may settle on the same day
      *
      */
     @Test
@@ -125,7 +131,7 @@ public class InvestmentTransactionTest extends TransactionTest {
 
 
     /**
-     *
+     * Transactions may not settle before the transaction date
      *
      */
     @Test
@@ -143,7 +149,7 @@ public class InvestmentTransactionTest extends TransactionTest {
 
 
     /**
-     *
+     * Gross amount bad math produces gross and net amount errors
      *
      */
     @Test
@@ -162,7 +168,7 @@ public class InvestmentTransactionTest extends TransactionTest {
 
 
     /**
-     *
+     * Net amount must sum to the net of transaction sum and expenses
      *
      */
     @Test
@@ -180,7 +186,7 @@ public class InvestmentTransactionTest extends TransactionTest {
 
 
     /**
-     *
+     * Commission must be a negative amount
      *
      */
     @Test
