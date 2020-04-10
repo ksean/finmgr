@@ -19,6 +19,8 @@ package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 
 
 /**
- *
+ * Tests for the average cost basis operation as used in the context of a finmgr Run
  *
  */
 @SpringBootTest
@@ -53,14 +55,18 @@ public class AverageCostBasisTest extends FinmgrTest {
 
     private final String TXCODE = "NON_REGISTERED-VTI-ACB";
 
+    private static final Logger LOG = LogManager.getLogger(AverageCostBasisTest.class);
+
 
     /**
+     * Creates a run that will use the AverageCostBasis operation from a list of transactions
      *
-     *
-     * @param transactions
-     * @return
+     * @param transactions the list of transactions to calculate ACB for
+     * @return the Run object to be used for ACB testing
      */
     private Run operationsTest(List<InvestmentTransaction> transactions) {
+
+        LOG.debug(String.format("Creating a Run from input list of transactions: %s", transactions.toString()));
 
         return Run.builder()
             .portfolio(
@@ -76,7 +82,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * The resulting ACB from a portfolio with zero net quantity is $0
      *
      */
     @Test
@@ -90,6 +96,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $0
         assertEquals(
             ZERO_CAD,
             transactionService.getACB(test.process(), TXCODE)
@@ -98,7 +105,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * The ACB for multiple different cost purchases should be the gross costs divided by the quantity
      *
      */
     @Test
@@ -112,6 +119,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, Currency.UNIT_CAD),
             transactionService.getACB(test.process(), TXCODE)
@@ -120,7 +128,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * The act of selling should not change the ACB
      *
      */
     @Test
@@ -135,6 +143,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, Currency.UNIT_CAD),
             transactionService.getACB(test.process(), TXCODE)
@@ -143,7 +152,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * A dividend distribution should not change the ACB
      *
      */
     @Test
@@ -158,6 +167,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, Currency.UNIT_CAD),
             transactionService.getACB(test.process(), TXCODE)
@@ -166,7 +176,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * A return of capital distribution should reduce the ACB
      *
      */
     @Test
@@ -181,6 +191,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $101.55
         assertEquals(
             Money.of(101.55, Currency.UNIT_CAD),
             transactionService.getACB(test.process(), TXCODE)
@@ -189,7 +200,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * Multiple buys then selling all quantity should set ACB to $0
      *
      */
     @Test
@@ -205,6 +216,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $0
         assertEquals(
             Money.of(0, Currency.UNIT_CAD),
             transactionService.getACB(test.process(), TXCODE)
@@ -213,7 +225,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
 
     /**
-     *
+     * Selling all quantity then re-buying should reset ACB to the rebuy price
      *
      */
     @Test
@@ -230,6 +242,7 @@ public class AverageCostBasisTest extends FinmgrTest {
             )
         );
 
+        // The ACB for the holding should be $100.05
         assertEquals(
             Money.of(100.05, Currency.UNIT_CAD),
             transactionService.getACB(test.process(), TXCODE)
