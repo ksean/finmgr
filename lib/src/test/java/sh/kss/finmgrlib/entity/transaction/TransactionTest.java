@@ -19,7 +19,8 @@ package sh.kss.finmgrlib.entity.transaction;
 
 
 import com.google.common.collect.ListMultimap;
-import org.springframework.stereotype.Service;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -32,124 +33,105 @@ import static org.junit.Assert.*;
 
 
 /**
- *
+ * A subset of finmgr tests that validate the state of a transaction object
  *
  */
-@Service
-public class TransactionTest extends FinmgrTest {
+public abstract class TransactionTest extends FinmgrTest {
+
+    private static final Logger LOG = LogManager.getLogger(TransactionTest.class);
 
     /**
+     * Assert that the input object when validated against the input validator returns the expected list of errors
      *
-     *
-     * @param validator
-     * @param object
-     * @param expectedErrors
+     * @param validator the validator for object validation
+     * @param object the object to be validated
+     * @param expectedErrors the list of errors expected to be produced
      */
     void assertHasErrors(Validator validator, Object object, ListMultimap<String, String> expectedErrors) {
 
-        Errors errors = new BeanPropertyBindingResult(object, object.getClass().toString());
-        validator.validate(object, errors);
+        LOG.debug(String.format("assertHasErrors on object: %s", object.toString()));
 
-        assertHasFieldErrors(errors, expectedErrors);
+        // Create the validator result object
+        Errors actualErrors = new BeanPropertyBindingResult(object, object.getClass().toString());
+
+        // Feed it into the validator with the input object
+        validator.validate(object, actualErrors);
+
+        // Assert that it has the specified errors
+        assertHasFieldErrors(expectedErrors, actualErrors);
     }
 
 
     /**
+     * Assert that the expected errors matches the input errors
      *
-     *
-     * @param errors
-     * @param expectedErrors
+     * @param expectedErrors expected errors
+     * @param actualErrors actual errors
      */
-    private void assertHasFieldErrors(Errors errors, ListMultimap<String, String> expectedErrors) {
+    private void assertHasFieldErrors(ListMultimap<String, String> expectedErrors, Errors actualErrors) {
 
+        // Keep a count
         int expectedErrorSum = 0;
 
+        // Loop through the expected field names to produce errors
         for (String fieldName : expectedErrors.keySet()) {
-            List<String> codes = expectedErrors.get(fieldName);
-            int numberOfErrorCodes = codes.size();
 
-            if (numberOfErrorCodes > 1) {
-                assertFieldHasMultiErrorCodes(errors, fieldName, codes);
-            }
-            else {
-                assertFieldHasOneErrorCode(errors, fieldName, codes);
-            }
+            // Get all error codes for that field
+            List<String> expectedFieldErrors = expectedErrors.get(fieldName);
 
-            expectedErrorSum += numberOfErrorCodes;
+            // Get the actual error codes for this field
+            List<FieldError> actualFieldErrors = actualErrors.getFieldErrors(fieldName);
+
+            // Assert that the error codes that are expected exist for the field
+            assertFieldnameHasErrors(expectedFieldErrors, actualFieldErrors);
+
+            // Add the number of errors for this field to the sum
+            expectedErrorSum += expectedFieldErrors.size();
         }
 
-        // There is an error for each expected error
+        // The count of errors matches
         assertEquals(
             expectedErrorSum,
-            errors.getAllErrors().size()
+            actualErrors.getAllErrors().size()
         );
     }
 
 
     /**
+     * All errors for a field must match the expected ones explicitly
      *
-     *
-     * @param errors
-     * @param fieldName
-     * @param code
+     * @param expectedFieldErrors expected field errors
+     * @param actualFieldErrors actual field errors produced
      */
-    private void assertFieldHasOneErrorCode(Errors errors, String fieldName, List<String> code) {
+    private void assertFieldnameHasErrors(List<String> expectedFieldErrors, List<FieldError> actualFieldErrors) {
 
-        FieldError fieldError =  errors.getFieldError(fieldName);
-
-        // Field error must exist
-        assertNotNull(fieldError);
-
-        String[] errorCodes = fieldError.getCodes();
-
-        // Error codes must exist
-        assertNotNull(errorCodes);
-
-        // Has at least one error code
-        assertTrue(errorCodes.length > 1);
-
-        // The last error code matches expected
-        assertEquals(
-            code.get(0),
-            errorCodes[errorCodes.length - 1]
-        );
-    }
-
-
-    /**
-     *
-     *
-     * @param errors
-     * @param fieldName
-     * @param codes
-     */
-    private void assertFieldHasMultiErrorCodes(Errors errors, String fieldName, List<String> codes) {
-
-        List<FieldError> fieldErrors = errors.getFieldErrors(fieldName);
-
-        int numberOfErrors = fieldErrors.size();
+        // Get the expected field error count size
+        int expectedErrorCount = expectedFieldErrors.size();
 
         // Assert validation generated the expected number of field errors
         assertEquals(
-            codes.size(),
-            numberOfErrors
+            expectedErrorCount,
+            actualFieldErrors.size()
         );
 
-        for (int i = 0; i < numberOfErrors; i++) {
+        // Loop through the expected error counts and check that an actual error was produced with that code
+        for (int i = 0; i < expectedErrorCount; i++) {
 
-            String[] errorCodes = fieldErrors.get(i).getCodes();
+            // Get the error codes for the field
+            String[] actualFieldError = actualFieldErrors.get(i).getCodes();
 
             // Error codes must exist
-            assertNotNull(errorCodes);
+            assertNotNull(actualFieldError);
 
             // Has at least one error code
-            assertTrue(errorCodes.length > 1);
+            assertTrue(actualFieldError.length > 0);
 
-            String lastError = errorCodes[errorCodes.length - 1];
+            // The usefuel code is always last in the array
+            String lastError = actualFieldError[actualFieldError.length - 1];
 
             // Must have the expected code
             assertEquals(
-                codes.get(i),
+                expectedFieldErrors.get(i),
                 lastError
             );
         }

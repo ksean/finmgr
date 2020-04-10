@@ -32,7 +32,7 @@ import java.util.Scanner;
  * A subset of tests that parse a file as part of the testing process
  *
  */
-public class ParseTest extends FinmgrTest {
+public abstract class ParseTest extends FinmgrTest {
 
     private static final Logger LOG = LogManager.getLogger(FinmgrTest.class);
 

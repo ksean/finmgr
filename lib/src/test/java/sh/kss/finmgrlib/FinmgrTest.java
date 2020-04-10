@@ -28,7 +28,7 @@ import java.time.LocalDate;
  * Common finmgr test definitions for use in all tests
  *
  */
-public class FinmgrTest {
+public abstract class FinmgrTest {
 
     protected final Symbol VTI_SYMBOL = new Symbol("VTI");
     protected final Account NON_REG_ACCOUNT = new Account("123-abc", "foo", AccountType.NON_REGISTERED);
