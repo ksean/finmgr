@@ -17,50 +17,79 @@
  */
 package sh.kss.finmgrcore;
 
-import com.google.common.collect.ImmutableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sh.kss.finmgrcore.storage.StorageProperties;
 import sh.kss.finmgrcore.storage.StorageService;
+import sh.kss.finmgrlib.parse.Runner;
 
-
+/**
+ *
+ *
+ */
 @SpringBootApplication(scanBasePackages = "sh.kss")
 @RestController
 @EnableConfigurationProperties(StorageProperties.class)
 public class FinmgrCoreApplication {
 
-    private HomeResponse defaultResponse = new HomeResponse("hello world");
-    private TransactionsResponse noTransactions = new TransactionsResponse(ImmutableList.of());
+    private static final Logger LOG = LogManager.getLogger(FinmgrCoreApplication.class);
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    private final HomeResponse defaultResponse = new HomeResponse("hello world");
+
+    /**
+     *
+     *
+     * @return
+     */
     @GetMapping("/")
     @ResponseBody
     public HomeResponse home() {
+        LOG.debug("Received /");
+
         return defaultResponse;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000/transactions")
+    /**
+     *
+     *
+     * @return
+     */
     @GetMapping("/transactions")
     @ResponseBody
     public TransactionsResponse transactions() {
-        return noTransactions;
+        LOG.info("Received /transactions");
+
+        return new TransactionsResponse(Runner.traversePath("/home/s/dev/java/finmgr/upload-dir"));
     }
 
+    /**
+     *
+     *
+     * @param args
+     */
     public static void main(String[] args) {
+
+        LOG.debug("Starting Spring FinmgrCoreApplication context");
         SpringApplication.run(FinmgrCoreApplication.class, args);
     }
 
+    /**
+     *
+     *
+     * @param storageService
+     * @return
+     */
     @Bean
     CommandLineRunner init(StorageService storageService) {
         return (args) -> {
-            storageService.deleteAll();
             storageService.init();
         };
     }

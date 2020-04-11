@@ -52,7 +52,7 @@ public class FileSystemStorageService implements StorageService {
     public void store(MultipartFile file) {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        LOG.debug("Calling store on filename: " + filename);
+        LOG.info("Calling store on filename: " + filename);
 
         try {
 
@@ -69,8 +69,8 @@ public class FileSystemStorageService implements StorageService {
             }
             try (InputStream inputStream = file.getInputStream()) {
 
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
-                StandardCopyOption.REPLACE_EXISTING);
+                LOG.debug("Storing file in: " + this.rootLocation.resolve(filename));
+                Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
             }
         }
         catch (IOException e) {
@@ -101,6 +101,8 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public Path load(String filename) {
+
+        LOG.debug("load on filename: " + filename);
 
         return rootLocation.resolve(filename);
     }

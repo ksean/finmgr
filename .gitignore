@@ -2,6 +2,7 @@ target/
 build/
 node_modules/
 node/
+upload-dir/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###

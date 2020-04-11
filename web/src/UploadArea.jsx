@@ -8,24 +8,36 @@ class UploadArea extends Component {
     super(props);
 
     this.state = {
-      files: []
+      files: [],
+      transactions: []
     };
   }
 
   handleChange = (files) => {
     this.setState({
-      files: files
+      files: files,
+      transactions: this.state.transactions
     });
   };
 
   onClickHandler = () => {
-    const data = new FormData()
-    data.append('file', this.state.files[0])
-    axios.post("http://localhost:8080/upload", data, {})
-      .then(response => {
-        console.log(response.statusText)
-      })
+    this.state.files.map(file => {
+      const data = new FormData()
+      data.append('file', file)
+      axios.post("http://localhost:8080/upload", data, {})
+        .then(response => {
+          console.log(response.statusText)
+        })
+    });
   };
+
+  getTransactionsHandler = () => {
+      axios.get("http://localhost:8080/transactions", {})
+        .then(response => {
+          console.log(response)
+        })
+  };
+
 
   render() {
     const { isLoading, error } = this.state;
@@ -38,6 +50,10 @@ class UploadArea extends Component {
       return <p>Error connecting to server</p>;
     }
 
+    const transactions = this.state.transactions.map( transaction =>
+      <li key={transaction.id}>{transaction.transactionDate} - {transaction.description} - {transaction.netAmount} - {transaction.currency}</li>
+    );
+
     return (
       <div>
         <DropzoneArea
@@ -48,10 +64,17 @@ class UploadArea extends Component {
           showFileNames={true}
           onChange={this.handleChange.bind(this)}
         />
-        <div>
+        <div className={"btn-div"}>
           <button type="button" className="btn btn-success btn-block btn-gap" onClick={this.onClickHandler}>Upload</button>
         </div>
-
+        <div className={"btn-div"}>
+          <button type="button" className="btn btn-success btn-block btn-gap" onClick={this.getTransactionsHandler}>Get Transactions</button>
+        </div>
+        <div>
+          <ul>
+            {transactions}
+          </ul>
+        </div>
 
       </div>
     );
