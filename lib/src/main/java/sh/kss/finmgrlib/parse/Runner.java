@@ -51,7 +51,7 @@ public class Runner {
      */
     private static boolean canCreateTextStripper() {
 
-        LOG.debug("Calling setUtils()");
+        LOG.debug("Calling canCreateTextStripper()");
 
         try {
 

@@ -17,18 +17,28 @@
  */
 package sh.kss.finmgrlib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- *
+ * The library of entities and useful functions for the framework objects
  *
  */
 @SpringBootApplication
 public class FinmgrLibApplication {
 
+    private static final Logger LOG = LogManager.getLogger(FinmgrLibApplication.class);
+
+    /**
+     * A spring application context so we can easily inject services and other components
+     *
+     * @param args launch arguments
+     */
     public static void main(String[] args) {
 
+        LOG.info("Start Spring application context");
         SpringApplication.run(FinmgrLibApplication.class, args);
     }
 }
