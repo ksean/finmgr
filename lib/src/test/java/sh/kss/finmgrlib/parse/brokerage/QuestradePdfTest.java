@@ -23,7 +23,6 @@ import org.javamoney.moneta.Money;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
@@ -55,8 +54,7 @@ public class QuestradePdfTest extends ParseTest {
     @Value("classpath:questrade/2011-jan.txt")
     Resource resourceFile;
 
-    @Autowired
-    private QuestradePdf QUESTRADE_PDF;
+    private static final QuestradePdf QUESTRADE_PDF = new QuestradePdf();
 
     private static List<String> lines;
 
