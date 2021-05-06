@@ -10,7 +10,17 @@ A financial transaction framework
 
 ## Requirements
 
-Java >= 8
+### finmgr-core, finmgr-lib
+
+Java >= 11
+
+Maven >= 3.6.3
+
+### finmgr-web
+
+Yarn >= 1.22.5
+
+Node >= 14.16.1
 
 ## Installation
 
