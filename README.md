@@ -1,7 +1,7 @@
 finmgr
 ===
 
-![Travis CI](https://travis-ci.org/ksean/finmgr.svg?branch=master)
+[![CircleCI](https://circleci.com/gh/ksean/finmgr.svg?style=svg)](https://circleci.com/gh/ksean/finmgr)
 
 A financial transaction framework
 
