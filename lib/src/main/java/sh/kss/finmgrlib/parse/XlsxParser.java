@@ -20,11 +20,11 @@ package sh.kss.finmgrlib.parse;
 import com.google.common.collect.ImmutableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.brokerage.QuestradePdf;
-import sh.kss.finmgrlib.parse.brokerage.QuestradePdfOld;
 import sh.kss.finmgrlib.parse.brokerage.QuestradeXlsx;
 
 import java.io.File;

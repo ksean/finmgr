@@ -20,8 +20,6 @@ package sh.kss.finmgrlib.parse;
 import org.apache.poi.ss.usermodel.Row;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
-import java.util.List;
-
 /**
  * A class that can parse the text from a specific format tabular data into finmgr transactions
  */
