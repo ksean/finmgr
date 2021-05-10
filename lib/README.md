@@ -1,13 +1,13 @@
 finmgr-lib
 ===
 
-![Travis CI](https://travis-ci.org/ksean/finmgr.svg?branch=master)
+[![CircleCI](https://circleci.com/gh/ksean/finmgr.svg?style=svg)](https://circleci.com/gh/ksean/finmgr)
 
 A library for defining financial transactions, and providing built-in financial functions to operate on them.
 
 ## Requirements
 
-Java >= 8
+Java >= 11
 
 ## Testing
 

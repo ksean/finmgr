@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2020 Kennedy Software Solutions Inc.
+    Copyright (C) 2021 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import sh.kss.finmgrlib.parse.Runner;
 
 /**
  * The library of entities and useful functions for the framework objects
@@ -40,5 +41,6 @@ public class FinmgrLibApplication {
 
         LOG.info("Start Spring application context");
         SpringApplication.run(FinmgrLibApplication.class, args);
+        Runner.traversePath("/home/s/questrade/2016/07-Jul.pdf");
     }
 }

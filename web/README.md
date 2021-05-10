@@ -1,13 +1,13 @@
 finmgr-web
 ===
 
-![Travis CI](https://travis-ci.org/ksean/finmgr.svg?branch=master)
+[![CircleCI](https://circleci.com/gh/ksean/finmgr.svg?style=svg)](https://circleci.com/gh/ksean/finmgr)
 
 A simple web interface implementation of the finmgr-core API project.
 
 ## Requirements
 
-Java >= 8
+Java >= 11
 
 ## Testing
 

@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2020 Kennedy Software Solutions Inc.
+    Copyright (C) 2021 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,16 +17,12 @@
  */
 package sh.kss.finmgrlib.parse;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.brokerage.QuestradePdf;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,40 +33,8 @@ import java.util.List;
  */
 public class Runner {
 
-    // A list of the available PDF parsers
-    private static final List<Parser> PARSERS = ImmutableList.of(new QuestradePdf());
-    // pdfbox PDF to Text object
-    private static PDFTextStripper textStripper;
     // Log manager
     private static final Logger LOG = LogManager.getLogger(Runner.class);
-
-    /**
-     * Since creating a PDF Text Stripper can throw an IOException, we should handle it here
-     *
-     * @return was the creation successful?
-     */
-    private static boolean canCreateTextStripper() {
-
-        LOG.debug("Calling canCreateTextStripper()");
-
-        try {
-
-            // If the PDF text stripper hasn't been instantiated, do so now
-            if (textStripper == null) {
-
-                LOG.debug("PDF text stripper was null - creating object");
-                textStripper = new PDFTextStripper();
-            }
-        } catch (IOException ioe) {
-
-            LOG.error("Failed to create PDF text stripper");
-            ioe.printStackTrace();
-
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * Traverse the input file for transactions
@@ -163,68 +127,26 @@ public class Runner {
      */
     public static List<InvestmentTransaction> parseFile(File file) {
 
-        LOG.info(String.format("Parsing input file %s", file.getAbsolutePath()));
+        LOG.debug(String.format("Parsing input file %s", file.getAbsolutePath()));
 
-        if (!canCreateTextStripper()) {
+        // Lowercase the extension for case insensitive matching
+        String extension = Files.getFileExtension(file.getName()).toLowerCase();
 
-            LOG.error("Could not create the PDF text stripper");
+        LOG.debug(String.format("Found extension %s", extension));
 
-            return Collections.emptyList();
+        switch (extension) {
+
+            case "pdf":
+                LOG.info(String.format("Parse %s", extension));
+                return PdfParser.parsePdf(file);
+
+            case "xlsx":
+                LOG.info(String.format("Parse %s", extension));
+                return XlsxParser.parseXlsx(file);
+
+            default:
+                // Don't know how to parse
+                return Collections.emptyList();
         }
-
-        // Try to load the file in PDDocument
-        try (PDDocument document = PDDocument.load(file)) {
-
-            // Skip any encrypted documents
-            if (!document.isEncrypted()) {
-
-                // Get the text from the document
-                String pdfFileInText = textStripper.getText(document);
-
-                // Split it into a list of strings
-                List<String> lines = Arrays.asList(pdfFileInText.split("\\r?\\n"));
-
-                // In debug mode output every line in the document
-                StringBuilder stringBuilder = new StringBuilder();
-
-                for (int i = 0; i < lines.size(); i++) {
-
-                    stringBuilder
-                        .append(i)
-                        .append(": ")
-                        .append(lines.get(i))
-                        .append("\n");
-                }
-
-                LOG.debug(stringBuilder);
-
-                // Try all the parsers on the document
-                for (Parser parser : PARSERS) {
-
-                    // If it matches then short-circuit and return the parse results
-                    if (parser.isMatch(lines)) {
-
-                        LOG.debug(String.format("Matched parser %s", parser.toString()));
-
-                        return parser.parse(lines);
-
-                    } else {
-
-                        LOG.debug(String.format("Did not match parser %s", parser.toString()));
-                    }
-                }
-            } else {
-
-                LOG.debug(String.format("Skipped file %s because it is encrypted", file.getAbsoluteFile()));
-            }
-        }
-        catch (IOException ioe) {
-
-            LOG.error(String.format("IOException occurred when loading PDDocumnent with file %s", file.getAbsoluteFile()));
-            ioe.printStackTrace();
-        }
-
-        // IOException, encrypted files, or a file that doesn't match will all return an empty list
-        return Collections.emptyList();
     }
 }

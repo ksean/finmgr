@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2020 Kennedy Software Solutions Inc.
+    Copyright (C) 2021 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,7 @@ import sh.kss.finmgrlib.parse.Runner;
  */
 @SpringBootApplication(scanBasePackages = "sh.kss")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @EnableConfigurationProperties(StorageProperties.class)
 public class FinmgrCoreApplication {
 
@@ -67,7 +69,7 @@ public class FinmgrCoreApplication {
     public TransactionsResponse transactions() {
         LOG.info("Received /transactions");
 
-        return new TransactionsResponse(Runner.traversePath("/home/s/dev/java/finmgr/upload-dir"));
+        return new TransactionsResponse(Runner.traversePath("upload-dir"));
     }
 
     /**

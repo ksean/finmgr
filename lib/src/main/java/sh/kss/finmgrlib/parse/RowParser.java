@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2020 Kennedy Software Solutions Inc.
+    Copyright (C) 2021 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,31 +17,30 @@
  */
 package sh.kss.finmgrlib.parse;
 
+import org.apache.poi.ss.usermodel.Row;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import java.util.List;
 
 /**
- * A class that can parse the text from a specific format of input file into finmgr transactions
+ * A class that can parse the text from a specific format tabular data into finmgr transactions
  */
-abstract public class Parser {
+abstract public class RowParser {
 
     /**
-     * Checks if the input text from an input file is a match for the parser
+     * Checks if the header row from an input file is a match for the parser
      * Ideally this should be implemented in O(1) time
      *
-     * @param lines List<String> - the lines of text from an input file
+     * @param row Row - the header row from an input file
      * @return the boolean if the input text is a match for the parser
      */
-    abstract public boolean isMatch(List<String> lines);
+    abstract public boolean isMatch(Row row);
 
     /**
-     * Parse the input text and return all of the transactions found
-     * Should produce an empty list if either: there are no transactions in the file
-     * or it is parsing an incompatible document (i.e. isMatch produces false)
+     * Parse the input row and return the transaction found
      *
-     * @param lines List<String> - the lines of text from an input file
-     * @return the list of transactions from the text
+     * @param row Row - the row from an input file
+     * @return the transaction from the row
      */
-    abstract public List<InvestmentTransaction> parse(List<String> lines);
+    abstract public InvestmentTransaction parse(Row row);
 }

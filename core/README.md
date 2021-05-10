@@ -1,13 +1,13 @@
 finmgr-core
 ===
 
-![Travis CI](https://travis-ci.org/ksean/finmgr.svg?branch=master)
+[![CircleCI](https://circleci.com/gh/ksean/finmgr.svg?style=svg)](https://circleci.com/gh/ksean/finmgr)
 
 A simple API wrapper implementation of the finmgr-lib project.
 
 ## Requirements
 
-Java >= 8
+Java >= 11
 
 ## Testing
 

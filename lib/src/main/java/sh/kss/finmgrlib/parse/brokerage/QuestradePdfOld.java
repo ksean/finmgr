@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  *
  *
  */
-public class QuestradePdf extends LineParser {
+public class QuestradePdfOld extends LineParser {
 
     // How Questrade formats their dates
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
@@ -100,11 +100,26 @@ public class QuestradePdf extends LineParser {
     @Override
     public boolean isMatch(List<String> lines) {
 
-        // Length of the list must be greater than 6 to avoid an out of bounds exception
+        // Length of the list must be greater than 53 to avoid an out of bounds exception
 
-        return lines.size() > 6 &&
+        return lines.size() > 54 &&
             (
-                lines.get(lines.size() - 7).trim().endsWith("Questrade, Inc.")
+                lines.get(37).trim().endsWith("Questrade")
+                || lines.get(38).trim().endsWith("Questrade")
+                || lines.get(41).trim().endsWith("Questrade")
+                || lines.get(42).trim().endsWith("Questrade")
+                || lines.get(44).trim().endsWith("Questrade")
+                || lines.get(16).trim().endsWith("Questrade, Inc.")
+                || lines.get(36).trim().endsWith("Questrade, Inc.")
+                || lines.get(37).trim().endsWith("Questrade, Inc.")
+                || lines.get(39).trim().endsWith("Questrade, Inc.")
+                || lines.get(41).trim().endsWith("Questrade, Inc.")
+                || lines.get(42).trim().endsWith("Questrade, Inc.")
+                || lines.get(44).trim().endsWith("Questrade, Inc.")
+                || lines.get(48).trim().endsWith("Questrade, Inc.")
+                || lines.get(49).trim().endsWith("Questrade, Inc.")
+                || lines.get(50).trim().endsWith("Questrade, Inc.")
+                || lines.get(54).trim().endsWith("Questrade, Inc.")
             )
         ;
     }

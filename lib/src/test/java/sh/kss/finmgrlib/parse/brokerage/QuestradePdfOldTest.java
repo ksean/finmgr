@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2020 Kennedy Software Solutions Inc.
+    Copyright (C) 2021 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ import static org.junit.Assert.assertTrue;
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class QuestradePdfTest extends ParseTest {
+public class QuestradePdfOldTest extends ParseTest {
 
     /**
      * The text version of an example Questrade PDF document
@@ -54,11 +54,11 @@ public class QuestradePdfTest extends ParseTest {
     @Value("classpath:questrade/2011-jan.txt")
     Resource resourceFile;
 
-    private static final QuestradePdf QUESTRADE_PDF = new QuestradePdf();
+    private static final QuestradePdfOld QUESTRADE_PDF = new QuestradePdfOld();
 
     private static List<String> lines;
 
-    private static final Logger LOG = LogManager.getLogger(QuestradePdfTest.class);
+    private static final Logger LOG = LogManager.getLogger(QuestradePdfOldTest.class);
 
 
     /**
