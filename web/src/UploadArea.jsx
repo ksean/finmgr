@@ -57,10 +57,10 @@ class UploadArea extends Component {
     return (
       <div>
         <DropzoneArea
-          acceptedFiles={['application/pdf', 'application/x-pdf', 'text/csv']}
+          acceptedFiles={['application/pdf', 'application/x-pdf', 'text/csv', 'application/vnd.ms-excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']}
           filesLimit={100000}
           maxFileSize={25000000}
-          dropzoneText={'PDF or CSV'}
+          dropzoneText={'.csv, .pdf, .xlsx...'}
           showFileNames={true}
           onChange={this.handleChange.bind(this)}
         />

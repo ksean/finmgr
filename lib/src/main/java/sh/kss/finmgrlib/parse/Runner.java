@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Can consume one or many CSV or PDF files and convert them into a list of transactions
+ * Can consume one or many files and convert them into a list of transactions
  */
 public class Runner {
 
