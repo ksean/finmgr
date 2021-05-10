@@ -21,7 +21,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.Runner;
+
+import java.util.List;
 
 /**
  * The library of entities and useful functions for the framework objects
@@ -41,6 +44,5 @@ public class FinmgrLibApplication {
 
         LOG.info("Start Spring application context");
         SpringApplication.run(FinmgrLibApplication.class, args);
-        Runner.traversePath("/home/s/questrade/2016/07-Jul.pdf");
     }
 }

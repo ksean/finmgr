@@ -58,14 +58,24 @@ public class XlsxParser {
             // Try to match against known row parsers
             for (RowParser rowParser : ROW_PARSERS) {
 
+                LOG.debug(String.format("Check RowParser %s", rowParser));
+
                 // If the header matches, parse it
                 if (rowParser.isMatch(header)) {
+
+                    LOG.debug(String.format("Matched RowParser %s", rowParser));
 
                     Iterator<Row> rowIterator = sheet.rowIterator();
                     List<InvestmentTransaction> transactions = new ArrayList<>();
 
+                    boolean skippedHeader = false;
                     // Parse each row into an InvestmentTransaction
                     while (rowIterator.hasNext()) {
+
+                        if (!skippedHeader) {
+                            rowIterator.next();
+                            skippedHeader = true;
+                        }
 
                         transactions.add(rowParser.parse(rowIterator.next()));
                     }

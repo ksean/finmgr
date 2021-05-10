@@ -34,6 +34,5 @@ public class Currency {
     public static final Currency CAD = new Currency("CAD");
     public static final Currency USD = new Currency("USD");
 
-
     String value;
 }
