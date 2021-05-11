@@ -31,10 +31,10 @@ import java.util.List;
 /**
  * Can consume one or many files and convert them into a list of transactions
  */
-public class Runner {
+public class Parser {
 
     // Log manager
-    private static final Logger LOG = LogManager.getLogger(Runner.class);
+    private static final Logger LOG = LogManager.getLogger(Parser.class);
 
     /**
      * Traverse the input file for transactions
@@ -137,12 +137,13 @@ public class Runner {
         switch (extension) {
 
             case "pdf":
-                LOG.info(String.format("Parse %s", extension));
-                return PdfParser.parsePdf(file);
+                return PdfFileParser.parsePdf(file);
 
             case "xlsx":
-                LOG.info(String.format("Parse %s", extension));
-                return XlsxParser.parseXlsx(file);
+                return XlsxFileParser.parseXlsx(file);
+
+            case "csv":
+                return CsvFileParser.parseCsv(file);
 
             default:
                 // Don't know how to parse

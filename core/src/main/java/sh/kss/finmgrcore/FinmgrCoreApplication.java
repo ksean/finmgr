@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sh.kss.finmgrcore.storage.StorageProperties;
 import sh.kss.finmgrcore.storage.StorageService;
-import sh.kss.finmgrlib.parse.Runner;
+import sh.kss.finmgrlib.parse.Parser;
 
 /**
  *
@@ -69,7 +69,7 @@ public class FinmgrCoreApplication {
     public TransactionsResponse transactions() {
         LOG.info("Received /transactions");
 
-        return new TransactionsResponse(Runner.traversePath("upload-dir"));
+        return new TransactionsResponse(Parser.traversePath("upload-dir"));
     }
 
     /**

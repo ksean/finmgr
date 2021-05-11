@@ -19,15 +19,16 @@ package sh.kss.finmgrlib.parse.brokerage;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.javamoney.moneta.Money;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.RowParser;
+import sh.kss.finmgrlib.parse.XlsxParser;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class QuestradeXlsx extends RowParser {
+public class QuestradeXlsx implements XlsxParser {
 
     public final String[] HEADER_COLUMNS = {
         "Transaction Date",
@@ -50,23 +51,25 @@ public class QuestradeXlsx extends RowParser {
      * Checks if the header row from an input file is a match for the parser
      * Ideally this should be implemented in O(1) time
      *
-     * @param row Row - the header row from an input file
+     * @param sheet Sheet - the sheet to perform matching against
      * @return the boolean if the input text is a match for the parser
      */
     @Override
-    public boolean isMatch(Row row) {
+    public boolean isMatch(Sheet sheet) {
+
+        Row header = sheet.getRow(0);
 
         for (int i = 0; i < HEADER_COLUMNS.length; i++) {
 
             // Order and column header strings must all match
-            if (!HEADER_COLUMNS[i].equals(row.getCell(i).getStringCellValue())) {
+            if (!HEADER_COLUMNS[i].equals(header.getCell(i).getStringCellValue())) {
 
                 return false;
             }
         }
 
         // Also check if column length matches to ensure blank rows don't match
-        return row.getLastCellNum() - row.getFirstCellNum() == HEADER_COLUMNS.length;
+        return header.getLastCellNum() - header.getFirstCellNum() == HEADER_COLUMNS.length;
     }
 
     /**
@@ -152,7 +155,7 @@ public class QuestradeXlsx extends RowParser {
                 return InvestmentAction.Corporate;
 
             case "":
-                if (descriptor.getStringCellValue().toLowerCase() == "interest") {
+                if (descriptor.getStringCellValue().equalsIgnoreCase("interest")) {
 
                     return InvestmentAction.Fee;
 

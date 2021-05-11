@@ -17,28 +17,29 @@
  */
 package sh.kss.finmgrlib.parse;
 
-import org.apache.poi.ss.usermodel.Row;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
+import java.io.FileInputStream;
+
 /**
- * A class that can parse the text from a specific format tabular data into finmgr transactions
+ * A class that can parse the text from a csv format into finmgr transactions
  */
-abstract public class RowParser {
+public interface CsvParser {
 
     /**
      * Checks if the header row from an input file is a match for the parser
      * Ideally this should be implemented in O(1) time
      *
-     * @param row Row - the header row from an input file
+     * @param fileInputStream FileInputStream  - the sheet to perform matching against
      * @return the boolean if the input text is a match for the parser
      */
-    abstract public boolean isMatch(Row row);
+    boolean isMatch(FileInputStream fileInputStream);
 
     /**
      * Parse the input row and return the transaction found
      *
-     * @param row Row - the row from an input file
+     * @param line String - the line from a csv file
      * @return the transaction from the row
      */
-    abstract public InvestmentTransaction parse(Row row);
+    InvestmentTransaction parse(String line);
 }

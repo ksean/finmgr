@@ -17,88 +17,29 @@
  */
 package sh.kss.finmgrlib.parse;
 
-import com.google.common.collect.ImmutableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.brokerage.QuestradeXlsx;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+/**
+ * A class that can parse the text from a specific format tabular data into finmgr transactions
+ */
+public interface XlsxParser {
 
-public class XlsxParser {
-    // Log manager
-    private static final Logger LOG = LogManager.getLogger(XlsxParser.class);
-    // A list of the available Xlsx parsers
-    private static final List<RowParser> ROW_PARSERS = ImmutableList.of(new QuestradeXlsx());
+    /**
+     * Checks if the header row from an input file is a match for the parser
+     * Ideally this should be implemented in O(1) time
+     *
+     * @param sheet Sheet - the sheet to perform matching against
+     * @return the boolean if the input text is a match for the parser
+     */
+    boolean isMatch(Sheet sheet);
 
-    public static List<InvestmentTransaction> parseXlsx(File file) {
-
-        LOG.debug("Calling parseXlsx()");
-
-        // Wrap in try catch due to opening file input stream
-        try {
-
-            // Get the root sheet and header row
-            FileInputStream inputStream = new FileInputStream(file);
-            Workbook workbook = new XSSFWorkbook(inputStream);
-            Sheet sheet = workbook.getSheetAt(0);
-            Row header = sheet.getRow(sheet.getFirstRowNum());
-
-            // Try to match against known row parsers
-            for (RowParser rowParser : ROW_PARSERS) {
-
-                LOG.debug(String.format("Check RowParser %s", rowParser));
-
-                // If the header matches, parse it
-                if (rowParser.isMatch(header)) {
-
-                    LOG.debug(String.format("Matched RowParser %s", rowParser));
-
-                    Iterator<Row> rowIterator = sheet.rowIterator();
-                    List<InvestmentTransaction> transactions = new ArrayList<>();
-
-                    boolean skippedHeader = false;
-                    // Parse each row into an InvestmentTransaction
-                    while (rowIterator.hasNext()) {
-
-                        if (!skippedHeader) {
-                            rowIterator.next();
-                            skippedHeader = true;
-                        }
-
-                        transactions.add(rowParser.parse(rowIterator.next()));
-                    }
-
-                    return transactions;
-                }
-            }
-
-            // If no Row Parsers matched, the file format is unknown and no transactions are parsed
-            return Collections.emptyList();
-
-
-        } catch (FileNotFoundException fnfe) {
-
-            LOG.error(String.format("FileNotFoundException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
-            fnfe.printStackTrace();
-
-        }  catch (IOException ioe) {
-
-            LOG.error(String.format("IOException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
-            ioe.printStackTrace();
-        }
-
-        return Collections.emptyList();
-    }
+    /**
+     * Parse the input row and return the transaction found
+     *
+     * @param row Row - the row from an input file
+     * @return the transaction from the row
+     */
+    InvestmentTransaction parse(Row row);
 }
