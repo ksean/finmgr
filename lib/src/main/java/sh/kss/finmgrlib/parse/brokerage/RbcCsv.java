@@ -77,7 +77,7 @@ public class RbcCsv implements CsvParser {
     public InvestmentTransaction parse(String line) {
 
         String[] cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-        git statu
+
         if (cols.length != 11) {
 
             return null;
