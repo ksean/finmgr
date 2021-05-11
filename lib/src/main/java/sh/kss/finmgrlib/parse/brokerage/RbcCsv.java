@@ -25,11 +25,18 @@ import sh.kss.finmgrlib.parse.CsvParser;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class RbcCsv implements CsvParser {
 
+    // Match RBC style header from raw csv
     private final String HEADER_MATCH = "\"Date\",\"Activity\",\"Symbol\",\"Symbol Description\",\"Quantity\",\"Price\",\"Settlement Date\",\"Account\",\"Value\",\"Currency\",\"Description\"";
+    // RBC style dates in csv file
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMMM d, u");
 
     /**
      * Checks if the header row from an input file is a match for the parser
@@ -76,17 +83,24 @@ public class RbcCsv implements CsvParser {
     @Override
     public InvestmentTransaction parse(String line) {
 
-        String[] cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+        // Split line into raw string array
+        String[] raw_cols = line.split("\",\"");
 
-        if (cols.length != 11) {
+        // Clean the columns for object population
+        List<String> cols = Arrays.stream(raw_cols).map(x -> x.replaceAll("^\"|\"$", "")).collect(Collectors.toList());
+
+        // Must have 11 columns, and the 8th column must contain an 8 digit account number
+        if (cols.size() != 11 || cols.get(7).length() != 8) {
 
             return null;
 
         } else {
 
-            String currencyCode = cols[9];
+            String currencyCode = cols.get(9);
+            Money zero = Money.of(0, currencyCode);
             Currency currency;
 
+            // Using switch here in preparation of adding more currencies
             switch (currencyCode.toLowerCase()) {
 
                 case "usd":
@@ -97,24 +111,48 @@ public class RbcCsv implements CsvParser {
                     currency = Currency.CAD;
             }
 
+            // Quantity defaults to 0 if blank
+            Quantity quantity;
+
+            if (cols.get(4).length() == 0) {
+
+                quantity = new Quantity(BigDecimal.ZERO);
+
+            } else {
+
+                quantity = new Quantity(new BigDecimal(cols.get(4)));
+            }
+
+            // Price defaults to 0 if blank
+            Money price;
+
+            if (cols.get(5).length() == 0) {
+
+                price = zero;
+
+            } else {
+
+                price = Money.parse(currency.getValue() + " " + cols.get(5));
+            }
+
             return InvestmentTransaction.builder()
-                .transactionDate(LocalDate.parse(cols[0]))
-                .action(parseAction(cols[1]))
-                .symbol(new Symbol(cols[2]))
-                .description(cols[10])
-                .quantity(new Quantity(new BigDecimal(cols[4])))
-                .price(Money.parse(currency.getValue() + " " + cols[5]))
-                .settlementDate(LocalDate.parse(cols[6]))
-                .account(new Account(cols[7], cols[7], AccountType.NON_REGISTERED))
-                .grossAmount(Money.parse(currency.getValue() + " " + cols[8]))
-                .netAmount(Money.parse(currency.getValue() + " " + cols[8]))
+                .transactionDate(LocalDate.parse(cols.get(0), DATE_FORMATTER))
+                .action(parseAction(cols.get(1)))
+                .symbol(new Symbol(cols.get(2)))
+                .description(cols.get(10))
+                .quantity(quantity)
+                .price(price)
+                .settlementDate(LocalDate.parse(cols.get(6), DATE_FORMATTER))
+                .account(new Account(cols.get(7), cols.get(7), AccountType.NON_REGISTERED))
+                .grossAmount(Money.parse(currency.getValue() + " " + cols.get(8)))
+                .netAmount(Money.parse(currency.getValue() + " " + cols.get(8)))
                 .currency(currency)
                 // TODO: implemented for intelligent taxation insight
-                .commission(Money.of(0, currencyCode))
-                .returnOfCapital(Money.of(0, currencyCode))
-                .capitalGain(Money.of(0, currencyCode))
-                .eligibleDividend(Money.of(0, currencyCode))
-                .nonEligibleDividend(Money.of(0, currencyCode))
+                .commission(zero)
+                .returnOfCapital(zero)
+                .capitalGain(zero)
+                .eligibleDividend(zero)
+                .nonEligibleDividend(zero)
             .build();
         }
     }

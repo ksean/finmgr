@@ -55,27 +55,53 @@ public class CsvFileParser {
 
                     LOG.debug(String.format("Matched CsvParser %s", csvParser));
 
-                    List<InvestmentTransaction> transactions = new ArrayList<>();
-
-                    try (Scanner scanner = new Scanner(inputStream, "UTF-8")) {
-
-                        while (scanner.hasNext()) {
-
-                            String line = scanner.next();
-
-                            LOG.debug(line);
-
-                            transactions.add(csvParser.parse(line));
-                        }
-                    }
-
-                    return transactions;
+                    return parseLines(file, csvParser);
                 }
             }
 
             // If no Row Parsers matched, the file format is unknown and no transactions are parsed
             return Collections.emptyList();
 
+
+        } catch (FileNotFoundException fnfe) {
+
+            LOG.error(String.format("FileNotFoundException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
+            fnfe.printStackTrace();
+
+        } catch (IOException ioe) {
+
+            LOG.error(String.format("IOException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
+            ioe.printStackTrace();
+        }
+
+        return Collections.emptyList();
+    }
+
+    private static List<InvestmentTransaction> parseLines(File file, CsvParser csvParser) {
+
+        LOG.debug("Calling parseLines()");
+
+        // Wrap in try catch due to opening file input stream
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+
+            List<InvestmentTransaction> transactions = new ArrayList<>();
+            Scanner scanner = new Scanner(inputStream, "UTF-8");
+
+            while (scanner.hasNextLine()) {
+
+                String line = scanner.nextLine();
+
+                LOG.debug(line);
+
+                InvestmentTransaction parsedTransaction = csvParser.parse(line);
+
+                if (parsedTransaction != null) {
+
+                    transactions.add(parsedTransaction);
+                }
+            }
+
+            return transactions;
 
         } catch (FileNotFoundException fnfe) {
 

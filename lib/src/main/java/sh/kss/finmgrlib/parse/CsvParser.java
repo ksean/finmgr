@@ -30,10 +30,10 @@ public interface CsvParser {
      * Checks if the header row from an input file is a match for the parser
      * Ideally this should be implemented in O(1) time
      *
-     * @param fileInputStream FileInputStream  - the sheet to perform matching against
+     * @param inputStream FileInputStream  - the sheet to perform matching against
      * @return the boolean if the input text is a match for the parser
      */
-    boolean isMatch(FileInputStream fileInputStream);
+    boolean isMatch(FileInputStream inputStream);
 
     /**
      * Parse the input row and return the transaction found
