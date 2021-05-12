@@ -21,6 +21,8 @@ import org.javamoney.moneta.Money;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import java.time.LocalDate;
 
 
@@ -33,7 +35,9 @@ public abstract class FinmgrTest {
     protected final Symbol VTI_SYMBOL = new Symbol("VTI");
     protected final Account NON_REG_ACCOUNT = new Account("123-abc", "foo", AccountType.NON_REGISTERED);
     protected final LocalDate BASE_DATE = LocalDate.of(1980, 1, 1);
-    protected final Money ZERO_CAD = Money.of(0, Currency.UNIT_CAD);
+    protected final CurrencyUnit USD = Monetary.getCurrency("USD");
+    protected final CurrencyUnit CAD = Monetary.getCurrency("CAD");
+    protected final Money ZERO_CAD = Money.of(0, CAD);
 
     // VALID buy and sell transactions
     // Buying 100 shares of ETF as the root transaction
@@ -45,34 +49,34 @@ public abstract class FinmgrTest {
         .symbol(VTI_SYMBOL)
         .quantity(Quantity.HUNDRED)
         .description("Buy 100 Shares of VTI at $CAD100")
-        .price(Money.of(100, Currency.UNIT_CAD))
-        .grossAmount(Money.of(-10_000, Currency.UNIT_CAD))
-        .commission(Money.of(-5, Currency.UNIT_CAD))
-        .netAmount(Money.of(-10_005, Currency.UNIT_CAD))
+        .price(Money.of(100, CAD))
+        .grossAmount(Money.of(-10_000, CAD))
+        .commission(Money.of(-5, CAD))
+        .netAmount(Money.of(-10_005, CAD))
         .account(NON_REG_ACCOUNT)
         .returnOfCapital(ZERO_CAD)
         .capitalGain(ZERO_CAD)
-        .currency(Currency.CAD)
+        .currency(CAD)
         .eligibleDividend(ZERO_CAD)
         .nonEligibleDividend(ZERO_CAD)
         .build();
 
 
     protected final InvestmentTransaction BUY_VTI_HIGHER_PRICE = BUY_VTI
-        .withPrice(Money.of(105, Currency.UNIT_CAD))
-        .withGrossAmount(Money.of(-10_500, Currency.UNIT_CAD))
-        .withNetAmount(Money.of(-10_505, Currency.UNIT_CAD));
+        .withPrice(Money.of(105, CAD))
+        .withGrossAmount(Money.of(-10_500, CAD))
+        .withNetAmount(Money.of(-10_505, CAD));
 
     protected final InvestmentTransaction SELL_VTI = BUY_VTI
         .withAction(InvestmentAction.Sell)
         .withQuantity(new Quantity(BUY_VTI.getQuantity().getValue().negate()))
         .withGrossAmount(BUY_VTI.getGrossAmount().negate())
-        .withNetAmount(Money.of(9_995, Currency.UNIT_CAD));
+        .withNetAmount(Money.of(9_995, CAD));
 
     protected final InvestmentTransaction SELL_VTI_LOWER_PRICE = SELL_VTI
-        .withPrice(Money.of(97.50, Currency.UNIT_CAD))
-        .withGrossAmount(Money.of(9_750, Currency.UNIT_CAD))
-        .withNetAmount(Money.of(9_745, Currency.UNIT_CAD));
+        .withPrice(Money.of(97.50, CAD))
+        .withGrossAmount(Money.of(9_750, CAD))
+        .withNetAmount(Money.of(9_745, CAD));
 
     protected final InvestmentTransaction VTI_DIVIDEND = BUY_VTI
         .withAction(InvestmentAction.Distribution)
@@ -80,14 +84,14 @@ public abstract class FinmgrTest {
         .withPrice(ZERO_CAD)
         .withGrossAmount(ZERO_CAD)
         .withCommission(ZERO_CAD)
-        .withNetAmount(Money.of(250, Currency.UNIT_CAD));
+        .withNetAmount(Money.of(250, CAD));
 
     protected final InvestmentTransaction VTI_RETURN_OF_CAPITAL = VTI_DIVIDEND
         .withNetAmount(ZERO_CAD)
-        .withReturnOfCapital(Money.of(1, Currency.UNIT_CAD));
+        .withReturnOfCapital(Money.of(1, CAD));
 
     protected final InvestmentTransaction VTI_CAPITAL_GAIN = VTI_RETURN_OF_CAPITAL
         .withReturnOfCapital(ZERO_CAD)
-        .withCapitalGain(Money.of(0.75, Currency.UNIT_CAD));
+        .withCapitalGain(Money.of(0.75, CAD));
 
 }

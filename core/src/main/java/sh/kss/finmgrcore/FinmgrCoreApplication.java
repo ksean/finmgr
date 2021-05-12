@@ -33,7 +33,7 @@ import sh.kss.finmgrcore.storage.StorageService;
 import sh.kss.finmgrlib.parse.Parser;
 
 /**
- *
+ * A Java Spring web API wrapping the finmgr library project
  *
  */
 @SpringBootApplication(scanBasePackages = "sh.kss")

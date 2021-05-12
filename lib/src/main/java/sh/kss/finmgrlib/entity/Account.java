@@ -20,7 +20,7 @@ package sh.kss.finmgrlib.entity;
 import lombok.Value;
 
 /**
- *
+ * An account has an id (external), and alias for the user to identify it, and an account type for tax treatment
  *
  */
 @Value

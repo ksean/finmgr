@@ -18,7 +18,7 @@
 package sh.kss.finmgrlib.entity;
 
 /**
- *
+ * Various account types are defined so that special tax treatments can be applied to the transactions within each type
  *
  */
 public enum AccountType {

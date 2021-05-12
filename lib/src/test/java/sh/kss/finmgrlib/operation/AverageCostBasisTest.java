@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sh.kss.finmgrlib.FinmgrTest;
-import sh.kss.finmgrlib.entity.Currency;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
@@ -121,7 +120,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $102.55
         assertEquals(
-            Money.of(102.55, Currency.UNIT_CAD),
+            Money.of(102.55, CAD),
             transactionService.getACB(test.process(), TXCODE)
         );
     }
@@ -145,7 +144,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $102.55
         assertEquals(
-            Money.of(102.55, Currency.UNIT_CAD),
+            Money.of(102.55, CAD),
             transactionService.getACB(test.process(), TXCODE)
         );
     }
@@ -169,7 +168,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $102.55
         assertEquals(
-            Money.of(102.55, Currency.UNIT_CAD),
+            Money.of(102.55, CAD),
             transactionService.getACB(test.process(), TXCODE)
         );
     }
@@ -193,7 +192,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $101.55
         assertEquals(
-            Money.of(101.55, Currency.UNIT_CAD),
+            Money.of(101.55, CAD),
             transactionService.getACB(test.process(), TXCODE)
         );
     }
@@ -218,7 +217,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $0
         assertEquals(
-            Money.of(0, Currency.UNIT_CAD),
+            Money.of(0, CAD),
             transactionService.getACB(test.process(), TXCODE)
         );
     }
@@ -244,7 +243,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $100.05
         assertEquals(
-            Money.of(100.05, Currency.UNIT_CAD),
+            Money.of(100.05, CAD),
             transactionService.getACB(test.process(), TXCODE)
         );
     }

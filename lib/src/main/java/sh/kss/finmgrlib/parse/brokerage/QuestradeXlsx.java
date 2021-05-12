@@ -25,6 +25,8 @@ import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.XlsxParser;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -82,17 +84,7 @@ public class QuestradeXlsx implements XlsxParser {
     public InvestmentTransaction parse(Row row) {
 
         String currencyCode = row.getCell(10).getStringCellValue();
-        Currency currency;
-
-        switch (currencyCode.toLowerCase()) {
-
-            case "usd":
-                currency = Currency.USD;
-                break;
-
-            default:
-                currency = Currency.CAD;
-        }
+        CurrencyUnit currency = Monetary.getCurrency(currencyCode);
 
         return InvestmentTransaction.builder()
             .transactionDate(LocalDate.parse(row.getCell(0).getStringCellValue().substring(0, 10)))
@@ -101,10 +93,10 @@ public class QuestradeXlsx implements XlsxParser {
             .symbol(new Symbol(row.getCell(3).getStringCellValue()))
             .description(row.getCell(4).getStringCellValue())
             .quantity(new Quantity(new BigDecimal(row.getCell(5).getStringCellValue())))
-            .price(Money.parse(currency.getValue() + " " + row.getCell(6).getStringCellValue()))
-            .grossAmount(Money.parse(currency.getValue() + " " + row.getCell(7).getStringCellValue()))
-            .commission(Money.parse(currency.getValue() + " " + row.getCell(8).getStringCellValue()))
-            .netAmount(Money.parse(currency.getValue() + " " + row.getCell(9).getStringCellValue()))
+            .price(Money.parse(currency.getCurrencyCode() + " " + row.getCell(6).getStringCellValue()))
+            .grossAmount(Money.parse(currency.getCurrencyCode() + " " + row.getCell(7).getStringCellValue()))
+            .commission(Money.parse(currency.getCurrencyCode() + " " + row.getCell(8).getStringCellValue()))
+            .netAmount(Money.parse(currency.getCurrencyCode() + " " + row.getCell(9).getStringCellValue()))
             .currency(currency)
             .account(new Account(row.getCell(11).getStringCellValue(), row.getCell(11).getStringCellValue(), parseAccountType(row.getCell(13))))
             // TODO: implemented for intelligent taxation insight

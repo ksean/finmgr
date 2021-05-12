@@ -22,7 +22,6 @@ import org.springframework.validation.Validator;
 import sh.kss.finmgrlib.entity.InvestmentAction;
 
 import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -90,7 +89,7 @@ public class InvestmentTransactionValidator implements Validator {
         Map<String, String> transactionStrings = Map.of(
             "accountAlias", transaction.getAccount().getAlias(),
             "accountId", transaction.getAccount().getId(),
-            "currencyValue", transaction.getCurrency().getValue(),
+            "currencyValue", transaction.getCurrency().getCurrencyCode(),
             "symbolValue", transaction.getSymbol().getValue(),
             "description", transaction.getDescription()
         );
@@ -212,7 +211,7 @@ public class InvestmentTransactionValidator implements Validator {
     private void getCurrencyErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Consistent currency
-        CurrencyUnit rootCurrency = Monetary.getCurrency(transaction.getCurrency().getValue());
+        CurrencyUnit rootCurrency = transaction.getCurrency();
 
         Map<String, MonetaryAmount> monetaryAmounts = Map.of(
             "netAmount", transaction.getNetAmount(),

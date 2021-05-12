@@ -18,7 +18,7 @@
 package sh.kss.finmgrlib.entity;
 
 /**
- *
+ * Contains the data necessary to match a transaction to a category via the description
  *
  */
 public abstract class CategoryMatchCondition {

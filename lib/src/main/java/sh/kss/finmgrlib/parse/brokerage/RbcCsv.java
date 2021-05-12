@@ -22,6 +22,8 @@ import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.CsvParser;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -98,18 +100,7 @@ public class RbcCsv implements CsvParser {
 
             String currencyCode = cols.get(9);
             Money zero = Money.of(0, currencyCode);
-            Currency currency;
-
-            // Using switch here in preparation of adding more currencies
-            switch (currencyCode.toLowerCase()) {
-
-                case "usd":
-                    currency = Currency.USD;
-                    break;
-
-                default:
-                    currency = Currency.CAD;
-            }
+            CurrencyUnit currency = Monetary.getCurrency(currencyCode);
 
             // Quantity defaults to 0 if blank
             Quantity quantity;
@@ -132,7 +123,7 @@ public class RbcCsv implements CsvParser {
 
             } else {
 
-                price = Money.parse(currency.getValue() + " " + cols.get(5));
+                price = Money.parse(currency.getCurrencyCode() + " " + cols.get(5));
             }
 
             return InvestmentTransaction.builder()
@@ -144,8 +135,8 @@ public class RbcCsv implements CsvParser {
                 .price(price)
                 .settlementDate(LocalDate.parse(cols.get(6), DATE_FORMATTER))
                 .account(new Account(cols.get(7), cols.get(7), AccountType.NON_REGISTERED))
-                .grossAmount(Money.parse(currency.getValue() + " " + cols.get(8)))
-                .netAmount(Money.parse(currency.getValue() + " " + cols.get(8)))
+                .grossAmount(Money.parse(currency.getCurrencyCode() + " " + cols.get(8)))
+                .netAmount(Money.parse(currency.getCurrencyCode() + " " + cols.get(8)))
                 .currency(currency)
                 // TODO: implemented for intelligent taxation insight
                 .commission(zero)

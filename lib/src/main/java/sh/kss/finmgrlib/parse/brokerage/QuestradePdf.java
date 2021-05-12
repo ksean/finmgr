@@ -127,11 +127,10 @@ public class QuestradePdf implements PdfParser {
 
             String line = lines.get(i);
 
-            cursorCurrencyUnit = Monetary.getCurrency(Currency.CAD.getValue());
+            cursorCurrencyUnit = Monetary.getCurrency("CAD");
             cursorSymbol = getSymbol(line, cursorSymbol);
 
             parseTransaction(
-                Currency.CAD,
                 cursorCurrencyUnit,
                 Account.UNKNOWN,
                 cursorSymbol,
@@ -163,7 +162,6 @@ public class QuestradePdf implements PdfParser {
             multiLine.append(lines.get(lastLineIndex));
 
             parseTransaction(
-                Currency.CAD,
                 cursorCurrencyUnit,
                 Account.UNKNOWN,
                 cursorSymbol,
@@ -181,15 +179,13 @@ public class QuestradePdf implements PdfParser {
      *
      *
      * @param currency
-     * @param currencyUnit
      * @param account
      * @param symbol
      * @param line
      * @return
      */
     private Optional<InvestmentTransaction> parseTransaction(
-            Currency currency,
-            CurrencyUnit currencyUnit,
+            CurrencyUnit currency,
             Account account,
             Symbol symbol,
             String line
@@ -211,15 +207,15 @@ public class QuestradePdf implements PdfParser {
             .currency(currency)
             .symbol(symbol)
             .description(transaction.group("description").trim())
-            .price(getMoney(transaction.group("price"), currencyUnit))
+            .price(getMoney(transaction.group("price"), currency))
             .quantity(getQuantity(transaction.group("quantity")))
-            .grossAmount(getMoney(transaction.group("gross"), currencyUnit))
-            .commission(getMoney(transaction.group("commission"), currencyUnit))
-            .netAmount(getMoney(transaction.group("net"), currencyUnit))
-            .eligibleDividend(getMoney("0", currencyUnit))
-            .returnOfCapital(getMoney("0", currencyUnit))
-            .nonEligibleDividend(getMoney("0", currencyUnit))
-            .capitalGain(getMoney("0", currencyUnit))
+            .grossAmount(getMoney(transaction.group("gross"), currency))
+            .commission(getMoney(transaction.group("commission"), currency))
+            .netAmount(getMoney(transaction.group("net"), currency))
+            .eligibleDividend(getMoney("0", currency))
+            .returnOfCapital(getMoney("0", currency))
+            .nonEligibleDividend(getMoney("0", currency))
+            .capitalGain(getMoney("0", currency))
             .build();
 
         return Optional.of(investmentTransaction);
@@ -234,18 +230,6 @@ public class QuestradePdf implements PdfParser {
     private boolean startPartialTransaction(String line) {
 
         return START_PATTERN.matcher(line.trim()).find();
-    }
-
-    /**
-     *
-     *
-     * @param line
-     * @param currentCurrency
-     * @return
-     */
-    private Currency getCurrency(String line, Currency currentCurrency) {
-
-        return currentCurrency;
     }
 
     /**

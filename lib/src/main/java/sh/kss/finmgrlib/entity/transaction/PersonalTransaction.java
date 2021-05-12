@@ -21,9 +21,9 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 import sh.kss.finmgrlib.entity.Account;
-import sh.kss.finmgrlib.entity.Currency;
 import sh.kss.finmgrlib.entity.TransactionCategory;
 
+import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
@@ -41,7 +41,7 @@ public class PersonalTransaction {
     LocalDate settlementDate;
     Account account;
     MonetaryAmount netAmount;
-    Currency currency;
+    CurrencyUnit currency;
     String description;
 
     TransactionCategory transactionCategory;

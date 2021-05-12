@@ -50,7 +50,7 @@ public class AverageCostBasis extends Operation {
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {
 
-        final CurrencyUnit CURRENCY = transaction.currencyUnit();
+        final CurrencyUnit CURRENCY = transaction.getCurrency();
         final String TXCODE = transaction.identifier(OPCODE);
         MonetaryAmount acb = Money.of(0, CURRENCY);
         Quantity quantity = ZERO;

@@ -21,15 +21,17 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
-import sh.kss.finmgrlib.entity.*;
+import sh.kss.finmgrlib.entity.Account;
+import sh.kss.finmgrlib.entity.InvestmentAction;
+import sh.kss.finmgrlib.entity.Quantity;
+import sh.kss.finmgrlib.entity.Symbol;
 
 import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 
 /**
- *
+ * An investment transaction is a transaction that is executed within an investment/brokerage account
  *
  */
 @Value
@@ -42,7 +44,7 @@ public class InvestmentTransaction implements Comparable<InvestmentTransaction> 
     @NonNull LocalDate settlementDate;
     @NonNull InvestmentAction action;
     @NonNull Account account;
-    @NonNull Currency currency;
+    @NonNull CurrencyUnit currency;
     Symbol symbol;
     @NonNull String description;
 
@@ -75,12 +77,6 @@ public class InvestmentTransaction implements Comparable<InvestmentTransaction> 
             + symbol.getValue()
             + "-"
             + opcode;
-    }
-
-
-    public CurrencyUnit currencyUnit() {
-
-        return Monetary.getCurrency(currency.getValue());
     }
 
 

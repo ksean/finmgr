@@ -30,7 +30,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import sh.kss.finmgrlib.entity.Currency;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -95,7 +94,7 @@ public class InvestmentTransactionTest extends TransactionTest {
         CurrencyUnit usd = Monetary.getCurrency("USD");
 
         InvestmentTransaction inconsistentTransaction = BUY_VTI
-            .withGrossAmount(Money.of(-10_001, Currency.UNIT_CAD))
+            .withGrossAmount(Money.of(-10_001, CAD))
             .withNetAmount(Money.of(-9_995, usd));
 
         // Assert spring validator errors
@@ -156,7 +155,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidGrossAmountTest() {
 
         InvestmentTransaction invalidGrossAmountTransaction = BUY_VTI
-            .withGrossAmount(Money.of(-10_001, Currency.UNIT_CAD));
+            .withGrossAmount(Money.of(-10_001, CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -175,7 +174,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidNetAmountTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-            .withNetAmount(Money.of(-10_004, Currency.UNIT_CAD));
+            .withNetAmount(Money.of(-10_004, CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -193,7 +192,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidCommissionTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-            .withCommission(Money.of(5, Currency.UNIT_CAD));
+            .withCommission(Money.of(5, CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
