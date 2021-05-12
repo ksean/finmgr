@@ -10,11 +10,8 @@
     </Console>
   </Appenders>
   <Loggers>
-    <Root level="info" additivity="false">
+    <Root level="info">
       <AppenderRef ref="Console"/>
     </Root>
-    <Logger name="sh.kss" level="debug">
-      <AppenderRef ref="Console" />
-    </Logger>
   </Loggers>
 </Configuration>
