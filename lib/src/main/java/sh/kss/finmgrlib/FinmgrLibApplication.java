@@ -17,8 +17,8 @@
  */
 package sh.kss.finmgrlib;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -29,7 +29,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FinmgrLibApplication {
 
-    private static final Logger LOG = LogManager.getLogger(FinmgrLibApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FinmgrLibApplication.class);
 
     /**
      * A spring application context so we can easily inject services and other components

@@ -8,7 +8,7 @@ import javax.money.MonetaryAmount;
 import java.util.Map;
 
 /**
- *
+ * A portfolio has some holdings represented by a collection of key values, where values can be numeric or financial
  *
  */
 @Value

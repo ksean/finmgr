@@ -22,7 +22,7 @@ import lombok.Value;
 import java.util.Set;
 
 /**
- *
+ * A transaction category is a way to categorize personal transactions to better understand the movement of money
  *
  */
 @Value

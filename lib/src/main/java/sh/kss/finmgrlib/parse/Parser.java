@@ -18,8 +18,8 @@
 package sh.kss.finmgrlib.parse;
 
 import com.google.common.io.Files;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import java.io.File;
@@ -34,7 +34,7 @@ import java.util.List;
 public class Parser {
 
     // Log manager
-    private static final Logger LOG = LogManager.getLogger(Parser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Parser.class);
 
     /**
      * Traverse the input file for transactions

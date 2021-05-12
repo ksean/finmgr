@@ -18,7 +18,7 @@
 package sh.kss.finmgrlib.entity;
 
 /**
- *
+ * An investment action differentiates how a transaction will be handling when processed (e.g. tax treatment)
  *
  */
 public enum InvestmentAction {

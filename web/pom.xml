@@ -50,6 +50,16 @@
               <arguments>build</arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>yarn test</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <arguments>test a --watchAll=false</arguments>
+            </configuration>
+          </execution>
         </executions>
         <configuration>
           <nodeVersion>${node.version}</nodeVersion>

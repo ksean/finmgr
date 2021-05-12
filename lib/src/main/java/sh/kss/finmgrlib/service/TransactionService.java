@@ -17,8 +17,8 @@
  */
 package sh.kss.finmgrlib.service;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.entity.Portfolio;
 
@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 @Service
 public class TransactionService {
 
-    private static final Logger LOG = LogManager.getLogger(TransactionService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionService.class);
 
     /**
      * getACB will retrieve the Average Cost Basis from a portfolio given a specific ACB identifier code

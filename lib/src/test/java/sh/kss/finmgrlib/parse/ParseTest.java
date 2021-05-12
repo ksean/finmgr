@@ -17,8 +17,8 @@
  */
 package sh.kss.finmgrlib.parse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.FinmgrTest;
 
 import java.io.File;
@@ -34,7 +34,7 @@ import java.util.Scanner;
  */
 public abstract class ParseTest extends FinmgrTest {
 
-    private static final Logger LOG = LogManager.getLogger(FinmgrTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FinmgrTest.class);
 
     /**
      * getLinesFromFile takes an input file and returns lines of text as a List of Strings using the Java Scanner class
@@ -42,7 +42,7 @@ public abstract class ParseTest extends FinmgrTest {
      * @param file a Java.io.File to be parsed
      * @return a list of the Strings found in the file
      */
-    protected List<String> getLinesFromFile(File file) {
+    protected static List<String> getLinesFromFile(File file) {
 
         LOG.debug(String.format("getLinesFromFile for: %s", file.getAbsolutePath()));
 

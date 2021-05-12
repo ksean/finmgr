@@ -37,7 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * This parser can read updated Questrade PDF documents and parse them for finmgr InvestmentTransactions
  *
  */
 public class QuestradePdf implements PdfParser {

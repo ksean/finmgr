@@ -17,16 +17,14 @@
  */
 package sh.kss.finmgrlib.parse.brokerage;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
-import org.springframework.test.context.junit4.SpringRunner;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.ParseTest;
@@ -37,15 +35,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
  * Test the questrade PDF parser
  */
 @SpringBootTest
-@RunWith(SpringRunner.class)
 public class QuestradePdfOldTest extends ParseTest {
 
     /**
@@ -58,33 +55,11 @@ public class QuestradePdfOldTest extends ParseTest {
 
     private static List<String> lines;
 
-    private static final Logger LOG = LogManager.getLogger(QuestradePdfOldTest.class);
-
-
-    /**
-     * Sets up the tests by converting a resource test file into a list of strings
-     */
-    @Before
-    public void setup() {
-
-        LOG.info("Setting up tests");
-
-        try {
-
-            LOG.debug("Retrieving file fixture contents");
-            lines = getLinesFromFile(resourceFile.getFile());
-
-        }
-        catch (IOException ioe) {
-
-            LOG.debug(String.format("IOException trying to read %s", resourceFile.getFilename()));
-            ioe.printStackTrace();
-        }
-    }
-
+    private static final Logger LOG = LoggerFactory.getLogger(QuestradePdfOldTest.class);
 
     /**
      * Questrade parser should match the test list of strings
+     *
      */
     @Test
     public void questradeTextMatchesTest() {
@@ -95,6 +70,7 @@ public class QuestradePdfOldTest extends ParseTest {
 
     /**
      * The parser should return one transaction with a net amount of $CAD 1500
+     *
      */
     @Test
     public void oneTransactionTest() {
@@ -137,5 +113,27 @@ public class QuestradePdfOldTest extends ParseTest {
             expectedTransaction,
             transactions.get(0)
         );
+    }
+
+    /**
+     * Sets up the tests by converting a resource test file into a list of strings
+     *
+     */
+    @BeforeEach
+    void setup()  {
+
+        LOG.info("Setting up tests");
+
+        try {
+
+            LOG.debug("Retrieving file fixture contents");
+            lines = getLinesFromFile(resourceFile.getFile());
+
+        }
+        catch (IOException ioe) {
+
+            LOG.debug(String.format("IOException trying to read %s", resourceFile.getFilename()));
+            ioe.printStackTrace();
+        }
     }
 }

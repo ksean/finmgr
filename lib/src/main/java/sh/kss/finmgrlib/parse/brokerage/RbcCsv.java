@@ -33,6 +33,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/**
+ * This parser can parse RBC activity report .csv files for finmgr InvestmentTransactions
+ *
+ */
 public class RbcCsv implements CsvParser {
 
     // Match RBC style header from raw csv

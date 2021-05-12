@@ -18,12 +18,12 @@
 package sh.kss.finmgrlib.parse;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.QuestradeXlsx;
 
@@ -36,9 +36,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class provides common functionality for the processing of .xlsx files into finmgr InvestmentTransactions
+ *
+ */
 public class XlsxFileParser {
+
     // Log manager
-    private static final Logger LOG = LogManager.getLogger(XlsxFileParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XlsxFileParser.class);
     // A list of the available Xlsx parsers
     private static final List<XlsxParser> XLSX_PARSERS = ImmutableList.of(new QuestradeXlsx());
 

@@ -33,7 +33,8 @@ import java.util.Map;
 import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 
 /**
- *
+ * Average cost basis will enhance a portfolio with data necessary to calculate each holdings ACB, given an input
+ * investment transaction
  *
  */
 @Component

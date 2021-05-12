@@ -15,25 +15,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package sh.kss.finmgrlib.entity;
+package sh.kss.finmgrcore;
 
-import lombok.Value;
-import lombok.With;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
 
 /**
- * A quantity simply wraps a BigDecimal and exposes some commonly used statics values
+ * Tests for the correctness of the finmgr core API
  *
  */
-@With
-@Value
-public class Quantity {
+@SpringBootTest
+public class FinmgrCoreApplicationTests {
 
-    public static final Quantity ZERO = new Quantity(BigDecimal.ZERO);
-    public static final Quantity ONE = new Quantity(BigDecimal.ONE);
-    public static final Quantity TEN = new Quantity(BigDecimal.TEN);
-    public static final Quantity HUNDRED = new Quantity(new BigDecimal(100));
+    private static final Logger LOG = LoggerFactory.getLogger(FinmgrCoreApplicationTests.class);
 
-    BigDecimal value;
+    /**
+     * Test that the Spring context can load
+     *
+     */
+    @Test
+    public void contextLoads() {
+        LOG.info("Spring context loaded");
+    }
 }

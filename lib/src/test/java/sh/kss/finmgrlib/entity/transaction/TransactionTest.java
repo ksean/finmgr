@@ -19,8 +19,8 @@ package sh.kss.finmgrlib.entity.transaction;
 
 
 import com.google.common.collect.ListMultimap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -29,8 +29,7 @@ import sh.kss.finmgrlib.FinmgrTest;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A subset of finmgr tests that validate the state of a transaction object
@@ -38,7 +37,7 @@ import static org.junit.Assert.*;
  */
 public abstract class TransactionTest extends FinmgrTest {
 
-    private static final Logger LOG = LogManager.getLogger(TransactionTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionTest.class);
 
     /**
      * Assert that the input object when validated against the input validator returns the expected list of errors

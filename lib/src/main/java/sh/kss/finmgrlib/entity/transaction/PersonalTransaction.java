@@ -29,7 +29,7 @@ import java.time.LocalDate;
 
 
 /**
- *
+ * A personal transaction is one that happens in a personal account like a chequings account or a credit card
  *
  */
 @Value

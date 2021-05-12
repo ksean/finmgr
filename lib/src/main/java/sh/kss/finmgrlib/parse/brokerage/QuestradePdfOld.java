@@ -40,7 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * This class can parse old versions of Questrade PDF statements for finmgr InvestmentTransactions
  *
  */
 public class QuestradePdfOld implements PdfParser {

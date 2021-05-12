@@ -21,13 +21,11 @@ package sh.kss.finmgrlib.entity.transaction;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.javamoney.moneta.Money;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
@@ -35,14 +33,13 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test the validity of investment transaction objects
  *
  */
 @SpringBootTest
-@RunWith(SpringRunner.class)
 public class InvestmentTransactionTest extends TransactionTest {
 
     private final InvestmentTransactionValidator VALIDATOR = new InvestmentTransactionValidator();
@@ -57,7 +54,7 @@ public class InvestmentTransactionTest extends TransactionTest {
         VTI_CAPITAL_GAIN
     );
 
-    private static final Logger LOG = LogManager.getLogger(InvestmentTransactionTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InvestmentTransactionTest.class);
 
 
     /**

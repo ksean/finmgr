@@ -17,8 +17,8 @@
  */
 package sh.kss.finmgrcore;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -42,7 +42,7 @@ import sh.kss.finmgrlib.parse.Parser;
 @EnableConfigurationProperties(StorageProperties.class)
 public class FinmgrCoreApplication {
 
-    private static final Logger LOG = LogManager.getLogger(FinmgrCoreApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FinmgrCoreApplication.class);
 
     private final HomeResponse defaultResponse = new HomeResponse("hello world");
 

@@ -20,7 +20,7 @@ package sh.kss.finmgrlib.entity;
 import lombok.Value;
 
 /**
- *
+ * A symbol is a simple wrapper for a string representation of a holding
  *
  */
 @Value

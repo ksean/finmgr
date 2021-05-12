@@ -17,8 +17,8 @@
  */
 package sh.kss.finmgrcore.storage;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private static final Logger LOG = LogManager.getLogger(FileSystemStorageService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileSystemStorageService.class);
 
     private final Path rootLocation;
 

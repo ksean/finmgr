@@ -35,9 +35,10 @@ public class InvestmentTransactionValidator implements Validator {
 
 
     /**
+     * Returns true if the provided class can be validated by this validator
      *
-     * @param aClass
-     * @return
+     * @param aClass the input class
+     * @return true if input class can be validated
      */
     @Override
     public boolean supports(Class<?> aClass) {
@@ -46,9 +47,10 @@ public class InvestmentTransactionValidator implements Validator {
     }
 
     /**
+     * Attempt to validate the input InvestmentTransaction object, and populate the errors variable with any rejections
      *
-     * @param o
-     * @param errors
+     * @param o the input InvestmentTransaction object to be validated
+     * @param errors the variable to contain any possible rejection errors
      */
     @Override
     public void validate(Object o, Errors errors) {

@@ -30,6 +30,10 @@ import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * This parser can parse Questrade .xlsx Excel file exports for finmgr InvestmentTransactions
+ *
+ */
 public class QuestradeXlsx implements XlsxParser {
 
     public final String[] HEADER_COLUMNS = {

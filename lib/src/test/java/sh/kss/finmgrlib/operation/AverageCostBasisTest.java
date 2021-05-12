@@ -19,14 +19,12 @@ package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.javamoney.moneta.Money;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import sh.kss.finmgrlib.FinmgrTest;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
@@ -35,15 +33,13 @@ import sh.kss.finmgrlib.service.TransactionService;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for the average cost basis operation as used in the context of a finmgr Run
  *
  */
 @SpringBootTest
-@RunWith(SpringRunner.class)
 public class AverageCostBasisTest extends FinmgrTest {
 
     @Autowired
@@ -54,7 +50,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
     private final String TXCODE = "NON_REGISTERED-VTI-ACB";
 
-    private static final Logger LOG = LogManager.getLogger(AverageCostBasisTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AverageCostBasisTest.class);
 
 
     /**
