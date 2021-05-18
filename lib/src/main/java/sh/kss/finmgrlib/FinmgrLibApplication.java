@@ -21,12 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import sh.kss.finmgrlib.data.MarketDataApi;
-import sh.kss.finmgrlib.data.MarketWatchApi;
-import sh.kss.finmgrlib.entity.Symbol;
-
-import javax.money.Monetary;
-import java.time.LocalDate;
 
 /**
  * The library of entities and useful functions for the framework objects
@@ -47,7 +41,7 @@ public class FinmgrLibApplication {
         LOG.info("Start Spring application context");
         SpringApplication.run(FinmgrLibApplication.class, args);
 
-        MarketDataApi api = new MarketWatchApi();
-        api.getClosingPrice(new Symbol("XEI"), LocalDate.now().minusDays(1), Monetary.getCurrency("CAD"));
+//        MarketDataApi api = new MarketWatchApi();
+//        api.getClosingPrice(new Symbol("XEI"), LocalDate.now().minusDays(1), Monetary.getCurrency("CAD"));
     }
 }

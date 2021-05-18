@@ -29,6 +29,8 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This parser can parse Questrade .xlsx Excel file exports for finmgr InvestmentTransactions
@@ -85,15 +87,15 @@ public class QuestradeXlsx implements XlsxParser {
      * @return the transaction from the row
      */
     @Override
-    public InvestmentTransaction parse(Row row) {
+    public Optional<InvestmentTransaction> parse(Row row) {
 
         String currencyCode = row.getCell(10).getStringCellValue();
         CurrencyUnit currency = Monetary.getCurrency(currencyCode);
 
-        return InvestmentTransaction.builder()
+        return Optional.of(InvestmentTransaction.builder()
             .transactionDate(LocalDate.parse(row.getCell(0).getStringCellValue().substring(0, 10)))
             .settlementDate(LocalDate.parse(row.getCell(1).getStringCellValue().substring(0, 10)))
-            .action(parseAction(row.getCell(2), row.getCell(12)))
+            .action(Objects.requireNonNull(parseAction(row.getCell(2), row.getCell(12))))
             .symbol(new Symbol(row.getCell(3).getStringCellValue()))
             .description(row.getCell(4).getStringCellValue())
             .quantity(new Quantity(new BigDecimal(row.getCell(5).getStringCellValue())))
@@ -108,7 +110,7 @@ public class QuestradeXlsx implements XlsxParser {
             .capitalGain(Money.of(0, currencyCode))
             .eligibleDividend(Money.of(0, currencyCode))
             .nonEligibleDividend(Money.of(0, currencyCode))
-        .build();
+        .build());
     }
 
     private InvestmentAction parseAction(Cell cell, Cell descriptor) {

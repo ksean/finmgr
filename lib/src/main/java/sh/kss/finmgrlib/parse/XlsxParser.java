@@ -21,6 +21,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
+import java.util.Optional;
+
 /**
  * A class that can parse the text from a specific format tabular data into finmgr transactions
  */
@@ -39,7 +41,7 @@ public interface XlsxParser {
      * Parse the input row and return the transaction found
      *
      * @param row Row - the row from an input file
-     * @return the transaction from the row
+     * @return optional transaction from the row
      */
-    InvestmentTransaction parse(Row row);
+    Optional<InvestmentTransaction> parse(Row row);
 }

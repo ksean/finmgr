@@ -31,10 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class provides common functionality for the processing of .xlsx files into finmgr InvestmentTransactions
@@ -81,7 +78,9 @@ public class XlsxFileParser {
                             skippedHeader = true;
                         }
 
-                        transactions.add(xlsxParser.parse(rowIterator.next()));
+                        // Parse the row and add it to the list of transactions if valid
+                        Optional<InvestmentTransaction> parsedRow = xlsxParser.parse(rowIterator.next());
+                        parsedRow.ifPresent(transactions::add);
                     }
 
                     return transactions;
