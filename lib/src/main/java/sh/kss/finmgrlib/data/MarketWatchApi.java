@@ -32,6 +32,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  *
  *
@@ -47,6 +49,9 @@ public class MarketWatchApi implements MarketDataApi {
     public MonetaryAmount getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency) {
 
         LOG.debug("called getClosingPrice()");
+
+        // You can't get a closing price for a future date
+        checkArgument(date.isBefore(LocalDate.now()));
 
         String formattedStartDate = date.minusDays(5).format(marketWatchDateFormat);
         String formattedDate = date.format(marketWatchDateFormat);

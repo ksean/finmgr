@@ -27,10 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * This class provides common functionality for the processing of .csv files into finmgr InvestmentTransactions
@@ -97,12 +94,8 @@ public class CsvFileParser {
 
                 LOG.debug(line);
 
-                InvestmentTransaction parsedTransaction = csvParser.parse(line);
-
-                if (parsedTransaction != null) {
-
-                    transactions.add(parsedTransaction);
-                }
+                Optional<InvestmentTransaction> parsedRow = csvParser.parse(line);
+                parsedRow.ifPresent(transactions::add);
             }
 
             return transactions;

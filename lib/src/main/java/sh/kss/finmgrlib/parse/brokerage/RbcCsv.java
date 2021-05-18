@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -84,10 +85,10 @@ public class RbcCsv implements CsvParser {
      * Parse the input row and return the transaction found
      *
      * @param line String - the line from a csv file
-     * @return the transaction from the row
+     * @return optional transaction from the row
      */
     @Override
-    public InvestmentTransaction parse(String line) {
+    public Optional<InvestmentTransaction> parse(String line) {
 
         // Split line into raw string array
         String[] raw_cols = line.split("\",\"");
@@ -98,7 +99,7 @@ public class RbcCsv implements CsvParser {
         // Must have 11 columns, and the 8th column must contain an 8 digit account number
         if (cols.size() != 11 || cols.get(7).length() != 8) {
 
-            return null;
+            return Optional.empty();
 
         } else {
 
@@ -130,7 +131,7 @@ public class RbcCsv implements CsvParser {
                 price = Money.parse(currency.getCurrencyCode() + " " + cols.get(5));
             }
 
-            return InvestmentTransaction.builder()
+            return Optional.of(InvestmentTransaction.builder()
                 .transactionDate(LocalDate.parse(cols.get(0), DATE_FORMATTER))
                 .action(parseAction(cols.get(1)))
                 .symbol(new Symbol(cols.get(2)))
@@ -148,7 +149,7 @@ public class RbcCsv implements CsvParser {
                 .capitalGain(zero)
                 .eligibleDividend(zero)
                 .nonEligibleDividend(zero)
-            .build();
+            .build());
         }
     }
 

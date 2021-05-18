@@ -20,6 +20,7 @@ package sh.kss.finmgrlib.parse;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 import java.io.FileInputStream;
+import java.util.Optional;
 
 /**
  * A class that can parse the text from a csv format into finmgr transactions
@@ -41,5 +42,5 @@ public interface CsvParser {
      * @param line String - the line from a csv file
      * @return the transaction from the row
      */
-    InvestmentTransaction parse(String line);
+    Optional<InvestmentTransaction> parse(String line);
 }
