@@ -163,6 +163,9 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         // The ACB for the holding should be $102.55
+        // buy 100 @ $100 / share, + $5 commission
+        // buy 100 @ $105 / share, + $5 commission
+        // (10_005 + 10_505) / 200 = 102.55
         assertEquals(
             Money.of(102.55, CAD),
             transactionService.getACB(test.process(), TXCODE)
@@ -187,6 +190,10 @@ public class AverageCostBasisTest extends FinmgrTest {
         );
 
         // The ACB for the holding should be $101.55
+        // buy 100 @ $100 / share, + $5 commission
+        // buy 100 @ $105 / share, + $5 commission
+        // roc 200 @ $1 / share
+        // (10_005 + 10_505) - 200 / 200 = 101.55
         assertEquals(
             Money.of(101.55, CAD),
             transactionService.getACB(test.process(), TXCODE)

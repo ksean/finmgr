@@ -143,12 +143,6 @@ public class RbcCsv implements CsvParser {
                 .grossAmount(Money.parse(currency.getCurrencyCode() + " " + cols.get(8)))
                 .netAmount(Money.parse(currency.getCurrencyCode() + " " + cols.get(8)))
                 .currency(currency)
-                // TODO: implemented for intelligent taxation insight
-                .commission(zero)
-                .returnOfCapital(zero)
-                .capitalGain(zero)
-                .eligibleDividend(zero)
-                .nonEligibleDividend(zero)
             .build());
         }
     }

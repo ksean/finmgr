@@ -26,6 +26,7 @@ import sh.kss.finmgrlib.entity.InvestmentAction;
 import sh.kss.finmgrlib.entity.Quantity;
 import sh.kss.finmgrlib.entity.Symbol;
 
+import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
@@ -45,36 +46,36 @@ public class InvestmentTransaction implements Comparable<InvestmentTransaction> 
     @NonNull InvestmentAction action;
     @NonNull Account account;
     @NonNull CurrencyUnit currency;
-    Symbol symbol;
+    @Nullable Symbol symbol;
     @NonNull String description;
 
     // Details of transactions that change the quantity of the security
-    @NonNull MonetaryAmount price;
-    @NonNull Quantity quantity;
-    @NonNull MonetaryAmount grossAmount;
-    @NonNull MonetaryAmount commission;
+    @Nullable MonetaryAmount price;
+    @Nullable Quantity quantity;
+    @Nullable MonetaryAmount grossAmount;
+    @Nullable MonetaryAmount commission;
     @NonNull MonetaryAmount netAmount;
 
     // Most frequently referenced distribution
-    @NonNull MonetaryAmount returnOfCapital;
-    @NonNull MonetaryAmount capitalGain;
-    @NonNull MonetaryAmount eligibleDividend;
-    @NonNull MonetaryAmount nonEligibleDividend;
+    @Nullable MonetaryAmount returnOfCapital;
+    @Nullable MonetaryAmount capitalGain;
+    @Nullable MonetaryAmount eligibleDividend;
+    @Nullable MonetaryAmount nonEligibleDividend;
 
-    MonetaryAmount foreignBusinessIncome;
-    MonetaryAmount foreignNonBusinessIncome;
-    MonetaryAmount otherIncome;
-    MonetaryAmount nonReportableDistribution;
-    MonetaryAmount capitalGainsDeductionEligible;
-    MonetaryAmount foreignBusinessIncomeTaxPaid;
-    MonetaryAmount foreignNonBusinessIncomeTaxPaid;
+    @Nullable MonetaryAmount foreignBusinessIncome;
+    @Nullable MonetaryAmount foreignNonBusinessIncome;
+    @Nullable MonetaryAmount otherIncome;
+    @Nullable MonetaryAmount nonReportableDistribution;
+    @Nullable MonetaryAmount capitalGainsDeductionEligible;
+    @Nullable MonetaryAmount foreignBusinessIncomeTaxPaid;
+    @Nullable MonetaryAmount foreignNonBusinessIncomeTaxPaid;
 
 
-    public String identifier(String opcode) {
+    public String identifier(String opcode, String symbol) {
 
         return account.getAccountType()
             + "-"
-            + symbol.getValue()
+            + symbol
             + "-"
             + opcode;
     }

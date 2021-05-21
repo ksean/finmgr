@@ -25,13 +25,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
-import sh.kss.finmgrlib.entity.*;
+import sh.kss.finmgrlib.entity.Account;
+import sh.kss.finmgrlib.entity.AccountType;
+import sh.kss.finmgrlib.entity.InvestmentAction;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.ParseTest;
 
 import javax.money.MonetaryAmount;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -87,18 +88,9 @@ public class QuestradePdfOldTest extends ParseTest {
             .settlementDate(LocalDate.of(2011,12,21))
             .action(InvestmentAction.Deposit)
             .account(new Account("UNKNOWN", "UNKNOWN", AccountType.NON_REGISTERED))
-            .symbol(new Symbol("UNKNOWN"))
             .currency(CAD)
             .description("1234567827 CIBC DIR DEP")
-            .price(ZERO_CAD)
-            .grossAmount(ZERO_CAD)
-            .commission(ZERO_CAD)
             .netAmount(Money.of(1500, "CAD"))
-            .quantity(new Quantity(new BigDecimal(0)))
-            .eligibleDividend(ZERO_CAD)
-            .nonEligibleDividend(ZERO_CAD)
-            .returnOfCapital(ZERO_CAD)
-            .capitalGain(ZERO_CAD)
             .build();
 
 

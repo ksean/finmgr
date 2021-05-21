@@ -130,16 +130,11 @@ public class QuestradePdf implements PdfParser {
             cursorCurrencyUnit = Monetary.getCurrency("CAD");
             cursorSymbol = getSymbol(line, cursorSymbol);
 
-            parseTransaction(
-                cursorCurrencyUnit,
-                Account.UNKNOWN,
-                cursorSymbol,
-                line
-            ).ifPresent(
-                transactions::add
-            );
+            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSymbol, line)
+                .ifPresent(transactions::add);
 
             if (! startPartialTransaction(line)) {
+
                 continue;
             }
 
@@ -161,14 +156,8 @@ public class QuestradePdf implements PdfParser {
 
             multiLine.append(lines.get(lastLineIndex));
 
-            parseTransaction(
-                cursorCurrencyUnit,
-                Account.UNKNOWN,
-                cursorSymbol,
-                multiLine.toString()
-            ).ifPresent(
-                transactions::add
-            );
+            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSymbol, multiLine.toString())
+                .ifPresent(transactions::add);
         }
 
         return transactions;
@@ -212,10 +201,6 @@ public class QuestradePdf implements PdfParser {
             .grossAmount(getMoney(transaction.group("gross"), currency))
             .commission(getMoney(transaction.group("commission"), currency))
             .netAmount(getMoney(transaction.group("net"), currency))
-            .eligibleDividend(getMoney("0", currency))
-            .returnOfCapital(getMoney("0", currency))
-            .nonEligibleDividend(getMoney("0", currency))
-            .capitalGain(getMoney("0", currency))
             .build();
 
         return Optional.of(investmentTransaction);

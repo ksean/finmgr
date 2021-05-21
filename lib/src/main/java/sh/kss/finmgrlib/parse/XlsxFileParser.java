@@ -79,8 +79,8 @@ public class XlsxFileParser {
                         }
 
                         // Parse the row and add it to the list of transactions if valid
-                        Optional<InvestmentTransaction> parsedRow = xlsxParser.parse(rowIterator.next());
-                        parsedRow.ifPresent(transactions::add);
+                        xlsxParser.parse(rowIterator.next())
+                            .ifPresent(transactions::add);
                     }
 
                     return transactions;

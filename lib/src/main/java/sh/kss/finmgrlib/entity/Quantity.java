@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgrlib.entity;
 
+import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
 
@@ -35,5 +36,5 @@ public class Quantity {
     public static final Quantity TEN = new Quantity(BigDecimal.TEN);
     public static final Quantity HUNDRED = new Quantity(new BigDecimal(100));
 
-    BigDecimal value;
+    @NonNull BigDecimal value;
 }

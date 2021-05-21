@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -89,7 +90,7 @@ public class CsvFileParser {
             List<InvestmentTransaction> transactions = new ArrayList<>();
 
             // Create a UTF-8 Scanner on the input stream
-            Scanner scanner = new Scanner(inputStream, "UTF-8");
+            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
 
             // While more lines exist
             while (scanner.hasNextLine()) {
@@ -100,7 +101,8 @@ public class CsvFileParser {
                 LOG.debug(line);
 
                 // Parse the line and add to the list if a valid row was found
-                csvParser.parse(line).ifPresent(transactions::add);
+                csvParser.parse(line)
+                    .ifPresent(transactions::add);
             }
 
             return transactions;

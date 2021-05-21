@@ -54,11 +54,7 @@ public abstract class FinmgrTest {
         .commission(Money.of(-5, CAD))
         .netAmount(Money.of(-10_005, CAD))
         .account(NON_REG_ACCOUNT)
-        .returnOfCapital(ZERO_CAD)
-        .capitalGain(ZERO_CAD)
         .currency(CAD)
-        .eligibleDividend(ZERO_CAD)
-        .nonEligibleDividend(ZERO_CAD)
         .build();
 
 
@@ -79,16 +75,17 @@ public abstract class FinmgrTest {
         .withNetAmount(Money.of(9_745, CAD));
 
     protected final InvestmentTransaction VTI_DIVIDEND = BUY_VTI
+        .withQuantity(null)
+        .withDescription("$200 Dividend")
+        .withPrice(null)
+        .withGrossAmount(null)
+        .withCommission(null)
         .withAction(InvestmentAction.Distribution)
-        .withQuantity(Quantity.ZERO)
-        .withPrice(ZERO_CAD)
-        .withGrossAmount(ZERO_CAD)
-        .withCommission(ZERO_CAD)
-        .withNetAmount(Money.of(250, CAD));
+        .withNetAmount(Money.of(200, CAD));
 
     protected final InvestmentTransaction VTI_RETURN_OF_CAPITAL = VTI_DIVIDEND
         .withNetAmount(ZERO_CAD)
-        .withReturnOfCapital(Money.of(1, CAD));
+        .withReturnOfCapital(Money.of(200, CAD));
 
     protected final InvestmentTransaction VTI_CAPITAL_GAIN = VTI_RETURN_OF_CAPITAL
         .withReturnOfCapital(ZERO_CAD)

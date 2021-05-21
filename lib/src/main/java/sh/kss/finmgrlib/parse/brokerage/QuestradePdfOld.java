@@ -137,7 +137,7 @@ public class QuestradePdfOld implements PdfParser {
     public List<InvestmentTransaction> parse(List<String> lines) {
 
         CurrencyUnit cursorCurrencyUnit;
-        Symbol cursorSymbol = new Symbol("UNKNOWN");
+        Symbol cursorSymbol = null;
 
         List<InvestmentTransaction> transactions = Lists.newArrayList();
 
@@ -148,16 +148,11 @@ public class QuestradePdfOld implements PdfParser {
             cursorCurrencyUnit = Monetary.getCurrency("CAD");
             cursorSymbol = getSymbol(line, cursorSymbol);
 
-            parseTransaction(
-                cursorCurrencyUnit,
-                Account.UNKNOWN,
-                cursorSymbol,
-                line
-            ).ifPresent(
-                transactions::add
-            );
+            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSymbol, line)
+                .ifPresent(transactions::add);
 
             if (! startPartialTransaction(line)) {
+
                 continue;
             }
 
@@ -179,14 +174,8 @@ public class QuestradePdfOld implements PdfParser {
 
             multiLine.append(lines.get(lastLineIndex));
 
-            parseTransaction(
-                cursorCurrencyUnit,
-                Account.UNKNOWN,
-                cursorSymbol,
-                multiLine.toString()
-            ).ifPresent(
-                transactions::add
-            );
+            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSymbol, multiLine.toString())
+                .ifPresent(transactions::add);
         }
 
         return transactions;
@@ -215,6 +204,7 @@ public class QuestradePdfOld implements PdfParser {
 
             return Optional.empty();
         }
+        String price = cleanDigits(transaction.group("price"));
 
         InvestmentTransaction investmentTransaction = InvestmentTransaction
             .builder()
@@ -225,18 +215,19 @@ public class QuestradePdfOld implements PdfParser {
             .currency(currency)
             .symbol(symbol)
             .description(transaction.group("description").trim())
-            .price(getMoney(transaction.group("price"), currency))
+            .price(getMoney(price, currency))
             .quantity(getQuantity(transaction.group("quantity")))
             .grossAmount(getMoney(transaction.group("gross"), currency))
             .commission(getMoney(transaction.group("commission"), currency))
-            .netAmount(getMoney(transaction.group("net"), currency))
-            .eligibleDividend(getMoney("0", currency))
-            .returnOfCapital(getMoney("0", currency))
-            .nonEligibleDividend(getMoney("0", currency))
-            .capitalGain(getMoney("0", currency))
+            .netAmount(Money.of(new BigDecimal(cleanDigits(transaction.group("net"))), currency))
             .build();
 
         return Optional.of(investmentTransaction);
+    }
+
+    private String cleanDigits(String input) {
+
+        return input.replaceAll("[^\\d.]", "");
     }
 
     /**
@@ -294,13 +285,10 @@ public class QuestradePdfOld implements PdfParser {
      */
     private MonetaryAmount getMoney(String amount, CurrencyUnit currencyUnit) {
 
-        String adjustedAmount = amount
-            .replaceAll("-", "0")
-            .replaceAll("[^\\d.]", "");
+        String cleanedAmount = cleanDigits(amount)
+            .replaceAll("-", "0");
 
-        BigDecimal parsedAmount = new BigDecimal(adjustedAmount);
-
-        return Money.of(parsedAmount, currencyUnit);
+        return cleanedAmount.equals("0.00") || cleanedAmount.equals("0.000") ? null : Money.of(new BigDecimal(cleanedAmount), currencyUnit);
     }
 
     /**
@@ -311,6 +299,8 @@ public class QuestradePdfOld implements PdfParser {
      */
     private Quantity getQuantity(String quantity) {
 
-        return new Quantity(new BigDecimal(quantity.replaceAll("[^\\d.]", "")));
+        String cleanedQuantity = cleanDigits(quantity);
+
+        return cleanedQuantity.equals("0") ? null : new Quantity(new BigDecimal(cleanDigits(quantity)));
     }
 }

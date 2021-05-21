@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgrlib.data;
 
+import org.javamoney.moneta.Money;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,26 +46,34 @@ public class MarketWatchApi implements MarketDataApi {
     // Log manager
     private static final Logger LOG = LoggerFactory.getLogger(MarketWatchApi.class);
 
-    DateTimeFormatter marketWatchDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final DateTimeFormatter MARKET_WATCH_DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final String MARKET_WATCH_PRICE_LOOKUP = "div.tab__pane:nth-child(1) > mw-downloaddata:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(5) > div:nth-child(1)";
+    private static final String MARKET_WATCH_URL = "https://www.marketwatch.com/investing/fund/%s/download-data?startDate=%s&endDate=%s&countryCode=%s";
 
     @Override
     public Optional<MonetaryAmount> getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency) {
 
-        LOG.debug("called getClosingPrice()");
+        LOG.debug(String.format("called getClosingPrice(%s, %s, %s)", symbol, date, currency));
 
         // You can't get a closing price for a future date
         checkArgument(date.isBefore(LocalDate.now()));
 
-        String formattedStartDate = date.minusDays(5).format(marketWatchDateFormat);
-        String formattedDate = date.format(marketWatchDateFormat);
+        // Ensure our date range will get us the latest business day closing price
+        String formattedStartDate = date.minusDays(5).format(MARKET_WATCH_DATE_FORMAT);
+        String formattedTargetDate = date.format(MARKET_WATCH_DATE_FORMAT);
         String countryCode = CurrencyAndCountry.currencyToCountryAlpha2.get(currency);
+        String connectionUrl = String.format(MARKET_WATCH_URL, symbol.getValue(), formattedStartDate, formattedTargetDate, countryCode);
 
         try {
-            Document doc = Jsoup.connect(String.format("https://www.marketwatch.com/investing/fund/%s/download-data?startDate=%s&endDate=%s&countryCode=%s", symbol.getValue(), formattedStartDate, formattedDate, countryCode)).get();
-            LOG.debug(doc.title());
-            LOG.info(doc.selectFirst("div.tab__pane:nth-child(1) > mw-downloaddata:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(5) > div:nth-child(1)").html());
+
+            Document doc = Jsoup.connect(connectionUrl).get();
+
+            return Optional.of(
+                Money.parse(currency.getCurrencyCode() + " " + doc.selectFirst(MARKET_WATCH_PRICE_LOOKUP).html()));
 
         } catch (IOException e) {
+
+            LOG.error(String.format("IOException when trying to connect to url: %s", connectionUrl));
             e.printStackTrace();
         }
 
@@ -71,11 +81,18 @@ public class MarketWatchApi implements MarketDataApi {
     }
 
     @Override
-    public Map<LocalDate, Optional<MonetaryAmount>> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency) {
+    public Map<LocalDate, MonetaryAmount> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency) {
 
         LOG.debug("called getClosingPrices()");
 
-        return null;
-    }
+        Map<LocalDate, MonetaryAmount> closingPrices = new HashMap<>();
 
+        for (LocalDate date : dates) {
+
+            getClosingPrice(symbol, date, currency)
+                .ifPresent(p -> closingPrices.put(date, p));
+        }
+
+        return closingPrices;
+    }
 }

@@ -105,11 +105,6 @@ public class QuestradeXlsx implements XlsxParser {
             .netAmount(Money.parse(currency.getCurrencyCode() + " " + row.getCell(9).getStringCellValue()))
             .currency(currency)
             .account(new Account(row.getCell(11).getStringCellValue(), row.getCell(11).getStringCellValue(), parseAccountType(row.getCell(13))))
-            // TODO: implemented for intelligent taxation insight
-            .returnOfCapital(Money.of(0, currencyCode))
-            .capitalGain(Money.of(0, currencyCode))
-            .eligibleDividend(Money.of(0, currencyCode))
-            .nonEligibleDividend(Money.of(0, currencyCode))
         .build());
     }
 

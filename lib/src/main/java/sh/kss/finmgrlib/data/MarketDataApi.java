@@ -34,7 +34,7 @@ public interface MarketDataApi {
 
     Optional<MonetaryAmount> getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency);
 
-    Map<LocalDate, Optional<MonetaryAmount>> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency);
+    Map<LocalDate, MonetaryAmount> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency);
 
 
 }

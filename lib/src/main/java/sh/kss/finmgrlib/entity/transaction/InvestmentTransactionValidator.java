@@ -24,6 +24,7 @@ import sh.kss.finmgrlib.entity.InvestmentAction;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -215,14 +216,28 @@ public class InvestmentTransactionValidator implements Validator {
         // Consistent currency
         CurrencyUnit rootCurrency = transaction.getCurrency();
 
-        Map<String, MonetaryAmount> monetaryAmounts = Map.of(
-            "netAmount", transaction.getNetAmount(),
-            "grossAmount", transaction.getGrossAmount(),
-            "price", transaction.getPrice(),
-            "commission", transaction.getCommission(),
-            "capitalGain", transaction.getCapitalGain(),
-            "returnOfCapital", transaction.getReturnOfCapital()
-        );
+        Map<String, MonetaryAmount> monetaryAmounts = new HashMap<>();
+        monetaryAmounts.put("netAmount", transaction.getNetAmount());
+
+        if (transaction.getGrossAmount() != null) {
+            monetaryAmounts.put("grossAmount", transaction.getGrossAmount());
+        }
+
+        if (transaction.getPrice() != null) {
+            monetaryAmounts.put("price", transaction.getPrice());
+        }
+
+        if (transaction.getCommission() != null) {
+            monetaryAmounts.put("commission", transaction.getCommission());
+        }
+
+        if (transaction.getCapitalGain() != null) {
+            monetaryAmounts.put("capitalGain", transaction.getCapitalGain());
+        }
+
+        if (transaction.getReturnOfCapital() != null) {
+            monetaryAmounts.put("returnOfCapital", transaction.getReturnOfCapital());
+        }
 
         for (Map.Entry<String, MonetaryAmount> entry : monetaryAmounts.entrySet()) {
 
@@ -243,19 +258,19 @@ public class InvestmentTransactionValidator implements Validator {
     private void getSignErrors(InvestmentTransaction transaction, Errors errors) {
 
         // Commission always negative or zero
-        if (transaction.getCommission().isPositive()) {
+        if (transaction.getCommission() != null && transaction.getCommission().isPositive()) {
 
             errors.rejectValue("commission", "commissionPositive");
         }
 
         // Return of capital always positive or zero
-        if (transaction.getReturnOfCapital().isNegative()) {
+        if (transaction.getReturnOfCapital() != null && transaction.getReturnOfCapital().isNegative()) {
 
             errors.rejectValue("returnOfCapital", "returnOfCapitalNegative");
         }
 
         // Capital gain always positive or zero
-        if (transaction.getCapitalGain().isNegative()) {
+        if (transaction.getCapitalGain() != null && transaction.getCapitalGain().isNegative()) {
 
             errors.rejectValue("capitalGain", "capitalGainNegative");
         }
@@ -265,12 +280,12 @@ public class InvestmentTransactionValidator implements Validator {
          */
         if (transaction.getAction().equals(InvestmentAction.Sell)) {
 
-            if (transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) > 0) {
+            if (transaction.getQuantity() != null && transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) > 0) {
 
                 errors.rejectValue("quantity", "sellQuantityPositive");
             }
 
-            if (transaction.getGrossAmount().isNegativeOrZero()) {
+            if (transaction.getGrossAmount() != null && transaction.getGrossAmount().isNegativeOrZero()) {
 
                 errors.rejectValue("grossAmount", "sellGrossAmountNegativeOrZero");
             }
@@ -281,12 +296,12 @@ public class InvestmentTransactionValidator implements Validator {
          */
         if (transaction.getAction().equals(InvestmentAction.Buy)) {
 
-            if (transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) < 0) {
+            if (transaction.getQuantity() != null && transaction.getQuantity().getValue().compareTo(BigDecimal.ZERO) < 0) {
 
                 errors.rejectValue("quantity", "buyQuantityNegative");
             }
 
-            if (transaction.getGrossAmount().isPositiveOrZero()) {
+            if (transaction.getGrossAmount() != null && transaction.getGrossAmount().isPositiveOrZero()) {
 
                 errors.rejectValue("grossAmount", "buyGrossAmountPositiveOrZero");
             }

@@ -40,7 +40,6 @@ import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 @Component
 public class AverageCostBasis extends Operation {
 
-    private final String OPCODE = "ACB";
     private final TransactionService transactionService;
 
     @Autowired
@@ -51,21 +50,28 @@ public class AverageCostBasis extends Operation {
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {
 
+        // ACB changes are limited to specific symbols so short circuit if not present
+        if (transaction.getSymbol() == null) {
+            return portfolio;
+        }
+
+        // Unique code to this operation
+        final String OPERATION_CODE = "ACB";
         final CurrencyUnit CURRENCY = transaction.getCurrency();
-        final String TXCODE = transaction.identifier(OPCODE);
-        MonetaryAmount acb = Money.of(0, CURRENCY);
+        final String TRANSACTION_CODE = transaction.identifier(OPERATION_CODE, transaction.getSymbol().getValue());
+        MonetaryAmount costBasis = Money.of(0, CURRENCY);
         Quantity quantity = ZERO;
 
 
-        Map<String, Quantity> quantities = portfolio.getQuantities();
-        Map<String, MonetaryAmount> monies = portfolio.getMonies();
+        Map<String, Quantity> quantityMap = portfolio.getQuantities();
+        Map<String, MonetaryAmount> costBasisMap = portfolio.getMonies();
 
-        if (monies.containsKey(TXCODE)) {
-            acb = monies.get(TXCODE);
+        if (costBasisMap.containsKey(TRANSACTION_CODE)) {
+            costBasis = costBasisMap.get(TRANSACTION_CODE);
         }
 
-        if (quantities.containsKey(TXCODE)) {
-            quantity = quantities.get(TXCODE);
+        if (quantityMap.containsKey(TRANSACTION_CODE)) {
+            quantity = quantityMap.get(TRANSACTION_CODE);
         }
 
         switch (transaction.getAction()) {
@@ -73,22 +79,27 @@ public class AverageCostBasis extends Operation {
             // ACB is summed with net amount of purchases
             case Reinvest:
             case Buy:
-                quantities.put(TXCODE, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
-                monies.put(TXCODE, acb.add(transaction.getNetAmount()));
+                quantityMap.put(TRANSACTION_CODE, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
+                costBasisMap.put(TRANSACTION_CODE, costBasis.add(transaction.getNetAmount()));
 
                 break;
 
             // ACB per share remains constant during sales.
             case Sell:
-                MonetaryAmount acbPerShare = transactionService.getACB(portfolio, TXCODE);
-                quantities.put(TXCODE, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
-                monies.put(TXCODE, acbPerShare.multiply(quantities.get(TXCODE).getValue().negate()));
+                MonetaryAmount acbPerShare = transactionService.getACB(portfolio, TRANSACTION_CODE);
+                quantityMap.put(TRANSACTION_CODE, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
+                costBasisMap.put(TRANSACTION_CODE, acbPerShare.multiply(quantityMap.get(TRANSACTION_CODE).getValue().negate()));
 
                 break;
 
             // Return of Capital reduces ACB
             case Distribution:
-                monies.put(TXCODE, acb.subtract(transaction.getReturnOfCapital().multiply(quantity.getValue()).negate()));
+                MonetaryAmount returnOfCapital = transaction.getReturnOfCapital();
+
+                // If a distribution has a RoC component, subtract from ACB
+                if (returnOfCapital != null) {
+                    costBasisMap.put(TRANSACTION_CODE, costBasis.add(transaction.getReturnOfCapital()));
+                }
 
                 break;
 
@@ -96,13 +107,13 @@ public class AverageCostBasis extends Operation {
                 break;
         }
 
-        if (quantities.get(TXCODE).getValue().equals(BigDecimal.ZERO)) {
+        if (quantityMap.get(TRANSACTION_CODE).getValue().equals(BigDecimal.ZERO)) {
 
-            monies.put(TXCODE, Money.of(0, CURRENCY));
+            costBasisMap.put(TRANSACTION_CODE, Money.of(0, CURRENCY));
         }
 
         return portfolio
-            .withMonies(monies)
-            .withQuantities(quantities);
+            .withMonies(costBasisMap)
+            .withQuantities(quantityMap);
     }
 }
