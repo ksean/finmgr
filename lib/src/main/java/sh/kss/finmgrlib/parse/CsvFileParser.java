@@ -85,17 +85,22 @@ public class CsvFileParser {
         // Wrap in try catch due to opening file input stream
         try (FileInputStream inputStream = new FileInputStream(file)) {
 
+            // Instantiate the list to hold transactions
             List<InvestmentTransaction> transactions = new ArrayList<>();
+
+            // Create a UTF-8 Scanner on the input stream
             Scanner scanner = new Scanner(inputStream, "UTF-8");
 
+            // While more lines exist
             while (scanner.hasNextLine()) {
 
+                // Fetch the line
                 String line = scanner.nextLine();
 
                 LOG.debug(line);
 
-                Optional<InvestmentTransaction> parsedRow = csvParser.parse(line);
-                parsedRow.ifPresent(transactions::add);
+                // Parse the line and add to the list if a valid row was found
+                csvParser.parse(line).ifPresent(transactions::add);
             }
 
             return transactions;

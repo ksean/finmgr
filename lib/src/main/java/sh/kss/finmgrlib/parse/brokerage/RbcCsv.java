@@ -168,8 +168,7 @@ public class RbcCsv implements CsvParser {
                 return InvestmentAction.Deposit;
 
             default:
+                return InvestmentAction.Unknown;
         }
-
-        return null;
     }
 }

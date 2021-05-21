@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -46,7 +47,7 @@ public class MarketWatchApi implements MarketDataApi {
     DateTimeFormatter marketWatchDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     @Override
-    public MonetaryAmount getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency) {
+    public Optional<MonetaryAmount> getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency) {
 
         LOG.debug("called getClosingPrice()");
 
@@ -66,11 +67,11 @@ public class MarketWatchApi implements MarketDataApi {
             e.printStackTrace();
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Map<LocalDate, MonetaryAmount> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency) {
+    public Map<LocalDate, Optional<MonetaryAmount>> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency) {
 
         LOG.debug("called getClosingPrices()");
 

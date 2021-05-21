@@ -24,6 +24,7 @@ import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -31,9 +32,9 @@ import java.util.Map;
  */
 public interface MarketDataApi {
 
-    MonetaryAmount getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency);
+    Optional<MonetaryAmount> getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency);
 
-    Map<LocalDate, MonetaryAmount> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency);
+    Map<LocalDate, Optional<MonetaryAmount>> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency);
 
 
 }

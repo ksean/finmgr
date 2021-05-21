@@ -33,5 +33,6 @@ public enum InvestmentAction {
     Reinvest,
     Corporate,
     Journal,
-    Other
+    Other,
+    Unknown
 }
