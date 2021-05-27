@@ -93,7 +93,7 @@ public class InvestmentTransactionValidator implements Validator {
             "accountAlias", transaction.getAccount().getAlias(),
             "accountId", transaction.getAccount().getId(),
             "currencyValue", transaction.getCurrency().getCurrencyCode(),
-            "symbolValue", transaction.getSymbol().getValue(),
+            "symbolValue", transaction.getSecurity().getValue(),
             "description", transaction.getDescription()
         );
 

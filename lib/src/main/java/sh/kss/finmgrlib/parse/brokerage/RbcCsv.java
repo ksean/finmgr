@@ -134,7 +134,7 @@ public class RbcCsv implements CsvParser {
             return Optional.of(InvestmentTransaction.builder()
                 .transactionDate(LocalDate.parse(cols.get(0), DATE_FORMATTER))
                 .action(parseAction(cols.get(1)))
-                .symbol(new Symbol(cols.get(2)))
+                .security(new Security(cols.get(2), currency))
                 .description(cols.get(10))
                 .quantity(quantity)
                 .price(price)

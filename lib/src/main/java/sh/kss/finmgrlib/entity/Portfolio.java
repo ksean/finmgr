@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 
-import javax.money.MonetaryAmount;
 import java.util.Map;
 
 /**
@@ -16,6 +15,11 @@ import java.util.Map;
 @Builder(toBuilder = true)
 public class Portfolio {
 
-    Map<String, Quantity> quantities;
-    Map<String, MonetaryAmount> monies;
+    public static final Portfolio EMPTY_NON_REGISTERED = Portfolio.builder()
+        .holdings(Map.of(
+            AccountType.NON_REGISTERED,
+            Holding.EMPTY))
+        .build();
+
+    Map<AccountType, Holding> holdings;
 }

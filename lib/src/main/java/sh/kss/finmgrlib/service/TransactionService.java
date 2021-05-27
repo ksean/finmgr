@@ -20,10 +20,20 @@ package sh.kss.finmgrlib.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import sh.kss.finmgrlib.data.MarketDataApi;
+import sh.kss.finmgrlib.data.MarketWatchApi;
+import sh.kss.finmgrlib.entity.AccountType;
+import sh.kss.finmgrlib.entity.Holding;
 import sh.kss.finmgrlib.entity.Portfolio;
+import sh.kss.finmgrlib.entity.Security;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A service to expose useful transaction functions
@@ -33,25 +43,54 @@ import java.math.BigDecimal;
 public class TransactionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionService.class);
+    // TODO: Allow injection of market data api
+    private static final MarketDataApi API = new MarketWatchApi();
 
     /**
      * getACB will retrieve the Average Cost Basis from a portfolio given a specific ACB identifier code
      *
      * @param portfolio the portfolio to query
-     * @param txcode the ACB identifier code
+     * @param security the security
      * @return the ACB as a MonetaryAmount
      */
-    public MonetaryAmount getACB(Portfolio portfolio, String txcode) {
+    public MonetaryAmount getACB(Portfolio portfolio, AccountType accountType, Security security) {
 
-        LOG.debug(String.format("getACB for portfolio %s and txcode %s", portfolio.toString(), txcode));
+        LOG.debug(String.format("getACB for portfolio=%s, account type=%s and security=%s", portfolio.toString(), accountType, security));
+
+        Holding holding = portfolio.getHoldings().getOrDefault(accountType, Holding.EMPTY);
 
         // Check if quantity is zero first to avoid zero division
-        if (portfolio.getQuantities().get(txcode).getValue().equals(BigDecimal.ZERO)) {
+        if (holding.getQuantities().get(security).getValue().equals(BigDecimal.ZERO)) {
 
 
-            return portfolio.getMonies().get(txcode);
+            return holding.getCostBasis().get(security);
         }
 
-        return portfolio.getMonies().get(txcode).divide(portfolio.getQuantities().get(txcode).getValue()).negate();
+        return holding.getCostBasis().get(security).divide(holding.getQuantities().get(security).getValue()).negate();
+    }
+
+    /**
+     * getHistoricalPrices will retrieve the value of all of the positions in a portfolio at a given previous point in time
+     *
+     * @param portfolio the portfolio to retrieve prices for
+     * @param localDate the date to lookup historical prices for
+     * @return a map of the securities in a portfolio to their historical EOD market value
+     */
+    public Map<String, MonetaryAmount> getHistoricalPrices(Portfolio portfolio, LocalDate localDate) {
+
+        Map<AccountType, Holding> holdings = portfolio.getHoldings();
+
+        Set<Security> securities = holdings.keySet().stream()
+            .map(holdings::get)
+            .map(Holding::getSecurities)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
+
+        for(Security security : securities) {
+
+            LOG.info(API.getClosingPrice(security, localDate).toString());
+        }
+
+        return Map.of();
     }
 }

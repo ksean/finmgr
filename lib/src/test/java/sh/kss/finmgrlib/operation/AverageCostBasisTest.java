@@ -18,14 +18,14 @@
 package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sh.kss.finmgrlib.FinmgrTest;
+import sh.kss.finmgrlib.entity.AccountType;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
@@ -48,8 +48,6 @@ public class AverageCostBasisTest extends FinmgrTest {
     @Autowired
     private AverageCostBasis averageCostBasis;
 
-    private final String TXCODE = "NON_REGISTERED-VTI-ACB";
-
     private static final Logger LOG = LoggerFactory.getLogger(AverageCostBasisTest.class);
 
 
@@ -64,12 +62,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         LOG.debug(String.format("Creating a Run from input list of transactions: %s", transactions.toString()));
 
         return Run.builder()
-            .portfolio(
-                Portfolio.builder()
-                    .monies(Maps.newHashMap())
-                    .quantities(Maps.newHashMap())
-                    .build()
-            )
+            .portfolio(Portfolio.EMPTY_NON_REGISTERED)
             .operations(ImmutableList.of(averageCostBasis))
             .transactions(transactions)
             .build();
@@ -94,7 +87,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $0
         assertEquals(
             ZERO_CAD,
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -117,7 +110,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, CAD),
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -141,7 +134,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, CAD),
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -168,7 +161,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // (10_005 + 10_505) / 200 = 102.55
         assertEquals(
             Money.of(102.55, CAD),
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -196,7 +189,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // (10_005 + 10_505) - 200 / 200 = 101.55
         assertEquals(
             Money.of(101.55, CAD),
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -221,7 +214,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $0
         assertEquals(
             Money.of(0, CAD),
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -247,7 +240,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $100.05
         assertEquals(
             Money.of(100.05, CAD),
-            transactionService.getACB(test.process(), TXCODE)
+            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
         );
     }
 }

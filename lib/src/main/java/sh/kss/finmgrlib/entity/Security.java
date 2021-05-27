@@ -19,11 +19,14 @@ package sh.kss.finmgrlib.entity;
 
 import lombok.Value;
 
+import javax.money.CurrencyUnit;
+
 /**
  * A symbol is a simple wrapper for a string representation of a holding
  *
  */
 @Value
-public class Symbol {
+public class Security {
     String value;
+    CurrencyUnit currency;
 }

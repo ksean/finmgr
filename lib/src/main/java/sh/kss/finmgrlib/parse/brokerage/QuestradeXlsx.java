@@ -96,7 +96,7 @@ public class QuestradeXlsx implements XlsxParser {
             .transactionDate(LocalDate.parse(row.getCell(0).getStringCellValue().substring(0, 10)))
             .settlementDate(LocalDate.parse(row.getCell(1).getStringCellValue().substring(0, 10)))
             .action(Objects.requireNonNull(parseAction(row.getCell(2), row.getCell(12))))
-            .symbol(new Symbol(row.getCell(3).getStringCellValue()))
+            .security(new Security(row.getCell(3).getStringCellValue(), currency))
             .description(row.getCell(4).getStringCellValue())
             .quantity(new Quantity(new BigDecimal(row.getCell(5).getStringCellValue())))
             .price(Money.parse(currency.getCurrencyCode() + " " + row.getCell(6).getStringCellValue()))

@@ -22,7 +22,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sh.kss.finmgrlib.entity.Symbol;
+import sh.kss.finmgrlib.entity.Security;
 import sh.kss.finmgrlib.map.CurrencyAndCountry;
 
 import javax.money.CurrencyUnit;
@@ -51,9 +51,10 @@ public class MarketWatchApi implements MarketDataApi {
     private static final String MARKET_WATCH_URL = "https://www.marketwatch.com/investing/fund/%s/download-data?startDate=%s&endDate=%s&countryCode=%s";
 
     @Override
-    public Optional<MonetaryAmount> getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency) {
+    public Optional<MonetaryAmount> getClosingPrice(Security security, LocalDate date) {
 
-        LOG.debug(String.format("called getClosingPrice(%s, %s, %s)", symbol, date, currency));
+        CurrencyUnit currency = security.getCurrency();
+        LOG.debug(String.format("called getClosingPrice(%s, %s, %s)", security.getValue(), date, currency));
 
         // You can't get a closing price for a future date
         checkArgument(date.isBefore(LocalDate.now()));
@@ -62,7 +63,7 @@ public class MarketWatchApi implements MarketDataApi {
         String formattedStartDate = date.minusDays(5).format(MARKET_WATCH_DATE_FORMAT);
         String formattedTargetDate = date.format(MARKET_WATCH_DATE_FORMAT);
         String countryCode = CurrencyAndCountry.currencyToCountryAlpha2.get(currency);
-        String connectionUrl = String.format(MARKET_WATCH_URL, symbol.getValue(), formattedStartDate, formattedTargetDate, countryCode);
+        String connectionUrl = String.format(MARKET_WATCH_URL, security.getValue(), formattedStartDate, formattedTargetDate, countryCode);
 
         try {
 
@@ -81,7 +82,7 @@ public class MarketWatchApi implements MarketDataApi {
     }
 
     @Override
-    public Map<LocalDate, MonetaryAmount> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency) {
+    public Map<LocalDate, MonetaryAmount> getClosingPrices(Security security, List<LocalDate> dates) {
 
         LOG.debug("called getClosingPrices()");
 
@@ -89,7 +90,7 @@ public class MarketWatchApi implements MarketDataApi {
 
         for (LocalDate date : dates) {
 
-            getClosingPrice(symbol, date, currency)
+            getClosingPrice(security, date)
                 .ifPresent(p -> closingPrices.put(date, p));
         }
 

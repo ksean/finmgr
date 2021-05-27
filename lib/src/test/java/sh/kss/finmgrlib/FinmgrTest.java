@@ -32,11 +32,11 @@ import java.time.LocalDate;
  */
 public abstract class FinmgrTest {
 
-    protected final Symbol VTI_SYMBOL = new Symbol("VTI");
     protected final Account NON_REG_ACCOUNT = new Account("123-abc", "foo", AccountType.NON_REGISTERED);
     protected final LocalDate BASE_DATE = LocalDate.of(1980, 1, 1);
     protected final CurrencyUnit USD = Monetary.getCurrency("USD");
     protected final CurrencyUnit CAD = Monetary.getCurrency("CAD");
+    protected final Security VTI = new Security("VTI", CAD);
     protected final Money ZERO_CAD = Money.of(0, CAD);
 
     // VALID buy and sell transactions
@@ -46,7 +46,7 @@ public abstract class FinmgrTest {
         .transactionDate(BASE_DATE)
         .settlementDate(BASE_DATE.plusDays(3))
         .action(InvestmentAction.Buy)
-        .symbol(VTI_SYMBOL)
+        .security(VTI)
         .quantity(Quantity.HUNDRED)
         .description("Buy 100 Shares of VTI at $CAD100")
         .price(Money.of(100, CAD))

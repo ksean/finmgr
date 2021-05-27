@@ -118,8 +118,8 @@ public class QuestradePdf implements PdfParser {
     @Override
     public List<InvestmentTransaction> parse(List<String> lines) {
 
-        CurrencyUnit cursorCurrencyUnit;
-        Symbol cursorSymbol = new Symbol("UNKNOWN");
+        CurrencyUnit cursorCurrencyUnit = Monetary.getCurrency("CAD");
+        Security cursorSecurity = new Security("UNKNOWN", cursorCurrencyUnit);
 
         List<InvestmentTransaction> transactions = Lists.newArrayList();
 
@@ -127,10 +127,9 @@ public class QuestradePdf implements PdfParser {
 
             String line = lines.get(i);
 
-            cursorCurrencyUnit = Monetary.getCurrency("CAD");
-            cursorSymbol = getSymbol(line, cursorSymbol);
+            cursorSecurity = getSymbol(line, cursorSecurity);
 
-            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSymbol, line)
+            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSecurity, line)
                 .ifPresent(transactions::add);
 
             if (! startPartialTransaction(line)) {
@@ -156,7 +155,7 @@ public class QuestradePdf implements PdfParser {
 
             multiLine.append(lines.get(lastLineIndex));
 
-            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSymbol, multiLine.toString())
+            parseTransaction(cursorCurrencyUnit, Account.UNKNOWN, cursorSecurity, multiLine.toString())
                 .ifPresent(transactions::add);
         }
 
@@ -169,14 +168,14 @@ public class QuestradePdf implements PdfParser {
      *
      * @param currency
      * @param account
-     * @param symbol
+     * @param security
      * @param line
      * @return
      */
     private Optional<InvestmentTransaction> parseTransaction(
             CurrencyUnit currency,
             Account account,
-            Symbol symbol,
+            Security security,
             String line
     ) {
 
@@ -194,7 +193,7 @@ public class QuestradePdf implements PdfParser {
             .action(getAction(transaction.group("type").trim().toLowerCase()))
             .account(account)
             .currency(currency)
-            .symbol(symbol)
+            .security(security)
             .description(transaction.group("description").trim())
             .price(getMoney(transaction.group("price"), currency))
             .quantity(getQuantity(transaction.group("quantity")))
@@ -233,12 +232,12 @@ public class QuestradePdf implements PdfParser {
      *
      *
      * @param line
-     * @param currentSymbol
+     * @param currentSecurity
      * @return
      */
-    private Symbol getSymbol(String line, Symbol currentSymbol) {
+    private Security getSymbol(String line, Security currentSecurity) {
 
-        return currentSymbol;
+        return currentSecurity;
     }
 
     /**

@@ -24,7 +24,7 @@ import lombok.With;
 import sh.kss.finmgrlib.entity.Account;
 import sh.kss.finmgrlib.entity.InvestmentAction;
 import sh.kss.finmgrlib.entity.Quantity;
-import sh.kss.finmgrlib.entity.Symbol;
+import sh.kss.finmgrlib.entity.Security;
 
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
@@ -46,7 +46,7 @@ public class InvestmentTransaction implements Comparable<InvestmentTransaction> 
     @NonNull InvestmentAction action;
     @NonNull Account account;
     @NonNull CurrencyUnit currency;
-    @Nullable Symbol symbol;
+    @Nullable Security security;
     @NonNull String description;
 
     // Details of transactions that change the quantity of the security

@@ -17,9 +17,8 @@
  */
 package sh.kss.finmgrlib.data;
 
-import sh.kss.finmgrlib.entity.Symbol;
+import sh.kss.finmgrlib.entity.Security;
 
-import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,9 +31,9 @@ import java.util.Optional;
  */
 public interface MarketDataApi {
 
-    Optional<MonetaryAmount> getClosingPrice(Symbol symbol, LocalDate date, CurrencyUnit currency);
+    Optional<MonetaryAmount> getClosingPrice(Security security, LocalDate date);
 
-    Map<LocalDate, MonetaryAmount> getClosingPrices(Symbol symbol, List<LocalDate> dates, CurrencyUnit currency);
+    Map<LocalDate, MonetaryAmount> getClosingPrices(Security security, List<LocalDate> dates);
 
 
 }
