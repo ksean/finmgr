@@ -243,4 +243,31 @@ public class AverageCostBasisTest extends FinmgrTest {
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
+
+
+    /**
+     * Buy the same security in different account types should have isolated ACB
+     *
+     */
+    @Test
+    public void buyInMultipleAccountTypes() {
+
+        // Buy at two different prices
+        Portfolio portfolio = operationsTest(
+            ImmutableList.of(
+                BUY_VTI,
+                BUY_VTI_TFSA
+            )
+        );
+
+        // The ACB for the holding should be $100.05
+        assertEquals(
+            Money.of(100.05, CAD),
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
+        );
+        assertEquals(
+            Money.of(100.05, CAD),
+            transactionService.getACB(portfolio, AccountType.TFSA, VTI)
+        );
+    }
 }

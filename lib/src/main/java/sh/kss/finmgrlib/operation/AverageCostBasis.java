@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgrlib.operation;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ import sh.kss.finmgrlib.service.TransactionServiceImpl;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -113,11 +115,16 @@ public class AverageCostBasis implements Operation {
     }
 
     private Portfolio getNewPortfolio(Portfolio oldPortfolio, AccountType accountType, Map<Security, MonetaryAmount> costBases, Map<Security, Quantity> quantities, Set<Security> securities) {
+        // Build new Holdings map
+        HashMap<AccountType, Holding> newHoldings = new HashMap<>();
+        newHoldings.put(accountType, new Holding(securities, quantities, costBases));
+        for (AccountType oldType : oldPortfolio.getHoldings().keySet()) {
+            if (!oldType.equals(accountType)) {
+                newHoldings.put(oldType, oldPortfolio.getHoldings().get(oldType));
+            }
+        }
+
         return oldPortfolio
-            .withHoldings(
-                Map.of(accountType,
-                    new Holding(Set.copyOf(securities), Map.copyOf(quantities), Map.copyOf(costBases))
-                )
-            );
+            .withHoldings(ImmutableMap.copyOf(newHoldings));
     }
 }

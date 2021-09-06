@@ -57,6 +57,9 @@ public abstract class FinmgrTest {
         .currency(CAD)
         .build();
 
+    protected final InvestmentTransaction BUY_VTI_TFSA = BUY_VTI
+        .withAccount(new Account("456-def", "foo2", AccountType.TFSA));
+
 
     protected final InvestmentTransaction BUY_VTI_HIGHER_PRICE = BUY_VTI
         .withPrice(Money.of(105, CAD))
