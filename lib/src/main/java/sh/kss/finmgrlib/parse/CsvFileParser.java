@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.RbcCsv;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,6 +35,7 @@ import java.util.*;
  * This class provides common functionality for the processing of .csv files into finmgr InvestmentTransactions
  *
  */
+@Singleton
 public class CsvFileParser {
     // Log manager
     private static final Logger LOG = LoggerFactory.getLogger(CsvFileParser.class);

@@ -25,6 +25,7 @@ import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.XlsxParser;
 
+import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ import java.util.Optional;
  * This parser can parse Questrade .xlsx Excel file exports for finmgr InvestmentTransactions
  *
  */
+@Singleton
 public class QuestradeXlsx implements XlsxParser {
 
     public final String[] HEADER_COLUMNS = {

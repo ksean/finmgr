@@ -24,6 +24,7 @@ import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.PdfParser;
 
+import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
@@ -40,6 +41,7 @@ import java.util.regex.Pattern;
  * This parser can read updated Questrade PDF documents and parse them for finmgr InvestmentTransactions
  *
  */
+@Singleton
 public class QuestradePdf implements PdfParser {
 
     // How Questrade formats their dates

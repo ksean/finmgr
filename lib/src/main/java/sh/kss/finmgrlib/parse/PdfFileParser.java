@@ -26,6 +26,7 @@ import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.QuestradePdf;
 import sh.kss.finmgrlib.parse.brokerage.QuestradePdfOld;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -36,6 +37,7 @@ import java.util.List;
  * This class provides common processing for .pdf files into finmgr InvestmentTransactions
  *
  */
+@Singleton
 public class PdfFileParser {
 
     // A list of the available PDF parsers

@@ -1,5 +1,6 @@
 package sh.kss.finmgrlib.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Value
 @With
 @Builder(toBuilder = true)
+@AllArgsConstructor
 public class Holding {
 
     public static final Holding EMPTY = new Holding(Set.of(), Map.of(), Map.of());

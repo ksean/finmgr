@@ -17,17 +17,20 @@
  */
 package sh.kss.finmgrlib.operation;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import lombok.AllArgsConstructor;
 import org.javamoney.moneta.Money;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.service.TransactionService;
+import sh.kss.finmgrlib.service.TransactionServiceImpl;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
 
 import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 
@@ -37,16 +40,12 @@ import static sh.kss.finmgrlib.entity.Quantity.ZERO;
  *
  */
 @Component
-public class AverageCostBasis extends Operation {
+@AllArgsConstructor
+public class AverageCostBasis implements Operation {
 
-    private final TransactionService transactionService;
+    private final TransactionServiceImpl transactionService;
     private static final String COST_BASIS = "ACB_CB";
     private static final String QUANTITY = "ACB_Q";
-
-    @Autowired
-    public AverageCostBasis(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
 
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {
@@ -59,37 +58,33 @@ public class AverageCostBasis extends Operation {
 
         final AccountType ACCOUNT_TYPE = transaction.getAccount().getAccountType();
         final CurrencyUnit CURRENCY = transaction.getCurrency();
-        Map<AccountType, Holding> holdings = portfolio.getHoldings();
+        Map<AccountType, Holding> holdings = Maps.newHashMap(portfolio.getHoldings());
         Holding holding = holdings.getOrDefault(ACCOUNT_TYPE, Holding.EMPTY);
 
-        if (holding.equals(Holding.EMPTY)) {
-
-            return portfolio;
-        }
-
         // Get ACB Map for the cursor cost basis
-        Map<Security, MonetaryAmount> costBasisMap = holding.getCostBasis();
-        MonetaryAmount costBasis = costBasisMap.getOrDefault(security, Money.of(0, CURRENCY));
+        Map<Security, MonetaryAmount> costBases = Maps.newHashMap(holding.getCostBasis());
+        MonetaryAmount costBasis = costBases.getOrDefault(security, Money.of(0, CURRENCY));
 
-        Map<Security, Quantity> quantityMap = holding.getQuantities();
-        Quantity quantity = quantityMap.getOrDefault(security, ZERO);
+        Map<Security, Quantity> quantities = Maps.newHashMap(holding.getQuantities());
+        Quantity quantity = quantities.getOrDefault(security, ZERO);
+
+        Set<Security> securities = Sets.newHashSet(holding.getSecurities());
 
         switch (transaction.getAction()) {
 
             // ACB is summed with net amount of purchases
             case Reinvest:
             case Buy:
-                quantityMap.put(security, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
-                costBasisMap.put(security, costBasis.add(transaction.getNetAmount()));
-
+                quantities.put(security, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
+                costBases.put(security, costBasis.add(transaction.getNetAmount()));
+                securities.add(security);
                 break;
 
             // ACB per share remains constant during sales.
             case Sell:
                 MonetaryAmount acbPerShare = transactionService.getACB(portfolio, ACCOUNT_TYPE, security);
-                quantityMap.put(security, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
-                costBasisMap.put(security, acbPerShare.multiply(quantityMap.get(security).getValue().negate()));
-
+                quantities.put(security, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
+                costBases.put(security, acbPerShare.multiply(quantities.get(security).getValue().negate()));
                 break;
 
             // Return of Capital reduces ACB
@@ -98,9 +93,8 @@ public class AverageCostBasis extends Operation {
 
                 // If a distribution has a RoC component, subtract from ACB
                 if (returnOfCapital != null) {
-                    costBasisMap.put(security, costBasis.add(transaction.getReturnOfCapital()));
+                    costBases.put(security, costBasis.add(transaction.getReturnOfCapital()));
                 }
-
                 break;
 
             default:
@@ -109,14 +103,21 @@ public class AverageCostBasis extends Operation {
 
         // If the quantity for a security is reduced to zero (sold all units), reset ACB
         // TODO: Superficial loss rule?
-        if (quantityMap.get(security).getValue().equals(BigDecimal.ZERO)) {
+        if (quantities.get(security).getValue().equals(BigDecimal.ZERO)) {
 
-            costBasisMap.put(security, Money.of(0, CURRENCY));
+            costBases.put(security, Money.of(0, CURRENCY));
+            securities.remove(security);
         }
 
+        return getNewPortfolio(portfolio,  ACCOUNT_TYPE, costBases, quantities, securities);
+    }
 
-
-        return portfolio
-            .withHoldings(holdings);
+    private Portfolio getNewPortfolio(Portfolio oldPortfolio, AccountType accountType, Map<Security, MonetaryAmount> costBases, Map<Security, Quantity> quantities, Set<Security> securities) {
+        return oldPortfolio
+            .withHoldings(
+                Map.of(accountType,
+                    new Holding(Set.copyOf(securities), Map.copyOf(quantities), Map.copyOf(costBases))
+                )
+            );
     }
 }

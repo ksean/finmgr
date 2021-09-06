@@ -31,9 +31,7 @@ import java.util.Optional;
  */
 public interface MarketDataApi {
 
-    Optional<MonetaryAmount> getClosingPrice(Security security, LocalDate date);
-
+    Optional<MonetaryAmount> findClosingPrice(Security security, LocalDate date);
     Map<LocalDate, MonetaryAmount> getClosingPrices(Security security, List<LocalDate> dates);
-
 
 }

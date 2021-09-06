@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.QuestradeXlsx;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +38,7 @@ import java.util.*;
  * This class provides common functionality for the processing of .xlsx files into finmgr InvestmentTransactions
  *
  */
+@Singleton
 public class XlsxFileParser {
 
     // Log manager

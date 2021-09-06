@@ -17,7 +17,6 @@
  */
 package sh.kss.finmgrlib.operation;
 
-import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
@@ -25,8 +24,7 @@ import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
  * An operation is something that can process the result a transaction has on a portfolio for a specific measurement
  *
  */
-@Component
-public abstract class Operation {
+public interface Operation {
 
-    abstract public Portfolio process(Portfolio portfolio, InvestmentTransaction investmentTransaction);
+    Portfolio process(Portfolio portfolio, InvestmentTransaction investmentTransaction);
 }

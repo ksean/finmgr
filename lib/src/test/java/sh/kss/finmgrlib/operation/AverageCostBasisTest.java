@@ -57,15 +57,15 @@ public class AverageCostBasisTest extends FinmgrTest {
      * @param transactions the list of transactions to calculate ACB for
      * @return the Run object to be used for ACB testing
      */
-    private Run operationsTest(List<InvestmentTransaction> transactions) {
+    private Portfolio operationsTest(List<InvestmentTransaction> transactions) {
 
         LOG.debug(String.format("Creating a Run from input list of transactions: %s", transactions.toString()));
 
-        return Run.builder()
-            .portfolio(Portfolio.EMPTY_NON_REGISTERED)
-            .operations(ImmutableList.of(averageCostBasis))
-            .transactions(transactions)
-            .build();
+        return Run.process(
+            Portfolio.EMPTY_NON_REGISTERED,
+            ImmutableList.of(averageCostBasis),
+            transactions
+        );
     }
 
 
@@ -77,7 +77,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void zeroQuantityACBTest() {
 
         // Buy and sell same quantity of same security
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 SELL_VTI
@@ -87,7 +87,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $0
         assertEquals(
             ZERO_CAD,
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -100,7 +100,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void buyAtDifferentPriceACBTest() {
 
         // Buy same security twice at different prices
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE
@@ -110,7 +110,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, CAD),
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -123,7 +123,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void sellingDoesNotChangeACBTest() {
 
         // Buy same security twice at different prices then sell some
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
@@ -134,7 +134,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $102.55
         assertEquals(
             Money.of(102.55, CAD),
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -147,7 +147,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void dividendDoesNotChangeACBTest() {
 
         // Buy at two different prices
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
@@ -161,7 +161,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // (10_005 + 10_505) / 200 = 102.55
         assertEquals(
             Money.of(102.55, CAD),
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -174,7 +174,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void returnOfCapitalReducesACBTest() {
 
         // Buy at two different prices
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
@@ -189,7 +189,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // (10_005 + 10_505) - 200 / 200 = 101.55
         assertEquals(
             Money.of(101.55, CAD),
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -202,7 +202,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void sellingAllQuantityResetsACBTest() {
 
         // Buy at two different prices
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
@@ -214,7 +214,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $0
         assertEquals(
             Money.of(0, CAD),
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 
@@ -227,7 +227,7 @@ public class AverageCostBasisTest extends FinmgrTest {
     public void sellAllRebuyACBTest() {
 
         // Buy at two different prices
-        Run test = operationsTest(
+        Portfolio portfolio = operationsTest(
             ImmutableList.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
@@ -240,7 +240,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // The ACB for the holding should be $100.05
         assertEquals(
             Money.of(100.05, CAD),
-            transactionService.getACB(test.process(), AccountType.NON_REGISTERED, VTI)
+            transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
 }

@@ -48,4 +48,4 @@ Use packaged jar file to deploy server API
 
 ## License
 
-[GNU GPLv3](https://www.gnu.org/licenses/)
+[GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)

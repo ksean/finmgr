@@ -22,6 +22,7 @@ import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.CsvParser;
 
+import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.io.FileInputStream;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
  * This parser can parse RBC activity report .csv files for finmgr InvestmentTransactions
  *
  */
+@Singleton
 public class RbcCsv implements CsvParser {
 
     // Match RBC style header from raw csv

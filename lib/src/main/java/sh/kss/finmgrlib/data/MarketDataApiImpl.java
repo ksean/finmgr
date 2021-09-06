@@ -22,6 +22,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.Security;
 import sh.kss.finmgrlib.map.CurrencyAndCountry;
 
@@ -41,17 +42,18 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  *
  */
-public class MarketWatchApi implements MarketDataApi {
+@Component
+public class MarketDataApiImpl implements MarketDataApi {
 
     // Log manager
-    private static final Logger LOG = LoggerFactory.getLogger(MarketWatchApi.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MarketDataApiImpl.class);
 
     private static final DateTimeFormatter MARKET_WATCH_DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final String MARKET_WATCH_PRICE_LOOKUP = "div.tab__pane:nth-child(1) > mw-downloaddata:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(5) > div:nth-child(1)";
     private static final String MARKET_WATCH_URL = "https://www.marketwatch.com/investing/fund/%s/download-data?startDate=%s&endDate=%s&countryCode=%s";
 
     @Override
-    public Optional<MonetaryAmount> getClosingPrice(Security security, LocalDate date) {
+    public Optional<MonetaryAmount> findClosingPrice(Security security, LocalDate date) {
 
         CurrencyUnit currency = security.getCurrency();
         LOG.debug(String.format("called getClosingPrice(%s, %s, %s)", security.getValue(), date, currency));
@@ -90,7 +92,7 @@ public class MarketWatchApi implements MarketDataApi {
 
         for (LocalDate date : dates) {
 
-            getClosingPrice(security, date)
+            findClosingPrice(security, date)
                 .ifPresent(p -> closingPrices.put(date, p));
         }
 

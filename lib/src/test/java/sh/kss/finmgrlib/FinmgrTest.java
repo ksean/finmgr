@@ -48,7 +48,7 @@ public abstract class FinmgrTest {
         .action(InvestmentAction.Buy)
         .security(VTI)
         .quantity(Quantity.HUNDRED)
-        .description("Buy 100 Shares of VTI at $CAD100")
+        .description("Buy 100 Shares of VTI")
         .price(Money.of(100, CAD))
         .grossAmount(Money.of(-10_000, CAD))
         .commission(Money.of(-5, CAD))
@@ -65,6 +65,7 @@ public abstract class FinmgrTest {
 
     protected final InvestmentTransaction SELL_VTI = BUY_VTI
         .withAction(InvestmentAction.Sell)
+        .withDescription("Sell 100 Shares of VTI")
         .withQuantity(new Quantity(BUY_VTI.getQuantity().getValue().negate()))
         .withGrossAmount(BUY_VTI.getGrossAmount().negate())
         .withNetAmount(Money.of(9_995, CAD));

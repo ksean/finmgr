@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgrlib.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import javax.money.CurrencyUnit;
@@ -26,6 +27,7 @@ import javax.money.CurrencyUnit;
  *
  */
 @Value
+@EqualsAndHashCode
 public class Security {
     String value;
     CurrencyUnit currency;

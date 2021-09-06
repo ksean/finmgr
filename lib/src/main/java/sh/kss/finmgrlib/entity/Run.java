@@ -17,12 +17,12 @@
  */
 package sh.kss.finmgrlib.entity;
 
-import lombok.Builder;
-import lombok.Value;
-import lombok.With;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.operation.Operation;
 
+import javax.inject.Singleton;
 import java.util.List;
 
 
@@ -30,37 +30,35 @@ import java.util.List;
  * A run is a list of transactions and some set of operations to run with each iteration
  *
  */
-@Value
-@With
-@Builder(toBuilder = true)
+@Singleton
 public class Run {
 
-    // Given a starting portfolio
-    Portfolio portfolio;
-
-    // Perform all of these operations
-    List<Operation> operations;
-
-    // When iterating through this list of transactions
-    List<InvestmentTransaction> transactions;
+    // Log manager
+    private static final Logger LOG = LoggerFactory.getLogger(Run.class);
 
     /**
      * Perform the operations against a list of transactions
      *
      * @return the final state of the portfolio after performing all operations
      */
-    public Portfolio process() {
+    public static Portfolio process(Portfolio portfolio, List<Operation> operations, List<InvestmentTransaction> transactions) {
 
         // Iterate through all transactions
-        for(InvestmentTransaction transaction : this.transactions) {
+        for(InvestmentTransaction transaction : transactions) {
+
+            LOG.debug("Transaction: " + transaction.getDescription());
 
             // Iterate through all operations
-            for(Operation operation : this.operations) {
+            for(Operation operation : operations) {
 
-                this.withPortfolio(operation.process(this.portfolio, transaction));
+                LOG.debug("Operation: " + operation.toString());
+
+                portfolio = operation.process(portfolio, transaction);
+
+                LOG.debug("Portfolio: " + portfolio.toString());
             }
         }
 
-        return this.portfolio;
+        return portfolio;
     }
 }
