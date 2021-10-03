@@ -17,11 +17,9 @@
  */
 package sh.kss.finmgrlib.operation;
 
-import sh.kss.finmgrlib.entity.Portfolio;
-import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+import sh.kss.finmgrlib.entity.Holding;
 
 import javax.money.MonetaryAmount;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -30,5 +28,5 @@ import java.util.Map;
  */
 public interface DailyOperation {
 
-    Map<LocalDateTime, MonetaryAmount> process(Portfolio portfolio, InvestmentTransaction transaction);
+    Map<String, MonetaryAmount> process(Holding holding);
 }
