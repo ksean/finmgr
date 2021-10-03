@@ -15,21 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package sh.kss.finmgrlib.map;
+package sh.kss.finmgrlib.operation;
 
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
+import sh.kss.finmgrlib.entity.Portfolio;
+import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+
+import javax.money.MonetaryAmount;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- *
+ * A daily operation consumes a portfolio and produces an output map
  *
  */
-public class CurrencyAndCountry {
+public interface DailyOperation {
 
-    public final static Map<CurrencyUnit, String> CURRENCY_TO_COUNTRY = Map.of(
-        Monetary.getCurrency("CAD"), "CA",
-        Monetary.getCurrency("USD"), "US"
-    );
-
+    Map<LocalDateTime, MonetaryAmount> process(Portfolio portfolio, InvestmentTransaction transaction);
 }

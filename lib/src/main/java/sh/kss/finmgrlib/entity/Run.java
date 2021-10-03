@@ -20,7 +20,7 @@ package sh.kss.finmgrlib.entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.operation.Operation;
+import sh.kss.finmgrlib.operation.TransactionOperation;
 
 import javax.inject.Singleton;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Run {
      *
      * @return the final state of the portfolio after performing all operations
      */
-    public static Portfolio process(Portfolio portfolio, List<Operation> operations, List<InvestmentTransaction> transactions) {
+    public static Portfolio process(Portfolio portfolio, List<TransactionOperation> transactionOperations, List<InvestmentTransaction> transactions) {
 
         // Iterate through all transactions
         for(InvestmentTransaction transaction : transactions) {
@@ -49,11 +49,11 @@ public class Run {
             LOG.debug("Transaction: " + transaction.getDescription());
 
             // Iterate through all operations
-            for(Operation operation : operations) {
+            for(TransactionOperation transactionOperation : transactionOperations) {
 
-                LOG.debug("Operation: " + operation.toString());
+                LOG.debug("Operation: " + transactionOperation.toString());
 
-                portfolio = operation.process(portfolio, transaction);
+                portfolio = transactionOperation.process(portfolio, transaction);
 
                 LOG.debug("Portfolio: " + portfolio.toString());
             }

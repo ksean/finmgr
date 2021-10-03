@@ -21,10 +21,10 @@ import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
 /**
- * An operation is something that can process the result a transaction has on a portfolio for a specific measurement
+ * A transaction operation can produce the resulting state of a portfolio, given the current state of the portfolio and an input transcation
  *
  */
-public interface Operation {
+public interface TransactionOperation {
 
-    Portfolio process(Portfolio portfolio, InvestmentTransaction investmentTransaction);
+    Portfolio process(Portfolio portfolio, InvestmentTransaction transaction);
 }

@@ -19,37 +19,26 @@ package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
-import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Component;
+import sh.kss.finmgrlib.data.MarketDataApi;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.service.TransactionServiceImpl;
 
 import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
-import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 
-/**
- * Average cost basis will enhance a portfolio with data necessary to calculate each holdings ACB, given an input
- * investment transaction
- *
- */
 @Component
 @Singleton
 @AllArgsConstructor
-public class AverageCostBasis implements TransactionOperation {
+public class NetPresentValue implements TransactionOperation {
 
-    private final TransactionServiceImpl transactionService;
-    private static final String COST_BASIS = "ACB_CB";
-    private static final String QUANTITY = "ACB_Q";
+    private final MarketDataApi dataApi;
 
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {
@@ -65,61 +54,40 @@ public class AverageCostBasis implements TransactionOperation {
         Map<AccountType, Holding> holdings = Maps.newHashMap(portfolio.getHoldings());
         Holding holding = holdings.getOrDefault(ACCOUNT_TYPE, Holding.EMPTY);
 
-        // Get ACB Map for the cursor cost basis
-        Map<Security, MonetaryAmount> costBases = Maps.newHashMap(holding.getCostBasis());
-        MonetaryAmount costBasis = costBases.getOrDefault(security, Money.of(0, CURRENCY));
-
         Map<Security, Quantity> quantities = Maps.newHashMap(holding.getQuantities());
         Quantity quantity = quantities.getOrDefault(security, ZERO);
 
-        Set<Security> securities = Sets.newHashSet(holding.getSecurities());
-
+        //TODO: Implement
         switch (transaction.getAction()) {
 
-            // ACB is summed with net amount of purchases
             case Reinvest:
             case Buy:
-                quantities.put(security, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
-                costBases.put(security, costBasis.add(transaction.getNetAmount()));
-                securities.add(security);
+
                 break;
 
-            // ACB per share remains constant during sales.
             case Sell:
-                MonetaryAmount acbPerShare = transactionService.getACB(portfolio, ACCOUNT_TYPE, security);
-                quantities.put(security, quantity.withValue(quantity.getValue().add(transaction.getQuantity().getValue())));
-                costBases.put(security, acbPerShare.multiply(quantities.get(security).getValue().negate()));
+
                 break;
 
-            // Return of Capital reduces ACB
             case Distribution:
-                MonetaryAmount returnOfCapital = transaction.getReturnOfCapital();
-
-                // If a distribution has a RoC component, subtract from ACB
-                if (returnOfCapital != null) {
-                    costBases.put(security, costBasis.add(transaction.getReturnOfCapital()));
-                }
                 break;
 
             default:
                 break;
         }
 
-        // If the quantity for a security is reduced to zero (sold all units), reset ACB
-        // TODO: Superficial loss rule?
         if (quantities.get(security).getValue().equals(BigDecimal.ZERO)) {
 
-            costBases.put(security, Money.of(0, CURRENCY));
-            securities.remove(security);
+
         }
 
-        return getNewPortfolio(portfolio,  ACCOUNT_TYPE, costBases, quantities, securities);
+        return getNewPortfolio(portfolio, ACCOUNT_TYPE, new Holding(holding.getSecurities(), quantities, holding.getCostBasis()));
     }
 
-    private Portfolio getNewPortfolio(Portfolio oldPortfolio, AccountType accountType, Map<Security, MonetaryAmount> costBases, Map<Security, Quantity> quantities, Set<Security> securities) {
+    private Portfolio getNewPortfolio(Portfolio oldPortfolio, AccountType accountType, Holding holding) {
         // Build new Holdings map
         HashMap<AccountType, Holding> newHoldings = new HashMap<>();
-        newHoldings.put(accountType, new Holding(securities, quantities, costBases));
+        newHoldings.put(accountType, holding);
         for (AccountType oldType : oldPortfolio.getHoldings().keySet()) {
             if (!oldType.equals(accountType)) {
                 newHoldings.put(oldType, oldPortfolio.getHoldings().get(oldType));

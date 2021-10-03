@@ -64,7 +64,7 @@ public class MarketDataApiImpl implements MarketDataApi {
         // Ensure our date range will get us the latest business day closing price
         String formattedStartDate = date.minusDays(5).format(MARKET_WATCH_DATE_FORMAT);
         String formattedTargetDate = date.format(MARKET_WATCH_DATE_FORMAT);
-        String countryCode = CurrencyAndCountry.currencyToCountryAlpha2.get(currency);
+        String countryCode = CurrencyAndCountry.CURRENCY_TO_COUNTRY.get(currency);
         String connectionUrl = String.format(MARKET_WATCH_URL, security.getValue(), formattedStartDate, formattedTargetDate, countryCode);
 
         try {
