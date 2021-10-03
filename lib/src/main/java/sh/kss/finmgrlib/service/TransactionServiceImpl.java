@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransactionServiceImpl.class);
+    private final Logger LOG = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
     @Autowired
     private MarketDataApi marketDataApi;

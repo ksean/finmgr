@@ -25,7 +25,7 @@ import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.service.TransactionServiceImpl;
+import sh.kss.finmgrlib.service.TransactionService;
 
 import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
@@ -47,9 +47,7 @@ import static sh.kss.finmgrlib.entity.Quantity.ZERO;
 @AllArgsConstructor
 public class AverageCostBasis implements TransactionOperation {
 
-    private final TransactionServiceImpl transactionService;
-    private static final String COST_BASIS = "ACB_CB";
-    private static final String QUANTITY = "ACB_Q";
+    private final TransactionService transactionService;
 
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {

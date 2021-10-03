@@ -44,6 +44,8 @@ public class FinmgrCoreApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(FinmgrCoreApplication.class);
 
+    private Parser parser;
+
     private final HomeResponse defaultResponse = new HomeResponse("hello world");
 
     /**
@@ -69,7 +71,7 @@ public class FinmgrCoreApplication {
     public TransactionsResponse transactions() {
         LOG.info("Received /transactions");
 
-        return new TransactionsResponse(Parser.traversePath("upload-dir"));
+        return new TransactionsResponse(parser.traversePath("upload-dir"));
     }
 
     /**

@@ -17,114 +17,12 @@
  */
 package sh.kss.finmgrlib.parse;
 
-import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.parse.brokerage.RbcCsv;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
-/**
- * This class provides common functionality for the processing of .csv files into finmgr InvestmentTransactions
- *
- */
-@Component
-public class CsvFileParser {
-    // Log manager
-    private static final Logger LOG = LoggerFactory.getLogger(CsvFileParser.class);
-    // A list of the available Csv parsers
-    private static final List<CsvParser> CSV_PARSERS = ImmutableList.of(new RbcCsv());
+public interface CsvFileParser {
 
-    private CsvFileParser() {}
-
-    public static List<InvestmentTransaction> parseCsv(File file) {
-
-        LOG.debug("Calling parseCsv()");
-
-        // Wrap in try catch due to opening file input stream
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-
-            // Try to match against known row parsers
-            for (CsvParser csvParser : CSV_PARSERS) {
-
-                LOG.debug(String.format("Check CsvParser %s", csvParser));
-
-                // If the header matches, parse it
-                if (csvParser.isMatch(inputStream)) {
-
-                    LOG.debug(String.format("Matched CsvParser %s", csvParser));
-
-                    return parseLines(file, csvParser);
-                }
-            }
-
-            // If no Row Parsers matched, the file format is unknown and no transactions are parsed
-            return Collections.emptyList();
-
-
-        } catch (FileNotFoundException fnfe) {
-
-            LOG.error(String.format("FileNotFoundException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
-            fnfe.printStackTrace();
-
-        } catch (IOException ioe) {
-
-            LOG.error(String.format("IOException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
-            ioe.printStackTrace();
-        }
-
-        return Collections.emptyList();
-    }
-
-    private static List<InvestmentTransaction> parseLines(File file, CsvParser csvParser) {
-
-        LOG.debug("Calling parseLines()");
-
-        // Wrap in try catch due to opening file input stream
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-
-            // Instantiate the list to hold transactions
-            List<InvestmentTransaction> transactions = new ArrayList<>();
-
-            // Create a UTF-8 Scanner on the input stream
-            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
-
-            // While more lines exist
-            while (scanner.hasNextLine()) {
-
-                // Fetch the line
-                String line = scanner.nextLine();
-
-                LOG.debug(line);
-
-                // Parse the line and add to the list if a valid row was found
-                csvParser.parse(line)
-                    .ifPresent(transactions::add);
-            }
-
-            return transactions;
-
-        } catch (FileNotFoundException fnfe) {
-
-            LOG.error(String.format("FileNotFoundException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
-            fnfe.printStackTrace();
-
-        } catch (IOException ioe) {
-
-            LOG.error(String.format("IOException occurred when creating FileInputStream for file %s", file.getAbsoluteFile()));
-            ioe.printStackTrace();
-        }
-
-        return Collections.emptyList();
-    }
+    List<InvestmentTransaction> parseCsv(File file);
 }

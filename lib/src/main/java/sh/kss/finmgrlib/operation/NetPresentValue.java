@@ -18,7 +18,6 @@
 package sh.kss.finmgrlib.operation;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.data.MarketDataApi;
 import sh.kss.finmgrlib.entity.Holding;
@@ -32,7 +31,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class NetPresentValue implements DailyOperation {
 
-    @Autowired
     private final MarketDataApi marketDataApi;
 
     @Override
