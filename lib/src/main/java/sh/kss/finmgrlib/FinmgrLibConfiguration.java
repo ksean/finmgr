@@ -52,4 +52,9 @@ public class FinmgrLibConfiguration {
     public XlsxFileParser xlsxFileParser() {
         return new XlsxFileParserImpl();
     }
+
+    @Bean
+    public Parser parser() {
+        return new ParserImpl();
+    }
 }

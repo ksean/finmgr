@@ -20,7 +20,6 @@ package sh.kss.finmgrlib.parse;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
@@ -39,13 +38,10 @@ public class ParserImpl implements Parser {
     // Log manager
     private final Logger LOG = LoggerFactory.getLogger(ParserImpl.class);
 
-    @Autowired
     private CsvFileParser csvFileParser;
 
-    @Autowired
     private XlsxFileParser xlsxFileParser;
 
-    @Autowired
     private PdfFileParser pdfFileParser;
 
     /**

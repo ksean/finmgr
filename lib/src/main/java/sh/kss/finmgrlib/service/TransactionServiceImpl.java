@@ -20,7 +20,6 @@ package sh.kss.finmgrlib.service;
 import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.data.MarketDataApi;
 import sh.kss.finmgrlib.entity.*;
@@ -42,7 +41,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final Logger LOG = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
-    @Autowired
     private MarketDataApi marketDataApi;
 
     /**
