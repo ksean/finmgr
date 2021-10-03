@@ -20,6 +20,7 @@ package sh.kss.finmgrlib.parse.brokerage;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import org.javamoney.moneta.Money;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.Account;
 import sh.kss.finmgrlib.entity.InvestmentAction;
 import sh.kss.finmgrlib.entity.Quantity;
@@ -27,7 +28,6 @@ import sh.kss.finmgrlib.entity.Security;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.PdfParser;
 
-import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * This class can parse old versions of Questrade PDF statements for finmgr InvestmentTransactions
  *
  */
-@Singleton
+@Component
 public class QuestradePdfOld implements PdfParser {
 
     // How Questrade formats their dates

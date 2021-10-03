@@ -40,8 +40,5 @@ public class FinmgrLibApplication {
 
         LOG.info("Start Spring application context");
         SpringApplication.run(FinmgrLibApplication.class, args);
-
-//        MarketDataApi api = new MarketWatchApi();
-//        api.getClosingPrice(new Symbol("XEI"), LocalDate.now().minusDays(1), Monetary.getCurrency("CAD"));
     }
 }

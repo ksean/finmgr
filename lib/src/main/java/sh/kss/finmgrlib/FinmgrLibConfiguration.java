@@ -15,29 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package sh.kss.finmgrlib.operation;
+package sh.kss.finmgrlib;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import sh.kss.finmgrlib.data.MarketDataApi;
-import sh.kss.finmgrlib.entity.Holding;
+import sh.kss.finmgrlib.data.MarketDataApiImpl;
+import sh.kss.finmgrlib.service.TransactionService;
+import sh.kss.finmgrlib.service.TransactionServiceImpl;
 
-import javax.inject.Singleton;
-import javax.money.MonetaryAmount;
-import java.util.Map;
+@Configuration
+public class FinmgrLibConfiguration {
 
-@Component
-@Singleton
-@AllArgsConstructor
-public class NetPresentValue implements DailyOperation {
+    @Bean
+    public TransactionService transactionService() {
+        return new TransactionServiceImpl();
+    }
 
-    @Autowired
-    private final MarketDataApi marketDataApi;
-
-    @Override
-    public Map<String, MonetaryAmount> process(Holding holding) {
-        //TODO: implement
-        return null;
+    @Bean
+    public MarketDataApi marketDataApi() {
+        return new MarketDataApiImpl();
     }
 }

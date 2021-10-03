@@ -20,7 +20,10 @@ package sh.kss.finmgrcore;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -32,6 +35,9 @@ public class FinmgrCoreApplicationTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(FinmgrCoreApplicationTests.class);
 
+    @Autowired
+    private FileUploadController fileUploadController;
+
     /**
      * Test that the Spring context can load
      *
@@ -39,5 +45,6 @@ public class FinmgrCoreApplicationTests {
     @Test
     public void contextLoads() {
         LOG.info("Spring context loaded");
+        assertThat(fileUploadController).isNotNull();
     }
 }

@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.operation.TransactionOperation;
 
-import javax.inject.Singleton;
 import java.util.List;
 
 
@@ -30,7 +29,6 @@ import java.util.List;
  * A run is a list of transactions and some set of operations to run with each iteration
  *
  */
-@Singleton
 public class Run {
 
     // Log manager

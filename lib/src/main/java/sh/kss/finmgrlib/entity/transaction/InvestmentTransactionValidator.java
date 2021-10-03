@@ -17,10 +17,12 @@
  */
 package sh.kss.finmgrlib.entity.transaction;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import sh.kss.finmgrlib.entity.InvestmentAction;
 
+import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
@@ -32,6 +34,8 @@ import java.util.Map;
  * Validate the state of an investment transaction. Investment transactions must be valid for use in supported
  * transaction operations.
  */
+@Component
+@Singleton
 public class InvestmentTransactionValidator implements Validator {
 
 

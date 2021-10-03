@@ -20,27 +20,32 @@ package sh.kss.finmgrlib.parse;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.RbcCsv;
 
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * This class provides common functionality for the processing of .csv files into finmgr InvestmentTransactions
  *
  */
-@Singleton
+@Component
 public class CsvFileParser {
     // Log manager
     private static final Logger LOG = LoggerFactory.getLogger(CsvFileParser.class);
     // A list of the available Csv parsers
     private static final List<CsvParser> CSV_PARSERS = ImmutableList.of(new RbcCsv());
+
+    private CsvFileParser() {}
 
     public static List<InvestmentTransaction> parseCsv(File file) {
 

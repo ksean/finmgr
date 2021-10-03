@@ -20,9 +20,9 @@ package sh.kss.finmgrlib.parse;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 
-import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,11 +32,13 @@ import java.util.List;
 /**
  * Can consume one or many files and convert them into a list of transactions
  */
-@Singleton
+@Component
 public class Parser {
 
     // Log manager
     private static final Logger LOG = LoggerFactory.getLogger(Parser.class);
+
+    private Parser() {}
 
     /**
      * Traverse the input file for transactions

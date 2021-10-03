@@ -20,9 +20,9 @@ package sh.kss.finmgrlib.service;
 import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.data.MarketDataApi;
-import sh.kss.finmgrlib.data.MarketDataApiImpl;
 import sh.kss.finmgrlib.entity.*;
 
 import javax.money.MonetaryAmount;
@@ -37,12 +37,13 @@ import java.util.stream.Collectors;
  * A service to expose useful transaction functions
  *
  */
-@Component
+@Service
 public class TransactionServiceImpl implements TransactionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionServiceImpl.class);
-    // TODO: Allow injection of market data api
-    private static final MarketDataApi API = new MarketDataApiImpl();
+
+    @Autowired
+    private MarketDataApi marketDataApi;
 
     /**
      * getACB will retrieve the Average Cost Basis from a portfolio given a specific ACB identifier code
@@ -88,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         for(Security security : securities) {
 
-            LOG.info(API.findClosingPrice(security, localDate).toString());
+            LOG.info(marketDataApi.findClosingPrice(security, localDate).toString());
         }
 
         return Map.of();

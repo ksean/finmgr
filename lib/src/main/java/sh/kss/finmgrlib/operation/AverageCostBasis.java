@@ -117,6 +117,7 @@ public class AverageCostBasis implements TransactionOperation {
     }
 
     private Portfolio getNewPortfolio(Portfolio oldPortfolio, AccountType accountType, Map<Security, MonetaryAmount> costBases, Map<Security, Quantity> quantities, Set<Security> securities) {
+
         // Build new Holdings map
         HashMap<AccountType, Holding> newHoldings = new HashMap<>();
         newHoldings.put(accountType, new Holding(securities, quantities, costBases));

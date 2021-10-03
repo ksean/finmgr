@@ -24,27 +24,32 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.QuestradeXlsx;
 
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This class provides common functionality for the processing of .xlsx files into finmgr InvestmentTransactions
  *
  */
-@Singleton
+@Component
 public class XlsxFileParser {
 
     // Log manager
     private static final Logger LOG = LoggerFactory.getLogger(XlsxFileParser.class);
     // A list of the available Xlsx parsers
     private static final List<XlsxParser> XLSX_PARSERS = ImmutableList.of(new QuestradeXlsx());
+
+    private XlsxFileParser() {}
 
     public static List<InvestmentTransaction> parseXlsx(File file) {
 

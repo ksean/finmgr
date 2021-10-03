@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
@@ -52,7 +53,8 @@ public class QuestradePdfOldTest extends ParseTest {
     @Value("classpath:questrade/2011-jan.txt")
     Resource resourceFile;
 
-    private static final QuestradePdfOld QUESTRADE_PDF = new QuestradePdfOld();
+    @Autowired
+    private QuestradePdfOld questradeOld;
 
     private static List<String> lines;
 
@@ -65,7 +67,7 @@ public class QuestradePdfOldTest extends ParseTest {
     @Test
     public void questradeTextMatchesTest() {
 
-        assertTrue(QUESTRADE_PDF.isMatch(lines));
+        assertTrue(questradeOld.isMatch(lines));
     }
 
 
@@ -77,7 +79,7 @@ public class QuestradePdfOldTest extends ParseTest {
     public void oneTransactionTest() {
 
         // Parse the transactions
-        List<InvestmentTransaction> transactions = QUESTRADE_PDF.parse(lines);
+        List<InvestmentTransaction> transactions = questradeOld.parse(lines);
 
         // Fixtures
         final MonetaryAmount ZERO_CAD = Money.of(0, "CAD");

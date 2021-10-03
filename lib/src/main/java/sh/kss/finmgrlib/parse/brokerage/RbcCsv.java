@@ -18,11 +18,11 @@
 package sh.kss.finmgrlib.parse.brokerage;
 
 import org.javamoney.moneta.Money;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.CsvParser;
 
-import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.io.FileInputStream;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * This parser can parse RBC activity report .csv files for finmgr InvestmentTransactions
  *
  */
-@Singleton
+@Component
 public class RbcCsv implements CsvParser {
 
     // Match RBC style header from raw csv

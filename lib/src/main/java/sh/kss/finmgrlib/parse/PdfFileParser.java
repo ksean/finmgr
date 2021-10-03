@@ -18,15 +18,15 @@
 package sh.kss.finmgrlib.parse;
 
 import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.parse.brokerage.QuestradePdf;
 import sh.kss.finmgrlib.parse.brokerage.QuestradePdfOld;
 
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -37,7 +37,7 @@ import java.util.List;
  * This class provides common processing for .pdf files into finmgr InvestmentTransactions
  *
  */
-@Singleton
+@Component
 public class PdfFileParser {
 
     // A list of the available PDF parsers
@@ -46,6 +46,8 @@ public class PdfFileParser {
     private static PDFTextStripper textStripper;
     // Log manager
     private static final Logger LOG = LoggerFactory.getLogger(PdfFileParser.class);
+
+    private PdfFileParser() {}
 
     /**
      * Since creating a PDF Text Stripper can throw an IOException, we should handle it here
