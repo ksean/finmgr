@@ -86,7 +86,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $0
         assertEquals(
-            ZERO_CAD,
+        ZERO_USD,
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }

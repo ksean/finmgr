@@ -73,7 +73,7 @@ public class Run {
         Map<LocalDate, Map<AccountType, Map<String, Map<Security, MonetaryAmount>>>> resultSet = new HashMap<>();
         for (LocalDate date : dates) {
             if (dailyTransactions.containsKey(date)) {
-                portfolio = process(portfolio, transactionOperations, transactions);
+                portfolio = process(portfolio, transactionOperations, dailyTransactions.get(date));
             }
 
             Map<AccountType, Map<String, Map<Security, MonetaryAmount>>> accountResults = new HashMap<>();

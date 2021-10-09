@@ -29,7 +29,6 @@ import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
 import sh.kss.finmgrlib.entity.Security;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
-import sh.kss.finmgrlib.service.TransactionService;
 
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
@@ -47,10 +46,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class NetPresentValueTest extends FinmgrTest {
 
     @Autowired
-    private TransactionService transactionService;
+    private NetPresentValue netPresentValue;
 
     @Autowired
-    private NetPresentValue netPresentValue;
+    private AverageCostBasis averageCostBasis;
 
     private static final Logger LOG = LoggerFactory.getLogger(NetPresentValueTest.class);
 
@@ -67,7 +66,7 @@ public class NetPresentValueTest extends FinmgrTest {
 
         return Run.process(
             Portfolio.EMPTY_NON_REGISTERED,
-            List.of(),
+            List.of(averageCostBasis),
             transactions,
             List.of(netPresentValue),
             startDate,

@@ -22,7 +22,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.entity.Security;
 import sh.kss.finmgrlib.map.CurrencyAndCountry;
 
@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  *
  */
-@Component
+@Service
 public class MarketDataApiImpl implements MarketDataApi {
 
     // Log manager
@@ -50,7 +50,8 @@ public class MarketDataApiImpl implements MarketDataApi {
 
     private static final DateTimeFormatter MARKET_WATCH_DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final String MARKET_WATCH_PRICE_LOOKUP = "div.tab__pane:nth-child(1) > mw-downloaddata:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(5) > div:nth-child(1)";
-    private static final String MARKET_WATCH_URL = "https://www.marketwatch.com/investing/fund/%s/download-data?startDate=%s&endDate=%s&countryCode=%s";
+    private static final String MARKET_WATCH_URL = "https://www.marketwatch.com/investing/fund/%s/downloaddatapartial?partial=true&index=0&countryCode=%s&iso=&startDate=%s&endDate=%s&frequency=null&downloadPartial=false&csvDownload=false&newDates=true";
+
 
     @Override
     public Optional<MonetaryAmount> findClosingPrice(Security security, LocalDate date) {
@@ -64,15 +65,15 @@ public class MarketDataApiImpl implements MarketDataApi {
         // Ensure our date range will get us the latest business day closing price
         String formattedStartDate = date.minusDays(5).format(MARKET_WATCH_DATE_FORMAT);
         String formattedTargetDate = date.format(MARKET_WATCH_DATE_FORMAT);
-        String countryCode = CurrencyAndCountry.CURRENCY_TO_COUNTRY.get(currency);
-        String connectionUrl = String.format(MARKET_WATCH_URL, security.getValue(), formattedStartDate, formattedTargetDate, countryCode);
+        String countryCode = CurrencyAndCountry.CURRENCY_TO_COUNTRY.get(currency).equalsIgnoreCase("US") ? "" : CurrencyAndCountry.CURRENCY_TO_COUNTRY.get(currency);
+        String connectionUrl = String.format(MARKET_WATCH_URL, security.getValue(), countryCode, formattedStartDate, formattedTargetDate);
 
         try {
 
             Document doc = Jsoup.connect(connectionUrl).get();
 
             return Optional.of(
-                Money.parse(currency.getCurrencyCode() + " " + doc.selectFirst(MARKET_WATCH_PRICE_LOOKUP).html()));
+                Money.parse(currency.getCurrencyCode() + " " + doc.selectFirst(MARKET_WATCH_PRICE_LOOKUP).html().substring(1)));
 
         } catch (IOException e) {
 

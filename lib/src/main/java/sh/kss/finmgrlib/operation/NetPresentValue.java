@@ -17,31 +17,35 @@
  */
 package sh.kss.finmgrlib.operation;
 
-import lombok.AllArgsConstructor;
 import org.javamoney.moneta.Money;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.data.MarketDataApi;
 import sh.kss.finmgrlib.entity.Holding;
 import sh.kss.finmgrlib.entity.Security;
 
-import javax.inject.Singleton;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Component
-@Singleton
-@AllArgsConstructor
+@Service
 public class NetPresentValue implements DailyOperation {
 
-    private final MarketDataApi marketDataApi;
+    private MarketDataApi marketDataApi;
+
+    @Autowired
+    public void setMarketDataApi(MarketDataApi marketDataApi) {
+        this.marketDataApi = marketDataApi;
+    }
 
     @Override
     public Map<Security, MonetaryAmount> process(Holding holding, LocalDate date) {
-        return holding.getQuantities().keySet().stream()
-            .collect(Collectors.toMap(Function.identity(), s -> marketDataApi.findClosingPrice(s, date).orElse(Money.of(0, s.getCurrency()))));
+        Set<Security> securities = holding.getQuantities().keySet();
+        return securities.stream()
+            .collect(Collectors.toMap(Function.identity(), s -> marketDataApi.findClosingPrice(s, date).orElse(Money.of(0, s.getCurrency())).multiply(holding.getQuantities().get(s).getValue())));
     }
 
     @Override

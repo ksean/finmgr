@@ -20,14 +20,13 @@ package sh.kss.finmgrlib.operation;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import lombok.AllArgsConstructor;
 import org.javamoney.moneta.Money;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import sh.kss.finmgrlib.entity.*;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
 import sh.kss.finmgrlib.service.TransactionService;
 
-import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
@@ -42,12 +41,15 @@ import static sh.kss.finmgrlib.entity.Quantity.ZERO;
  * investment transaction
  *
  */
-@Component
-@Singleton
-@AllArgsConstructor
+@Service
 public class AverageCostBasis implements TransactionOperation {
 
-    private final TransactionService transactionService;
+    private TransactionService transactionService;
+
+    @Autowired
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @Override
     public Portfolio process(Portfolio portfolio, InvestmentTransaction transaction) {

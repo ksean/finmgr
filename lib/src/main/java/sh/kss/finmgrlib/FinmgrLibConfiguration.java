@@ -17,44 +17,11 @@
  */
 package sh.kss.finmgrlib;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import sh.kss.finmgrlib.data.MarketDataApi;
-import sh.kss.finmgrlib.data.MarketDataApiImpl;
-import sh.kss.finmgrlib.parse.*;
-import sh.kss.finmgrlib.service.TransactionService;
-import sh.kss.finmgrlib.service.TransactionServiceImpl;
 
 @Configuration
+@ComponentScan(basePackages = { "sh.kss.finmgrlib" })
 public class FinmgrLibConfiguration {
 
-    @Bean
-    public TransactionService transactionService() {
-        return new TransactionServiceImpl();
-    }
-
-    @Bean
-    public MarketDataApi marketDataApi() {
-        return new MarketDataApiImpl();
-    }
-
-    @Bean
-    public CsvFileParser csvFileParser() {
-        return new CsvFileParserImpl();
-    }
-
-    @Bean
-    public PdfFileParser pdfFileParser() {
-        return new PdfFileParserImpl();
-    }
-
-    @Bean
-    public XlsxFileParser xlsxFileParser() {
-        return new XlsxFileParserImpl();
-    }
-
-    @Bean
-    public Parser parser() {
-        return new ParserImpl();
-    }
 }
