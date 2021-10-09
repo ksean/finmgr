@@ -86,7 +86,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $0
         assertEquals(
-        ZERO_USD,
+            ZERO_USD,
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -109,7 +109,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $102.55
         assertEquals(
-            Money.of(102.55, CAD),
+            Money.of(102.55, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -133,7 +133,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $102.55
         assertEquals(
-            Money.of(102.55, CAD),
+            Money.of(102.55, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -160,7 +160,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // buy 100 @ $105 / share, + $5 commission
         // (10_005 + 10_505) / 200 = 102.55
         assertEquals(
-            Money.of(102.55, CAD),
+            Money.of(102.55, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -188,7 +188,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // roc 200 @ $1 / share
         // (10_005 + 10_505 - 200) / 200 = 101.55
         assertEquals(
-            Money.of(101.55, CAD),
+            Money.of(101.55, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -213,7 +213,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $0
         assertEquals(
-            Money.of(0, CAD),
+            Money.of(0, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -239,7 +239,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $100.05
         assertEquals(
-            Money.of(100.05, CAD),
+            Money.of(100.05, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
     }
@@ -262,11 +262,11 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // The ACB for the holding should be $100.05
         assertEquals(
-            Money.of(100.05, CAD),
+            Money.of(100.05, USD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)
         );
         assertEquals(
-            Money.of(100.05, CAD),
+            Money.of(100.05, USD),
             transactionService.getACB(portfolio, AccountType.TFSA, VTI)
         );
     }

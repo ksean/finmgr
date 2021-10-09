@@ -21,16 +21,14 @@ package sh.kss.finmgrlib.entity.transaction;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,12 +85,10 @@ public class InvestmentTransactionTest extends TransactionTest {
      */
     @Test
     public void inconsistentCurrencyAndNetAmountTest() {
-        // Setup
-        CurrencyUnit usd = Monetary.getCurrency("USD");
 
         InvestmentTransaction inconsistentTransaction = BUY_VTI
-            .withGrossAmount(Money.of(-10_001, CAD))
-            .withNetAmount(Money.of(-9_995, usd));
+            .withGrossAmount(Money.of(-10_001, USD))
+            .withNetAmount(Money.of(-9_995, CAD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -152,7 +148,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidGrossAmountTest() {
 
         InvestmentTransaction invalidGrossAmountTransaction = BUY_VTI
-            .withGrossAmount(Money.of(-10_001, CAD));
+            .withGrossAmount(Money.of(-10_001, USD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -171,7 +167,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidNetAmountTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-            .withNetAmount(Money.of(-10_004, CAD));
+            .withNetAmount(Money.of(-10_004, USD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
@@ -189,7 +185,7 @@ public class InvestmentTransactionTest extends TransactionTest {
     public void invalidCommissionTest() {
 
         InvestmentTransaction invalidNetAmountTransaction = BUY_VTI
-            .withCommission(Money.of(5, CAD));
+            .withCommission(Money.of(5, USD));
 
         // Assert spring validator errors
         ListMultimap<String, String> expectedErrors = ArrayListMultimap.create();
