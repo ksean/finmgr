@@ -18,12 +18,19 @@
 package sh.kss.finmgrlib.operation;
 
 import com.google.common.collect.ImmutableList;
+import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sh.kss.finmgrlib.FinmgrTest;
+import sh.kss.finmgrlib.data.MarketDataApi;
 import sh.kss.finmgrlib.entity.AccountType;
 import sh.kss.finmgrlib.entity.Portfolio;
 import sh.kss.finmgrlib.entity.Run;
@@ -34,6 +41,7 @@ import javax.money.MonetaryAmount;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,10 +50,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Tests for the net present value daily operation reporting
  *
  */
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class NetPresentValueTest extends FinmgrTest {
 
-    @Autowired
+    @Mock
+    private MarketDataApi marketDataApiMock;
+
+    @InjectMocks
     private NetPresentValue netPresentValue;
 
     @Autowired
@@ -82,7 +94,13 @@ public class NetPresentValueTest extends FinmgrTest {
     @Test
     public void zeroQuantityNpvTest() {
         LocalDate startDate = BASE_DATE;
+        LocalDate midDate = BASE_DATE.plusDays(1);
         LocalDate endDate = BASE_DATE.plusDays(2);
+
+        // Mock internet requests
+        Mockito.when(marketDataApiMock.findClosingPrice(VTI, startDate)).thenReturn(Optional.of(Money.of(50, USD)));
+        Mockito.when(marketDataApiMock.findClosingPrice(VTI, midDate)).thenReturn(Optional.of(Money.of(51, USD)));
+        Mockito.when(marketDataApiMock.findClosingPrice(VTI, endDate)).thenReturn(Optional.of(Money.of(52, USD)));
 
         // Buy and sell same quantity of same security
         Map<LocalDate, Map<AccountType, Map<String, Map<Security, MonetaryAmount>>>> result = dailyOperationsTest(
@@ -106,8 +124,10 @@ public class NetPresentValueTest extends FinmgrTest {
         // NPV should be reporting on just 1 security VTI
         assertEquals(1, result.get(startDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).size());
         assertTrue(result.get(startDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).containsKey(VTI));
-        // The NPV after buying should be non-zero
-        assertTrue(result.get(startDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).get(VTI).isPositive());
+        // The NPV after buying should be 5_000
+        assertEquals(Money.of(5_000, USD), result.get(startDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).get(VTI));
+        // The NPV on the second day should be 5_100
+        assertEquals(Money.of(5_100, USD), result.get(midDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).get(VTI));
         // The NPV after selling should be zero
         assertTrue(result.get(endDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).get(VTI).isZero());
     }
