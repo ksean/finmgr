@@ -73,6 +73,10 @@ public abstract class FinmgrTest {
         .withGrossAmount(BUY_VTI.getGrossAmount().negate())
         .withNetAmount(Money.of(9_995, CAD));
 
+    protected final InvestmentTransaction SELL_VTI_LATER = SELL_VTI
+        .withTransactionDate(BASE_DATE.plusDays(2))
+        .withSettlementDate(BASE_DATE.plusDays(4));
+
     protected final InvestmentTransaction SELL_VTI_LOWER_PRICE = SELL_VTI
         .withPrice(Money.of(97.50, CAD))
         .withGrossAmount(Money.of(9_750, CAD))

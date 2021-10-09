@@ -186,7 +186,7 @@ public class AverageCostBasisTest extends FinmgrTest {
         // buy 100 @ $100 / share, + $5 commission
         // buy 100 @ $105 / share, + $5 commission
         // roc 200 @ $1 / share
-        // (10_005 + 10_505) - 200 / 200 = 101.55
+        // (10_005 + 10_505 - 200) / 200 = 101.55
         assertEquals(
             Money.of(101.55, CAD),
             transactionService.getACB(portfolio, AccountType.NON_REGISTERED, VTI)

@@ -85,7 +85,7 @@ public class TransactionServiceImpl implements TransactionService {
             .flatMap(Collection::stream)
             .collect(Collectors.toSet());
 
-        for(Security security : securities) {
+        for (Security security : securities) {
 
             LOG.info(marketDataApi.findClosingPrice(security, localDate).toString());
         }

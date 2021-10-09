@@ -101,7 +101,7 @@ public class InvestmentTransactionValidator implements Validator {
             "description", transaction.getDescription()
         );
 
-        for(Map.Entry<String, String> entry : transactionStrings.entrySet()) {
+        for (Map.Entry<String, String> entry : transactionStrings.entrySet()) {
 
             if (entry.getValue() == null || entry.getValue().trim().isEmpty()) {
 

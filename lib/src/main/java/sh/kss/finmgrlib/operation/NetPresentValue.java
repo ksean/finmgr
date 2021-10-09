@@ -18,13 +18,18 @@
 package sh.kss.finmgrlib.operation;
 
 import lombok.AllArgsConstructor;
+import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Component;
 import sh.kss.finmgrlib.data.MarketDataApi;
 import sh.kss.finmgrlib.entity.Holding;
+import sh.kss.finmgrlib.entity.Security;
 
 import javax.inject.Singleton;
 import javax.money.MonetaryAmount;
+import java.time.LocalDate;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @Singleton
@@ -34,8 +39,13 @@ public class NetPresentValue implements DailyOperation {
     private final MarketDataApi marketDataApi;
 
     @Override
-    public Map<String, MonetaryAmount> process(Holding holding) {
-        //TODO: implement
-        return null;
+    public Map<Security, MonetaryAmount> process(Holding holding, LocalDate date) {
+        return holding.getQuantities().keySet().stream()
+            .collect(Collectors.toMap(Function.identity(), s -> marketDataApi.findClosingPrice(s, date).orElse(Money.of(0, s.getCurrency()))));
+    }
+
+    @Override
+    public String getName() {
+        return "NPV";
     }
 }

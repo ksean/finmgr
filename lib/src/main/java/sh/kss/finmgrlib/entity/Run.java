@@ -20,9 +20,15 @@ package sh.kss.finmgrlib.entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sh.kss.finmgrlib.entity.transaction.InvestmentTransaction;
+import sh.kss.finmgrlib.operation.DailyOperation;
 import sh.kss.finmgrlib.operation.TransactionOperation;
 
+import javax.money.MonetaryAmount;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -42,12 +48,12 @@ public class Run {
     public static Portfolio process(Portfolio portfolio, List<TransactionOperation> transactionOperations, List<InvestmentTransaction> transactions) {
 
         // Iterate through all transactions
-        for(InvestmentTransaction transaction : transactions) {
+        for (InvestmentTransaction transaction : transactions) {
 
             LOG.debug("Transaction: " + transaction.getDescription());
 
             // Iterate through all operations
-            for(TransactionOperation transactionOperation : transactionOperations) {
+            for (TransactionOperation transactionOperation : transactionOperations) {
 
                 LOG.debug("Operation: " + transactionOperation.toString());
 
@@ -58,5 +64,29 @@ public class Run {
         }
 
         return portfolio;
+    }
+
+    public static Map<LocalDate, Map<AccountType, Map<String, Map<Security, MonetaryAmount>>>> process(Portfolio portfolio, List<TransactionOperation> transactionOperations, List<InvestmentTransaction> transactions, List<DailyOperation> dailyOperations, LocalDate startDate, LocalDate endDate) {
+        Map<LocalDate, List<InvestmentTransaction>> dailyTransactions = transactions.stream().collect(Collectors.groupingBy(InvestmentTransaction::getTransactionDate));
+        List<LocalDate> dates = startDate.datesUntil(endDate.plusDays(1)).collect(Collectors.toList());
+
+        Map<LocalDate, Map<AccountType, Map<String, Map<Security, MonetaryAmount>>>> resultSet = new HashMap<>();
+        for (LocalDate date : dates) {
+            if (dailyTransactions.containsKey(date)) {
+                portfolio = process(portfolio, transactionOperations, transactions);
+            }
+
+            Map<AccountType, Map<String, Map<Security, MonetaryAmount>>> accountResults = new HashMap<>();
+            for (AccountType accountType : portfolio.getHoldings().keySet()) {
+                Map<String, Map<Security, MonetaryAmount>> securityResults = new HashMap<>();
+                for (DailyOperation dailyOperation : dailyOperations) {
+                    securityResults.put(dailyOperation.getName(), dailyOperation.process(portfolio.getHoldings().get(accountType), date));
+                }
+                accountResults.put(accountType, securityResults);
+            }
+            resultSet.put(date, accountResults);
+        }
+
+        return resultSet;
     }
 }
