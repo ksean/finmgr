@@ -3,16 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>sh.kss</groupId>
-  <artifactId>finmgr-web</artifactId>
+  <groupId>sh.kss.finmgr</groupId>
+  <artifactId>web</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
-  <name>finmgr-web</name>
+  <name>web</name>
   <description>Financial framework web frontend</description>
 
   <properties>
-    <node.version>v14.17.6</node.version>
-    <yarn.version>v1.22.5</yarn.version>
+    <node.version>v14.18.1</node.version>
+    <yarn.version>v1.22.15</yarn.version>
     <frontend-maven-plugin.version>1.12.0</frontend-maven-plugin.version>
   </properties>
 
@@ -67,5 +67,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
