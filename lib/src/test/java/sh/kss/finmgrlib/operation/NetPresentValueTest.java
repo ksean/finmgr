@@ -69,8 +69,10 @@ public class NetPresentValueTest extends FinmgrTest {
     /**
      * Creates a run that will use the NetPresentValue operation from a list of transactions
      *
-     * @param transactions the list of transactions to calculate ACB for
-     * @return the Run object to be used for ACB testing
+     * @param transactions the list of transactions to calculate NPV for
+     * @param startDate the start date for the daily operations test
+     * @param endDate the end date for the daily operations test (inclusive)
+     * @return the Report result object to be used for NPV testing
      */
     private Map<LocalDate, Map<AccountType, Map<String, Map<Security, MonetaryAmount>>>> dailyOperationsTest(List<InvestmentTransaction> transactions, LocalDate startDate, LocalDate endDate) {
 
