@@ -131,4 +131,54 @@ public class NetPresentValueTest extends FinmgrTest {
         // The NPV after selling should be zero
         assertTrue(result.get(endDate).get(AccountType.NON_REGISTERED).get(netPresentValue.getName()).get(VTI).isZero());
     }
+
+    /**
+     * The resulting NPV from a portfolio with holdings in multiple account types is segregated
+     *
+     */
+    @Test
+    public void segregatedAccountTypeNpvTest() {
+        LocalDate startDate = BASE_DATE;
+        LocalDate midDate = BASE_DATE.plusDays(1);
+        LocalDate endDate = BASE_DATE.plusDays(2);
+
+        // Mock internet requests
+        Mockito.when(marketDataApiMock.findClosingPrice(VTI, startDate)).thenReturn(Optional.of(Money.of(50, USD)));
+        Mockito.when(marketDataApiMock.findClosingPrice(VTI, midDate)).thenReturn(Optional.of(Money.of(51, USD)));
+        Mockito.when(marketDataApiMock.findClosingPrice(VTI, endDate)).thenReturn(Optional.of(Money.of(52, USD)));
+
+        // Buy and sell same quantity of same security
+        Map<LocalDate, Map<AccountType, Map<String, Map<Security, MonetaryAmount>>>> result = dailyOperationsTest(
+            ImmutableList.of(
+                BUY_VTI,
+                BUY_VTI_TFSA
+            ),
+            startDate,
+            endDate
+        );
+
+        // The NPV for the holding should be non-zero after buying and $0 after sold
+        // Expecting 3 report dates
+        assertEquals(3, result.size());
+        // Each day should have just 2 account types
+        assertEquals(2, result.get(startDate).size());
+        assertEquals(2, result.get(midDate).size());
+        assertEquals(2, result.get(endDate).size());
+        assertTrue(result.get(startDate).containsKey(AccountType.NON_REGISTERED));
+        assertTrue(result.get(startDate).containsKey(AccountType.TFSA));
+        // Each account type report should have just 1 daily operation being reported of NPV
+        Map<String, Map<Security, MonetaryAmount>> accountResult = result.get(startDate).get(AccountType.TFSA);
+        assertEquals(1, result.get(startDate).get(AccountType.TFSA).size());
+        assertTrue(accountResult.containsKey(netPresentValue.getName()));
+        // NPV should be reporting on just 1 security VTI
+        Map<Security, MonetaryAmount> npvResult = accountResult.get(netPresentValue.getName());
+        assertEquals(1, npvResult.size());
+        assertTrue(npvResult.containsKey(VTI));
+        // The NPV after buying should be 5_000
+        assertEquals(Money.of(5_000, USD), npvResult.get(VTI));
+        // The NPV on the second day should be 5_100
+        assertEquals(Money.of(5_100, USD), result.get(midDate).get(AccountType.TFSA).get(netPresentValue.getName()).get(VTI));
+        // The NPV on the last day should be 5_200
+        assertEquals(Money.of(5_200, USD), result.get(endDate).get(AccountType.TFSA).get(netPresentValue.getName()).get(VTI));
+    }
 }
