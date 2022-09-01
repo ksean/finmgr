@@ -20,7 +20,7 @@
     <guava.version>30.1.1-jre</guava.version>
     <pdfbox.version>2.0.24</pdfbox.version>
     <poi.version>5.0.0</poi.version>
-    <jsoup.version>1.14.2</jsoup.version>
+    <jsoup.version>1.15.3</jsoup.version>
   </properties>
 
   <dependencies>
