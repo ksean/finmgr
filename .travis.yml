@@ -1,6 +1,6 @@
 warnings_are_errors: false
 language: java
-dist: trusty
+dist: jammy
 jdk:
-  - oraclejdk11
-  - openjdk11
+  - oraclejdk21
+  - openjdk21
