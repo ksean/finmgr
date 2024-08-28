@@ -7,11 +7,13 @@ A simple web interface implementation of the finmgr-core API project.
 
 ## Requirements
 
-Java >= 11
+yarn >= 4.4.1
 
-## Testing
+## Steps
 
-`mvn test`
+`yarn`
+
+`yarn start`
 
 ## License
 

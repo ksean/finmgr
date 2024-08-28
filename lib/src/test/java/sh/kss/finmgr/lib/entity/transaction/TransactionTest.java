@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 package sh.kss.finmgr.lib.entity.transaction;
 
 
-import com.google.common.collect.ListMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -28,6 +27,7 @@ import org.springframework.validation.Validator;
 import sh.kss.finmgr.lib.FinmgrTest;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,7 +46,7 @@ public abstract class TransactionTest extends FinmgrTest {
      * @param object the object to be validated
      * @param expectedErrors the list of errors expected to be produced
      */
-    void assertHasErrors(Validator validator, Object object, ListMultimap<String, String> expectedErrors) {
+    void assertHasErrors(Validator validator, Object object, Map<String, List<String>> expectedErrors) {
 
         LOG.debug(String.format("assertHasErrors on object: %s", object.toString()));
 
@@ -67,7 +67,7 @@ public abstract class TransactionTest extends FinmgrTest {
      * @param expectedErrors expected errors
      * @param actualErrors actual errors
      */
-    private void assertHasFieldErrors(ListMultimap<String, String> expectedErrors, Errors actualErrors) {
+    private void assertHasFieldErrors(Map<String, List<String>> expectedErrors, Errors actualErrors) {
 
         // Keep a count
         int expectedErrorSum = 0;

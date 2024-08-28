@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
  */
 package sh.kss.finmgr.lib.parse.brokerage;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Component;
 import sh.kss.finmgr.lib.entity.Account;
@@ -34,6 +32,7 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,17 +82,17 @@ public class QuestradePdfOld implements PdfParser {
     private final Pattern END_DIV_PATTERN = Pattern.compile("^\\$[\\d|,]+\\.\\d{2}$");
 
     // Map Questrade action to an internal InvestmentAction
-    private final Map<String, InvestmentAction> ACTION_MAP = ImmutableMap.<String, InvestmentAction>builder()
-        .put("buy", InvestmentAction.Buy)
-        .put("sell", InvestmentAction.Sell)
-        .put("deposit", InvestmentAction.Deposit)
-        .put("brw", InvestmentAction.Journal)
-        .put("fee", InvestmentAction.Fee)
-        .put("foreign", InvestmentAction.Exchange)
-        .put("div", InvestmentAction.Distribution)
-        .put("rei", InvestmentAction.Reinvest)
-        .put("nac", InvestmentAction.Corporate)
-        .build();
+    private final Map<String, InvestmentAction> ACTION_MAP = Map.of(
+        "buy", InvestmentAction.Buy,
+        "sell", InvestmentAction.Sell,
+        "deposit", InvestmentAction.Deposit,
+        "brw", InvestmentAction.Journal,
+        "fee", InvestmentAction.Fee,
+        "foreign", InvestmentAction.Exchange,
+        "div", InvestmentAction.Distribution,
+        "rei", InvestmentAction.Reinvest,
+        "nac", InvestmentAction.Corporate
+    );
 
 
     /**
@@ -141,7 +140,7 @@ public class QuestradePdfOld implements PdfParser {
         CurrencyUnit cursorCurrencyUnit;
         Security cursorSecurity = null;
 
-        List<InvestmentTransaction> transactions = Lists.newArrayList();
+        List<InvestmentTransaction> transactions = new ArrayList<>();
 
         for (int i = 0; i < lines.size(); i++) {
 

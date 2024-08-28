@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package sh.kss.finmgr.lib.data;
 
+import org.apache.commons.lang3.Validate;
 import org.javamoney.moneta.Money;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,8 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  *
@@ -60,7 +59,7 @@ public class MarketDataApiImpl implements MarketDataApi {
         LOG.debug(String.format("called getClosingPrice(%s, %s, %s)", security.getValue(), date, currency));
 
         // You can't get a closing price for a future date
-        checkArgument(date.isBefore(LocalDate.now()));
+        Validate.isTrue(date.isBefore(LocalDate.now()));
 
         // Ensure our date range will get us the latest business day closing price
         String formattedStartDate = date.minusDays(5).format(MARKET_WATCH_DATE_FORMAT);

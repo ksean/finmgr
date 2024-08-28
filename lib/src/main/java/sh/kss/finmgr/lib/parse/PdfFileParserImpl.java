@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,8 @@
  */
 package sh.kss.finmgr.lib.parse;
 
-import com.google.common.collect.ImmutableList;
+import org.apache.pdfbox.io.RandomAccessReadBufferedFile;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
@@ -41,54 +42,19 @@ import java.util.List;
 public class PdfFileParserImpl implements PdfFileParser {
 
     // A list of the available PDF parsers
-    private final List<PdfParser> PDF_PARSERS = ImmutableList.of(new QuestradePdfOld(), new QuestradePdf());
+    private final List<PdfParser> PDF_PARSERS = List.of(new QuestradePdfOld(), new QuestradePdf());
     // pdfbox PDF to Text object
-    private PDFTextStripper textStripper;
+    private PDFTextStripper textStripper = new PDFTextStripper();
     // Log manager
     private final Logger LOG = LoggerFactory.getLogger(PdfFileParserImpl.class);
-
-    /**
-     * Since creating a PDF Text Stripper can throw an IOException, we should handle it here
-     *
-     * @return was the creation successful?
-     */
-    private boolean canCreateTextStripper() {
-
-        LOG.debug("Calling canCreateTextStripper()");
-
-        try {
-
-            // If the PDF text stripper hasn't been instantiated, do so now
-            if (textStripper == null) {
-
-                LOG.debug("PDF text stripper was null - creating object");
-                textStripper = new PDFTextStripper();
-            }
-        } catch (IOException ioe) {
-
-            LOG.error("Failed to create PDF text stripper");
-            ioe.printStackTrace();
-
-            return false;
-        }
-
-        return true;
-    }
 
     @Override
     public List<InvestmentTransaction> parsePdf(File file) {
 
         LOG.debug("Calling parsePdf()");
 
-        if (!canCreateTextStripper()) {
-
-            LOG.error("Could not create the PDF text stripper");
-
-            return Collections.emptyList();
-        }
-
         // .pdf handler
-        try (PDDocument document = PDDocument.load(file)) {
+        try (PDDocument document = Loader.loadPDF(new RandomAccessReadBufferedFile(file))) {
 
             // Skip any encrypted documents
             if (!document.isEncrypted()) {

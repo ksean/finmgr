@@ -7,7 +7,7 @@ A simple API wrapper implementation of the finmgr-lib project.
 
 ## Requirements
 
-Java >= 11
+Java >= 21
 
 ## Testing
 

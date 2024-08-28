@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,12 +17,11 @@
  */
 package sh.kss.finmgr.lib.entity.transaction;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import sh.kss.finmgr.lib.entity.InvestmentAction;
 
-import javax.inject.Singleton;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
@@ -34,8 +33,7 @@ import java.util.Map;
  * Validate the state of an investment transaction. Investment transactions must be valid for use in supported
  * transaction operations.
  */
-@Component
-@Singleton
+@Service
 public class InvestmentTransactionValidator implements Validator {
 
 

@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,6 @@
  */
 package sh.kss.finmgr.lib.operation;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +28,7 @@ import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,17 +60,17 @@ public class AverageCostBasis implements TransactionOperation {
 
         final AccountType ACCOUNT_TYPE = transaction.getAccount().getAccountType();
         final CurrencyUnit CURRENCY = transaction.getCurrency();
-        Map<AccountType, Holding> holdings = Maps.newHashMap(portfolio.getHoldings());
+        Map<AccountType, Holding> holdings = new HashMap<>(portfolio.getHoldings());
         Holding holding = holdings.getOrDefault(ACCOUNT_TYPE, Holding.EMPTY);
 
         // Get ACB Map for the cursor cost basis
-        Map<Security, MonetaryAmount> costBases = Maps.newHashMap(holding.getCostBasis());
+        Map<Security, MonetaryAmount> costBases = new HashMap<>(holding.getCostBasis());
         MonetaryAmount costBasis = costBases.getOrDefault(security, Money.of(0, CURRENCY));
 
-        Map<Security, Quantity> quantities = Maps.newHashMap(holding.getQuantities());
+        Map<Security, Quantity> quantities = new HashMap<>(holding.getQuantities());
         Quantity quantity = quantities.getOrDefault(security, ZERO);
 
-        Set<Security> securities = Sets.newHashSet(holding.getSecurities());
+        Set<Security> securities = new HashSet<>(holding.getSecurities());
 
         switch (transaction.getAction()) {
 
@@ -128,6 +126,6 @@ public class AverageCostBasis implements TransactionOperation {
         }
 
         return oldPortfolio
-            .withHoldings(ImmutableMap.copyOf(newHoldings));
+            .withHoldings(Map.copyOf(newHoldings));
     }
 }

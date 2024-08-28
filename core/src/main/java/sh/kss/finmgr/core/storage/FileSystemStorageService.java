@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -38,7 +37,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
 @Service
-@Singleton
 public class FileSystemStorageService implements StorageService {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileSystemStorageService.class);

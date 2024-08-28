@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package sh.kss.finmgr.lib.parse;
 
-import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,7 @@ public class CsvFileParserImpl implements CsvFileParser {
     // Log manager
     private final Logger LOG = LoggerFactory.getLogger(CsvFileParserImpl.class);
     // A list of the available Csv parsers
-    private final List<CsvParser> CSV_PARSERS = ImmutableList.of(new RbcCsv());
+    private final List<CsvParser> CSV_PARSERS = List.of(new RbcCsv());
 
     @Override
     public List<InvestmentTransaction> parseCsv(File file) {

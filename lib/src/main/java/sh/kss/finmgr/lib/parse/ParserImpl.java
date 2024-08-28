@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  */
 package sh.kss.finmgr.lib.parse;
 
-import com.google.common.io.Files;
+import org.apache.commons.compress.utils.FileNameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -137,8 +137,8 @@ public class ParserImpl implements Parser {
 
         LOG.debug(String.format("Parsing input file %s", file.getAbsolutePath()));
 
-        // Lowercase the extension for case insensitive matching
-        String extension = Files.getFileExtension(file.getName()).toLowerCase();
+        // Lowercase the extension for case-insensitive matching
+        String extension = FileNameUtils.getExtension(file.getPath()).toLowerCase();
 
         LOG.debug(String.format("Found extension %s", extension));
 

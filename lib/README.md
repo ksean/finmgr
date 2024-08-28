@@ -7,7 +7,7 @@ A library for defining financial transactions, and providing built-in financial 
 
 ## Requirements
 
-Java >= 11
+Java >= 21
 
 ## Testing
 

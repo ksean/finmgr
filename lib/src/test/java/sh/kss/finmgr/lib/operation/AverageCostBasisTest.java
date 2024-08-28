@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package sh.kss.finmgr.lib.operation;
 
-import com.google.common.collect.ImmutableList;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -63,7 +62,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         return Run.process(
             Portfolio.EMPTY_NON_REGISTERED,
-            ImmutableList.of(averageCostBasis),
+            List.of(averageCostBasis),
             transactions
         );
     }
@@ -78,7 +77,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy and sell same quantity of same security
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 SELL_VTI
             )
@@ -101,7 +100,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy same security twice at different prices
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE
             )
@@ -124,7 +123,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy same security twice at different prices then sell some
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
                 SELL_VTI
@@ -148,7 +147,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy at two different prices
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
                 VTI_DIVIDEND
@@ -175,7 +174,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy at two different prices
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
                 VTI_RETURN_OF_CAPITAL
@@ -203,7 +202,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy at two different prices
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
                 SELL_VTI,
@@ -228,7 +227,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy at two different prices
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_HIGHER_PRICE,
                 SELL_VTI,
@@ -254,7 +253,7 @@ public class AverageCostBasisTest extends FinmgrTest {
 
         // Buy at two different prices
         Portfolio portfolio = operationsTest(
-            ImmutableList.of(
+            List.of(
                 BUY_VTI,
                 BUY_VTI_TFSA
             )

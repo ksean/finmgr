@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package sh.kss.finmgr.lib.parse;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -47,7 +46,7 @@ public class XlsxFileParserImpl implements XlsxFileParser {
     // Log manager
     private final Logger LOG = LoggerFactory.getLogger(XlsxFileParserImpl.class);
     // A list of the available Xlsx parsers
-    private final List<XlsxParser> XLSX_PARSERS = ImmutableList.of(new QuestradeXlsx());
+    private final List<XlsxParser> XLSX_PARSERS = List.of(new QuestradeXlsx());
 
     @Override
     public List<InvestmentTransaction> parseXlsx(File file) {

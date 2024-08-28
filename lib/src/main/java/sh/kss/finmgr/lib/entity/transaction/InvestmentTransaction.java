@@ -1,6 +1,6 @@
 /*
     finmgr - A financial transaction framework
-    Copyright (C) 2021 Kennedy Software Solutions Inc.
+    Copyright (C) 2024 Kennedy Software Solutions Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import sh.kss.finmgr.lib.entity.InvestmentAction;
 import sh.kss.finmgr.lib.entity.Quantity;
 import sh.kss.finmgr.lib.entity.Security;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.time.LocalDate;
