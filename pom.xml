@@ -44,7 +44,6 @@
   <modules>
     <module>lib</module>
     <module>core</module>
-    <module>web</module>
   </modules>
 
 </project>
