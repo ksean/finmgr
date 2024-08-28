@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import '@fontsource/roboto/400.css';
+import SideMenu from "./SideMenu";
 
 function Copyright() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           finmgr
         </Typography>
+        <SideMenu />
         <Copyright />
       </Box>
     </Container>
